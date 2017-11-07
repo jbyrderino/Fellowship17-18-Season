@@ -35,6 +35,29 @@ public class MecanumDS extends DriveSystem {
         BackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void setMotorPower(double FL, double FR, double BL, double BR){
+        tl.addData("","FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", FL, FR, BL, BR);
+        FrontLeft.setPower(-FL);
+        FrontRight.setPower(FR);
+        BackLeft.setPower(-BL);
+        BackRight.setPower(BR);
+    }
+
+    public void setEncoders (boolean allow)
+    {
+        if (allow) {
+            FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+            FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+            BackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+            BackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        } else {
+            FrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            BackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            BackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+
     public boolean Move (double power, double direction, double spin, double distance, int timeout){
         //BUGBUG - implment this
         return false;

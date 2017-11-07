@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -59,7 +61,7 @@ public class TeleOpModeTest extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    DrivingSubsystem ds = null;
+    MecanumDS ds = null;
     boolean normalMode = false;
     boolean allowEncoders = true;
     public double MaxPower = 1.0;
@@ -73,8 +75,7 @@ public class TeleOpModeTest extends OpMode {
      */
     @Override
     public void init() {
-        ds = new DrivingSubsystem ();
-        ds.Init(hardwareMap, telemetry);
+        ds = new MecanumDS (hardwareMap, telemetry, "Front Left", "Front Right", "Back Left", "Back Right");
     }
 
     /*

@@ -142,9 +142,9 @@ public class TeleOpModeTest extends OpMode {
 
         ds.setEncoders(allowEncoders);
 
-        double LeftX = 0;//gamepad1.left_stick_x;
+        double LeftX = gamepad1.left_stick_x;
         double LeftY = -gamepad1.left_stick_y;
-        double RightX = 0;//gamepad1.right_stick_x;
+        double RightX = gamepad1.right_stick_x;
         double RightY = -gamepad1.right_stick_y;
         telemetry.addData("","LX: %.3f, LY: %.3f, RX: %.3f, RY: %.3f", LeftX, LeftY, RightX, RightY);
 

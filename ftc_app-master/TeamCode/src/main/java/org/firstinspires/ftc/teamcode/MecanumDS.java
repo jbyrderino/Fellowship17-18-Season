@@ -59,7 +59,16 @@ public class MecanumDS extends DriveSystem {
     }
 
     public boolean Move (double power, double direction, double spin, double distance, int timeout){
-        //BUGBUG - implment this
-        return false;
+        long startTime = System.currentTimeMillis();
+        do {
+            //do stuff depending on what the power and direction is:
+            FrontLeft.setPower(0);
+            FrontRight.setPower(0);
+            BackLeft.setPower(0);
+            BackRight.setPower(0);
+
+        } while (System.currentTimeMillis() - startTime <= distance);
+
+        return true;
     }
 }

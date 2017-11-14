@@ -5,6 +5,9 @@ package org.firstinspires.ftc.teamcode;
  */
 
 public abstract class DriveSystem {
-    public abstract boolean Move (double power, double direction, double spin, double distance, int timeout);
+
+    IMUSystem imu = null;
+
+    public abstract boolean Move(double power, double direction, double spin, double distance, int timeout);
 
 }

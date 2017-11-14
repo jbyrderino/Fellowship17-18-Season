@@ -45,15 +45,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * The names of OpModes appear on the menu of the FTC Driver Station.
  * When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
  * It includes all the skeletal structure that all iterative OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOpModeTest", group="Iterative Opmode")
+@TeleOp(name = "TeleOpModeTest", group = "Iterative Opmode")
 
 public class TeleOpModeTest extends OpMode {
 
@@ -69,13 +69,12 @@ public class TeleOpModeTest extends OpMode {
     public boolean linearMode = true;
 
 
-
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        ds = new MecanumDS (hardwareMap, telemetry, "Front Left", "Front Right", "Back Left", "Back Right");
+        ds = new MecanumDS(hardwareMap, telemetry, null, "Front Left", "Front Right", "Back Left", "Back Right");
     }
 
     /*
@@ -108,10 +107,10 @@ public class TeleOpModeTest extends OpMode {
             }
             resetStartTime();
         }
-        if(MaxPower > 1) {
+        if (MaxPower > 1) {
             MaxPower = 1;
         }
-        if(MaxPower < 0) {
+        if (MaxPower < 0) {
             MaxPower = 0;
         }
         if (gamepad1.a) {
@@ -135,10 +134,10 @@ public class TeleOpModeTest extends OpMode {
             normalModeStr = "N";
         }
         String allowEncodersStr = "Y";
-        if (!allowEncoders){
+        if (!allowEncoders) {
             allowEncodersStr = "N";
         }
-        telemetry.addData("","Power: %.1f, Input: %s, Normal: %s, Encoders: %s", MaxPower, Mode, normalModeStr, allowEncodersStr);
+        telemetry.addData("", "Power: %.1f, Input: %s, Normal: %s, Encoders: %s", MaxPower, Mode, normalModeStr, allowEncodersStr);
 
         ds.setEncoders(allowEncoders);
 
@@ -146,7 +145,7 @@ public class TeleOpModeTest extends OpMode {
         double LeftY = -gamepad1.left_stick_y;
         double RightX = gamepad1.right_stick_x;
         double RightY = -gamepad1.right_stick_y;
-        telemetry.addData("","LX: %.3f, LY: %.3f, RX: %.3f, RY: %.3f", LeftX, LeftY, RightX, RightY);
+        telemetry.addData("", "LX: %.3f, LY: %.3f, RX: %.3f, RY: %.3f", LeftX, LeftY, RightX, RightY);
 
         double frontLeftPower = 0;
         double frontRightPower = 0;
@@ -154,18 +153,18 @@ public class TeleOpModeTest extends OpMode {
         double backRightPower = 0;
 
         if (normalMode) {
-            frontLeftPower = LeftY-LeftX;
-            frontRightPower = RightY+RightX;
-            backLeftPower = LeftY+LeftX;
-            backRightPower = RightY-RightX;
+            frontLeftPower = LeftY - LeftX;
+            frontRightPower = RightY + RightX;
+            backLeftPower = LeftY + LeftX;
+            backRightPower = RightY - RightX;
         } else {
-            frontLeftPower = RightY+RightX;
-            frontRightPower = -LeftY+LeftX;
-            backLeftPower = -RightY+RightX;
-            backRightPower = LeftY+LeftX;
+            frontLeftPower = RightY + RightX;
+            frontRightPower = -LeftY + LeftX;
+            backLeftPower = -RightY + RightX;
+            backRightPower = LeftY + LeftX;
         }
 
-        telemetry.addData("","FLP: %.3f, FRP: %.3f, BLP: %.3f, BRP: %.3f", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+        telemetry.addData("", "FLP: %.3f, FRP: %.3f, BLP: %.3f, BRP: %.3f", frontLeftPower, frontRightPower, backLeftPower, backRightPower);
         if (!linearMode) {
             frontLeftPower = frontLeftPower * 7;
             frontRightPower = frontRightPower * 7;

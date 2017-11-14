@@ -4,20 +4,21 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
- * Created by Joshua on 10/28/2017.
+ * Created by Joshua(Just kidding, it was the magical programming fairy) on 10/28/2017.
  */
 
 public class AdafruitIMU extends IMUSystem {
     BNO055IMU imu;
     double heading;
 
-    AdafruitIMU (HardwareMap hwMap, String label) {
+    AdafruitIMU(HardwareMap hwMap, String label) {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -31,12 +32,23 @@ public class AdafruitIMU extends IMUSystem {
         ResetHeading();
     }
 
-    public void ResetHeading (){
+    public void ResetHeading() {
         heading = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
     }
 
-    public double GetHeading (){
+    public double GetHeading() {
         double currHeading = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
         return (currHeading - heading);
     }
+
+    public Acceleration GetAcceleration() {
+        Acceleration acceleration = imu.getAcceleration();
+        return acceleration;
+    }
+
+    public Velocity GetVelocity(){
+        Velocity velocity = imu.getVelocity();
+        return  velocity;
+    }
+
 }

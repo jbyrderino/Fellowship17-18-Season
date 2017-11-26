@@ -58,6 +58,8 @@ public class MecanumDS extends DriveSystem {
         }
     }
 
+    static final double FIX_COEFFICENT = 2.0;
+
     public boolean Move(double power, double direction, double spin, double distance, int timeout) {
         //range check
         assert 0 <= power && power <= 1;
@@ -85,10 +87,24 @@ public class MecanumDS extends DriveSystem {
         FrontRight.setPower(0);
         BackLeft.setPower(0);
         BackRight.setPower(0);
+        //reset heading to zero
+        imu.ResetHeading();
         //main loop
         do {
             //do stuff depending on what the power and direction is:
-            setMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+            double heading = imu.GetHeading();
+            tl.addLine("current heading " + heading);
+            double ratio = heading / 90.0;
+            double deltaP = FIX_COEFFICENT * ratio;
+            tl.addLine("delta p " + deltaP);
+            double max = Math.max(Math.abs(frontLeftPower + deltaP), Math.abs(backLeftPower + deltaP));
+            max = Math.max(max, Math.max(Math.abs(frontRightPower - deltaP), Math.abs(backRightPower - deltaP)));
+            if (max > 1.0) {
+                //clip if out of range
+                setMotorPower((frontLeftPower + deltaP) / max, (frontRightPower - deltaP) / max, (backLeftPower + deltaP) / max, (backRightPower - deltaP) / max);
+            } else {
+                setMotorPower(frontLeftPower + deltaP, frontRightPower - deltaP, backLeftPower + deltaP, backRightPower - deltaP);
+            }
             tl.update();
         } while (System.currentTimeMillis() - startTime <= distance);
         //stop robot

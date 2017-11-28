@@ -37,9 +37,10 @@ public class MoveTest extends LinearOpMode {
 
         Acceleration acceleration = nav.GetAcceleration();
         Velocity velocity = nav.GetVelocity();
-        double xVelocity = velocity.xVeloc;
+        String VelocityStr = nav.GetVelocity().toString();
 
-        telemetry.addData(xVelocity);
+        telemetry.addLine(VelocityStr);
+        telemetry.update();
 
         double[][] command = new double[8][2];
         //square

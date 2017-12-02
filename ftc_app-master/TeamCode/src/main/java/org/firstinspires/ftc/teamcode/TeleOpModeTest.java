@@ -62,7 +62,7 @@ public class TeleOpModeTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     MecanumDS ds = null;
-    boolean normalMode = false;
+    boolean normalMode = true;
     boolean allowEncoders = true;
     public double MaxPower = 1.0;
     public double MaxDomain = 7;

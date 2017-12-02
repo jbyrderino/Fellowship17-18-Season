@@ -17,7 +17,6 @@ import java.util.Vector;
 public class MoveTest extends LinearOpMode {
 
     KeithRobot keith;
-    Navigation nav;
 
     public DriveSystem ds = null;
 
@@ -32,15 +31,7 @@ public class MoveTest extends LinearOpMode {
         keith = new KeithRobot(hwMap, telemetry);
         //initialize Mecanum Driving System
         ds = keith.GetDriveSystem();
-        nav = keith.GetNavigationSystem();
         waitForStart();
-
-        Acceleration acceleration = nav.GetAcceleration();
-        Velocity velocity = nav.GetVelocity();
-        String VelocityStr = nav.GetVelocity().toString();
-
-        telemetry.addLine(VelocityStr);
-        telemetry.update();
 
         double[][] command = new double[8][2];
         //square

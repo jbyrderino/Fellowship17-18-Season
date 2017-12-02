@@ -34,11 +34,38 @@ public class AdafruitIMU extends IMUSystem {
 
     public void ResetHeading() {
         heading = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
+        if (heading < 0) {
+            heading = 360 + heading;
+        }
     }
 
     public double GetHeading() {
         double currHeading = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
-        return (currHeading - heading);
+        if (currHeading < 0) {
+            currHeading = 360 + currHeading;
+        }
+
+        double diff = currHeading - heading;
+        if (diff > 180) {
+            diff = -360 + diff;
+        }
+        if (diff < -180) {
+            diff = 360 + diff;
+        }
+        return diff;
+    }
+
+    public double GetNormalizedHeading() {
+        double currHeading = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle;
+        if (currHeading < 0) {
+            currHeading = 360 + currHeading;
+        }
+
+        double diff = currHeading - heading;
+        if (diff < 0) {
+            diff = 360 + diff;
+        }
+        return diff;
     }
 
     public Acceleration GetAcceleration() {

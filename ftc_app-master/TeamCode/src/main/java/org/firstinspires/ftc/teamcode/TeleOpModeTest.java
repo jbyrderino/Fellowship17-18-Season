@@ -97,6 +97,7 @@ public class TeleOpModeTest extends OpMode {
      */
     @Override
     public void loop() {
+        //KeithRobot.nav.posStart;
         if (getRuntime() == 200) {
             if (gamepad1.left_bumper) {
                 resetStartTime();

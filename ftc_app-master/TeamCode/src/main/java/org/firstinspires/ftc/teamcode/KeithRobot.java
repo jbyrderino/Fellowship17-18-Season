@@ -17,6 +17,7 @@ public class KeithRobot extends FTCRobot {
     KeithRobot(HardwareMap hardwareMap, Telemetry telemetry) {
         imu = new AdafruitIMU(hardwareMap, "imu");
         mds = new MecanumDS(hardwareMap, telemetry, imu, "Front Left", "Front Right", "Back Left", "Back Right");
+        nav = new Navigation(this, telemetry);
     }
 
     public IMUSystem GetIMUSystem() {

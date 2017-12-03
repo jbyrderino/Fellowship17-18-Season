@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Hardware;
 
@@ -15,12 +16,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 public class Navigation{
     FTCRobot ftcRobot = null;
     Telemetry tl = null;
-
-    //Impliment the acceleration formula for distance, import acceleration, and velocity.
+    DcMotor frontLeft;
+    int posStart = 0;
 
     Navigation (FTCRobot FTCRobot, Telemetry telemetry){
         ftcRobot = FTCRobot;
         tl = telemetry;
+        //frontLeft = FrontLeft;
+    }
+
+    public void StartGetDistance (DcMotor FrontLeft){
+        posStart = frontLeft.getCurrentPosition();
+    }
+
+    public int GetDistance (){
+        int pos = frontLeft.getCurrentPosition();
+        return  (pos - posStart)*-1;
     }
 
     public Velocity GetVelocity(){

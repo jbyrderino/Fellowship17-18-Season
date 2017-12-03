@@ -254,6 +254,8 @@ public class MecanumDS extends DriveSystem {
         double y = maxPower * Math.cos(directionR);
 
         //power configuration
+        FrontLeft.getCurrentPosition();
+
         double frontLeftPower = y - x;
         double frontRightPower = y + x;
         double backLeftPower = y + x;

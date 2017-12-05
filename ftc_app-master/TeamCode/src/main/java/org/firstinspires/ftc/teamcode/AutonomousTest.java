@@ -34,17 +34,30 @@ public class AutonomousTest extends LinearOpMode {
             if (gamepad1.y) {
                 break;
             }
-            if (gamepad1.dpad_up) {
-                ds.Move(spinPower, 0, 15, 0, 0);
-                sleep(200);
+            if (gamepad1.x) {
+                //ds.Move(spinPower, 0, 15, 0, 0);
+                //telemetry.addLine("Completed Step 1");
+                //telemetry.update();
+                //ds.Move(spinPower, 0, -15, 0, 0);
+                //telemetry.addLine("Completed Step 2");
+                //telemetry.update();
+                //ds.Move(movePower, 0, 0, 4000, 0);
+                //telemetry.addLine("Completed Step 3");
+                //telemetry.update();
+                ds.Move(movePower, -90, 0, 2700, 0);
+                telemetry.addLine("Completed Step 4");
+                telemetry.update();
+                //ds.Move(movePower, 0, 0, 1800, 0);
+                //telemetry.addLine("Completed Step 5");
+                //telemetry.update();
+                break;
+            }
+            if (gamepad1.b) {
                 ds.Move(spinPower, 0, -15, 0, 0);
-                sleep(200);
+                ds.Move(spinPower, 0, 15, 0, 0);
                 ds.Move(movePower, 0, 0, 4000, 0);
-                sleep(200);
-                ds.Move(movePower, -90, 0, 4000, 0);
-                sleep(200);
-                ds.Move(movePower - 0.1, 0, 0, 500, 0);
-                sleep(500);
+                ds.Move(movePower, -90, 0, 2700, 0);
+                ds.Move(movePower, 0, 0, 1800, 0);
                 break;
             }
         }

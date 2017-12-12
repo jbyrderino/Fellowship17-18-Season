@@ -25,10 +25,10 @@ public class SpinTest extends LinearOpMode {
         ds = keith.GetDriveSystem();
         waitForStart();
 
-        double movePower = 0.3;
+        double movePower = 0.5;
         double moveDistance = 2000;
-        double spinPower = 0.1;
-        double spinValue = 8;
+        double spinPower = 0.3;
+        double spinValue = 90;
 
         /*
         while (true) {

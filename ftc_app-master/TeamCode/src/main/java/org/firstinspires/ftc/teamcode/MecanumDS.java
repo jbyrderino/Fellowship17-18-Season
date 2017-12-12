@@ -28,6 +28,7 @@ public class MecanumDS extends DriveSystem {
     MecanumDS(HardwareMap hwMap, Telemetry telemetry, IMUSystem imuSys, String flLabel, String frLabel, String blLabel, String brLabel) {
         tl = telemetry;
         imu = imuSys;
+
         FrontLeft = hwMap.get(DcMotor.class, flLabel);
         FrontRight = hwMap.get(DcMotor.class, frLabel);
         BackLeft = hwMap.get(DcMotor.class, blLabel);
@@ -43,11 +44,13 @@ public class MecanumDS extends DriveSystem {
     }
 
     public void setMotorPower(double FL, double FR, double BL, double BR) {
-        tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", FL, FR, BL, BR);
-        FrontLeft.setPower(FL);
-        FrontRight.setPower(FR);
-        BackLeft.setPower(BL);
-        BackRight.setPower(BR);
+        //normalize range to [-1,1]
+        Utilities.PowerLevels normalizedPower = Utilities.NormalizePower(new Utilities.PowerLevels(FL, FR, BL, BR), 1);
+        tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", normalizedPower.powerBL, normalizedPower.powerFR, normalizedPower.powerBL, normalizedPower.powerBR);
+        FrontLeft.setPower(normalizedPower.powerFL);
+        FrontRight.setPower(normalizedPower.powerFR);
+        BackLeft.setPower(normalizedPower.powerBL);
+        BackRight.setPower(normalizedPower.powerBR);
     }
 
     public void setEncoders(boolean allow) {
@@ -90,20 +93,6 @@ public class MecanumDS extends DriveSystem {
 
     static final double FIX_COEFFICENT = 2.0;
 
-    double Calculate_S_Curve (double startReturnValue, double endReturnValue, double startValue, double endValue, double currentValue) {
-        double valueRatio = Math.abs(endValue - startValue) / 12; // domain is between -6 and +6
-        double powerRatio = Math.abs(endReturnValue - startReturnValue) / 1; // range is between 0 and 1
-        double x = Math.abs(currentValue - startValue) / valueRatio - 6;
-        double y = Math.pow(Math.E, x) / (Math.pow(Math.E, x) + 1);
-        double result = 0;
-        if (startReturnValue > endReturnValue) {
-            result = startReturnValue - y * powerRatio;
-        } else {
-            result = startReturnValue + y * powerRatio;
-        }
-        return result;
-    }
-
     boolean ExecuteSpin (double headingGoal, double maxPower, double minPower, double tolerance) {
         double currentHeading = imu.GetHeading();
         long originalTime = System.currentTimeMillis();
@@ -118,17 +107,16 @@ public class MecanumDS extends DriveSystem {
             long diffTime = System.currentTimeMillis() - originalTime;
             if (diffTime <= RAMP_UP_TIME) {
                 //apply the "s" curve on the power based on time for acceleration
-                currentPower = Calculate_S_Curve(0, currentPower, 0, RAMP_UP_TIME, diffTime);
+                currentPower = Utilities.Calculate_S_Curve(0, currentPower, 0, RAMP_UP_TIME, diffTime);
             }
 
             currentHeading = imu.GetHeading();
             if (Math.abs(headingGoal - currentHeading) <= slowDownDegrees) {
                 //apply the "s" curve on the power based on the remaining number of degrees for deceleration
-                currentPower = Calculate_S_Curve(currentPower, minPower, slowDownDegrees, 0, Math.abs(headingGoal - currentHeading));
+                currentPower = Utilities.Calculate_S_Curve(currentPower, minPower, slowDownDegrees, 0, Math.abs(headingGoal - currentHeading));
             }
 
             tl.addData("", "CP: %.3f, CH: %.3f", currentPower, currentHeading);
-            tl.update();
 
             if(currentHeading > headingGoal) {
                 setMotorPower(currentPower, -currentPower, currentPower, -currentPower);
@@ -136,6 +124,8 @@ public class MecanumDS extends DriveSystem {
             if(currentHeading < headingGoal) {
                 setMotorPower(-currentPower, currentPower, -currentPower, currentPower);
             }
+
+            tl.update();
         }
         setMotorPower(0, 0, 0, 0);
         return true;
@@ -163,6 +153,34 @@ public class MecanumDS extends DriveSystem {
         backLeftPower = backLeftPower / highValue * maxPower;
         backRightPower = backRightPower / highValue * maxPower;
 
+        // in order to ramp up or down the power this function will use a modifier
+        // which is a value between 0 and 1 that will be multiplied with the expected
+        // power for each motor, effectively obtaining the same power pattern but
+        // with lower values.
+        // In order to do this properly we need to find out the minimum value for
+        // the modifier, otherwise we are running the risk of some motors getting
+        // power level below the minimum power that would make them move. But we
+        // will only do this for the motors for which the absolute power is greater
+        // than the minimum power, otherwise
+        double minModifier = 1;
+        double tempModifier = 1;
+        tempModifier = minPower / Math.abs(frontLeftPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+        tempModifier = minPower / Math.abs(frontRightPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+        tempModifier = minPower / Math.abs(backLeftPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+        tempModifier = minPower / Math.abs(backRightPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+
         //record starting time
         long originalTime = System.currentTimeMillis();
 
@@ -170,7 +188,8 @@ public class MecanumDS extends DriveSystem {
         double originalEncoderValue = GetAverageEncodersValue();
 
         while(true) {
-            double diffEncoderValue = GetAverageEncodersValue() - originalEncoderValue;
+            double currentEncoderValue = GetAverageEncodersValue();
+            double diffEncoderValue = currentEncoderValue - originalEncoderValue;
             if (diffEncoderValue >= (distance - tolerance)) {
                 break;
             }
@@ -178,15 +197,33 @@ public class MecanumDS extends DriveSystem {
             double modifier = 1;
             if (diffTime <= RAMP_UP_TIME) {
                 //apply the "s" curve on the power based on time for acceleration
-                modifier = Calculate_S_Curve(0, modifier, 0, RAMP_UP_TIME, diffTime);
+                modifier = Utilities.Calculate_S_Curve(0, 1, 0, RAMP_UP_TIME, diffTime);
             }
 
             if ((distance - diffEncoderValue) <= RAMP_DOWN_DISTANCE) {
                 //apply the "s" curve on the power based on the remaining distance for deceleration
-                modifier = Calculate_S_Curve(modifier, 0, RAMP_DOWN_DISTANCE, 0, distance - diffEncoderValue);
+                double localModifier = Utilities.Calculate_S_Curve(1, minModifier, RAMP_DOWN_DISTANCE, 0, distance - diffEncoderValue);
+                if (localModifier < modifier) {
+                    modifier = localModifier;
+                }
             }
-            setMotorPower(frontLeftPower * modifier, frontRightPower * modifier, backLeftPower * modifier, backRightPower * modifier);
+            double localFLPower = frontLeftPower * modifier;
+            double localFRPower = frontRightPower * modifier;
+            double localBLPower = backLeftPower * modifier;
+            double localBRPower = backRightPower * modifier;
+
+            //TODO - apply any correction we might need due to drift
+
+            tl.addData("", "FLE: %d, FRE: %d, BLE: %d, BRE: %d", FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition(), BackLeft.getCurrentPosition(), BackRight.getCurrentPosition());
+            tl.addData("", "OrgEnc: %.3f, CurrEnc: %.3f", originalEncoderValue, currentEncoderValue);
+            tl.addData("", "Dist: %.3f, DiffD: %.3f", distance, diffEncoderValue);
+            tl.addData("", "Modifier: %.3f", modifier);
+            tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", localFLPower, localFRPower, localBLPower, localBRPower);
+            tl.update();
+
+            setMotorPower(localFLPower, localFRPower, localBLPower, localBRPower);
         }
+        setMotorPower(0, 0, 0, 0);
         return true;
     }
 

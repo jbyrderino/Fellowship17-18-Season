@@ -217,6 +217,7 @@ public class MecanumDS extends DriveSystem {
             //TODO - apply any correction we might need due to drift
 
             tl.addData("", "FLE: %d, FRE: %d, BLE: %d, BRE: %d", FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition(), BackLeft.getCurrentPosition(), BackRight.getCurrentPosition());
+            tl.addData("", "Test");
             tl.addData("", "OrgEnc: %.3f, CurrEnc: %.3f", originalEncoderValue, currentEncoderValue);
             tl.addData("", "Dist: %.3f, DiffD: %.3f", distance, diffEncoderValue);
             tl.addData("", "Modifier: %.3f", modifier);

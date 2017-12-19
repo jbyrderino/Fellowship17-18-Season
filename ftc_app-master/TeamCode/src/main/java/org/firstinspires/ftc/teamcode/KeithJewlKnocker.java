@@ -8,14 +8,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class KeithJewlKnocker extends JewlKnocker {
 
+    Servo servoKnocker = null;
 
-    Servo jKServo;
+    KeithJewlKnocker (Servo sK) {
+        servoKnocker = sK;
+    }
 
+    public double getKnockerPosition() {
+        double servoPosition = servoKnocker.getPosition();
+
+        return servoPosition;
+    }
     public void knockerDown() {
-        jKServo.setPosition(0.5);
+        servoKnocker.setPosition(0.5);
     }
     public void knockerUp(){
-        jKServo.setPosition(0);
+        servoKnocker.setPosition(0);
     }
 
 

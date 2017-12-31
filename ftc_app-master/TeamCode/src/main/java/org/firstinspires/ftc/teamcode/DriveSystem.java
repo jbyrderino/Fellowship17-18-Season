@@ -8,8 +8,6 @@ public abstract class DriveSystem {
 
     IMUSystem imu = null;
 
-    public abstract boolean Calibrate ();
-
     public abstract boolean Move(double power, double direction, double spin, double distance, int timeout);
 
 }

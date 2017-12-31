@@ -71,16 +71,19 @@ public class Reverse extends LinearOpMode {
         while (opModeIsActive()) {
 
             if(gamepad1.a){
-                if (motorPower <= .7){
-                    motorPower += .1;
+                if (motorPower < .7){
+                    motorPower = motorPower+0.1;
                 }else{
-                    motorPower = 0.1;
+                    motorPower = 0.0;
                 }
                 ReverseMotor.setPower(motorPower);
+            }else if (gamepad1.b){
+                motorPower = 0.0;
             }else {
                 ReverseMotor.setPower(motorPower);
             }
             telemetry.addData("MotorPower:", motorPower);
+            telemetry.update();
         }
     }
 }

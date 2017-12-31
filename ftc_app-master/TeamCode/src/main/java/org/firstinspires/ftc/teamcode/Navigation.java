@@ -43,6 +43,5 @@ public class Navigation{
         Acceleration acceleration = ftcRobot.GetIMUSystem().GetAcceleration();
         return acceleration;
     }
-
-
+    
 }

@@ -44,5 +44,4 @@ public class Navigation{
         return acceleration;
     }
 
-
 }

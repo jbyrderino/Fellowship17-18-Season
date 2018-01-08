@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.coolRunnings;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -9,5 +9,11 @@ public abstract class Elevator {
     public abstract void elevatorStart(double Pwr);
 
     public abstract void elevatorStop();
+
+    public abstract void kickerInit();
+
+    public abstract void kickerSetPosition(double Pos);
+
+    public abstract void kickerReset();
 
 }

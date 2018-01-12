@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.coolRunnings;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.teamcode.coolRunnings.Elevator;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 public class KeithElevator extends Elevator {
 
 
-    private DcMotor ElevatorMotor = null;
-    private Servo ElevatorServo = null;
+    private HardwareDevice ElevatorMotor = null;
+    private HardwareDevice ElevatorServo = null;
     private double motorPower;
 
     //Temporary until controller class is finished
@@ -17,8 +17,10 @@ public class KeithElevator extends Elevator {
     private boolean rBumperPressed;
     private boolean DPadDownPressed;
 
-    KeithElevator (DcMotor eM, Servo eS) {
-        ElevatorMotor = eM; ElevatorServo = eS;
+    KeithElevator (HardwareMap hwmap, double MotorPower) {
+        ElevatorMotor = hwmap.get("ElevatorMotor");
+        ElevatorServo = hwmap.get("ElevatorMotor");
+        ElevatorInit(MotorPower);
     }
 
     @Override

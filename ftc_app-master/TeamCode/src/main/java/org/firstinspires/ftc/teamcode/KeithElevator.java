@@ -5,25 +5,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-public class KeithElevator extends Elevator {
+public class KeithElevator{
 
 
-    private HardwareDevice ElevatorMotor = null;
-    private HardwareDevice ElevatorServo = null;
+    private DcMotor ElevatorMotor = null;
+    private Servo ElevatorServo = null;
     private double motorPower;
 
-    //Temporary until controller class is finished
-    private boolean lBumperPressed;
-    private boolean rBumperPressed;
-    private boolean DPadDownPressed;
-
     KeithElevator (HardwareMap hwmap, double MotorPower) {
-        ElevatorMotor = hwmap.get("ElevatorMotor");
-        ElevatorServo = hwmap.get("ElevatorMotor");
+        ElevatorMotor = hwmap.get(DcMotor.class, "ElevatorMotor");
+        ElevatorServo = hwmap.get(Servo.class, "ElevatorServo");;
         ElevatorInit(MotorPower);
     }
 
-    @Override
     public void elevatorStart(double Pwr) {
         ElevatorMotor.setPower(Pwr);
     }
@@ -45,36 +39,14 @@ public class KeithElevator extends Elevator {
         ElevatorServo.setPosition(0.0);
     }
 
+    public void kickerKick() {
+        kickerReset();
+        kickerSetPosition(1.0);
+        kickerReset();
+    }
+
     public void ElevatorInit(double mp) {
         motorPower = mp;
         kickerInit();
-    }
-
-    public void ElevatorRun() {
-        kickerReset();
-        elevatorStop();
-
-        if (lBumperPressed){
-            elevatorStart(motorPower);
-
-            while (true) {
-                 if (lBumperPressed) {
-                    elevatorStop();
-                }
-            }
-        }
-        if (rBumperPressed) {
-            elevatorStart(-motorPower);
-
-            while (true) {
-                if (lBumperPressed) {
-                    elevatorStop();
-                }
-            }
-        }
-
-        if (DPadDownPressed) {
-            kickerSetPosition(1.0);
-        }
     }
 }

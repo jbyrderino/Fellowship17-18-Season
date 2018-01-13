@@ -9,4 +9,6 @@ public abstract class FTCRobot {
 
     public abstract DriveSystem GetDriveSystem ();
 
+    public abstract Navigation GetNavigationSystem ();
+
 }

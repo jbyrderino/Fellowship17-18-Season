@@ -4,6 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import java.util.Vector;
+
 /**
  * Created by 28761 on 11/11/2017.
  */
@@ -12,13 +17,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class MoveTest extends LinearOpMode {
 
     KeithRobot keith;
+
     public DriveSystem ds = null;
 
     @Override
     public void runOpMode() {
         //initialize hardwareMap
         HardwareMap hwMap = hardwareMap;
+
         telemetry.addLine("DcMotors Set...");
+
 
         keith = new KeithRobot(hwMap, telemetry);
         //initialize Mecanum Driving System

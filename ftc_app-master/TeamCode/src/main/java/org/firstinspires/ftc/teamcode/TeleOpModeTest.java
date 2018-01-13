@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.KeithJewlKnocker;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -62,7 +63,7 @@ public class TeleOpModeTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     MecanumDS ds = null;
-    boolean normalMode = false;
+    boolean normalMode = true;
     boolean allowEncoders = true;
     public double MaxPower = 1.0;
     public double MaxDomain = 7;
@@ -97,6 +98,7 @@ public class TeleOpModeTest extends OpMode {
      */
     @Override
     public void loop() {
+        //KeithRobot.nav.posStart;
         if (getRuntime() == 200) {
             if (gamepad1.left_bumper) {
                 resetStartTime();

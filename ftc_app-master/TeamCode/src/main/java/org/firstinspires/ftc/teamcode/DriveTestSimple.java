@@ -57,6 +57,7 @@ public class DriveTestSimple extends LinearOpMode {
     public DcMotor FrontRight = null;
     public DcMotor BackLeft = null;
     public DcMotor BackRight = null;
+    public DcMotor ReverseMotor = null;
     public double MaxPower = 0.4;
     public double MaxDomain = 7;
 
@@ -67,6 +68,7 @@ public class DriveTestSimple extends LinearOpMode {
         FrontRight.setPower(FR);
         BackLeft.setPower(-BL);
         BackRight.setPower(BR);
+        ReverseMotor.setPower(-0.3);
     }
 
     @Override
@@ -78,6 +80,7 @@ public class DriveTestSimple extends LinearOpMode {
         FrontRight = hwMap.get(DcMotor.class, "Front Right");
         BackLeft = hwMap.get(DcMotor.class, "Back Left");
         BackRight = hwMap.get(DcMotor.class, "Back Right");
+        ReverseMotor = hwMap.get(DcMotor.class, "ReverseMotor");
 
         FrontLeft.setPower(0);
         FrontRight.setPower(0);

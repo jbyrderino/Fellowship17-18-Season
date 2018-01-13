@@ -12,6 +12,8 @@ public abstract class IMUSystem {
 
     public abstract double GetHeading ();
 
+    public abstract double GetNormalizedHeading ();
+
     public abstract Acceleration GetAcceleration ();
 
     public  abstract Velocity GetVelocity ();

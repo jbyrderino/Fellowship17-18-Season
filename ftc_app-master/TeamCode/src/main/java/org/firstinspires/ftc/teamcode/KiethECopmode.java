@@ -35,8 +35,5 @@ public class KiethECopmode extends OpMode {
        if (gamepad2.dpad_down) {
            kE.kickerSetPosition(1.0);
        }
-
-
    }
-
 }

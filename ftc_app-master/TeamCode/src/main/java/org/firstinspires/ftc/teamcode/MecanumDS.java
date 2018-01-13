@@ -1,10 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Environment;
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+import com.sun.tools.javac.util.Context;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by Joshua on 10/28/2017.
@@ -58,7 +67,8 @@ public class MecanumDS extends DriveSystem {
         }
     }
 
-    static final double FIX_COEFFICENT = 2.0;
+    static final double MAJOR_FIX_COEFFICENT = 2.5;
+//    static final double MINOR_FIX_COEFFICENT = 1;
 
     public boolean Move(double power, double direction, double spin, double distance, int timeout) {
         //range check
@@ -89,13 +99,16 @@ public class MecanumDS extends DriveSystem {
         BackRight.setPower(0);
         //reset heading to zero
         imu.ResetHeading();
+        StringBuffer output = new StringBuffer();
         //main loop
         do {
             //do stuff depending on what the power and direction is:
             double heading = imu.GetHeading();
             tl.addLine("current heading " + heading);
             double ratio = heading / 90.0;
-            double deltaP = FIX_COEFFICENT * ratio;
+            double deltaP = MAJOR_FIX_COEFFICENT * ratio;
+            output.append("curr heading " + heading);
+            output.append("deltaP " + deltaP);
             tl.addLine("delta p " + deltaP);
             double max = Math.max(Math.abs(frontLeftPower + deltaP), Math.abs(backLeftPower + deltaP));
             max = Math.max(max, Math.max(Math.abs(frontRightPower - deltaP), Math.abs(backRightPower - deltaP)));
@@ -108,6 +121,8 @@ public class MecanumDS extends DriveSystem {
             tl.update();
         } while (System.currentTimeMillis() - startTime <= distance);
         //stop robot
+        saveToFile(output.toString());
+        tl.addLine("file outputted");
         FrontLeft.setPower(0);
         FrontRight.setPower(0);
         BackLeft.setPower(0);
@@ -117,5 +132,28 @@ public class MecanumDS extends DriveSystem {
 //            return false;
 //        }
         return true;
+    }
+
+    final static String fileName = "data.txt";
+    final static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/instinctcoder/readwrite/";
+
+    public static boolean saveToFile(String data) {
+        try {
+            new File(path).mkdir();
+            File file = new File(path + fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+            fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+
     }
 }

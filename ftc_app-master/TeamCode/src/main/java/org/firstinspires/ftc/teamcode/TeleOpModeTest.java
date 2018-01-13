@@ -93,8 +93,6 @@ public class TeleOpModeTest extends OpMode {
         runtime.reset();
     }
 
-    //KeithJewlKnocker(hwmap).knockerDown();
-
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */

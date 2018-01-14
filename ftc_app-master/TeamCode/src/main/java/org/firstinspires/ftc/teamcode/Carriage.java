@@ -9,23 +9,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class Carriage {
 
-    public DcMotor CarriageMotor;
-
-    public DcMotor FlipMotor;
-
-    public Servo lServo;
-
-    public Servo rServo;
-
-    public abstract void carriageInit();
-
-    public abstract void carriageStart(double Pwr);
-
-    public abstract void carriageStop();
-
-    public abstract void flipClass(double Dir);
-
-    public abstract void blockEjector(double Pos);
+//    public DcMotor CarriageMotor;
+//
+//    public DcMotor FlipMotor;
+//
+//    public Servo lServo;
+//
+//    public Servo rServo;
+//
+//    public abstract void carriageInit();
+//
+//    public abstract void carriageStart(double Pwr);
+//
+//    public abstract void carriageStop();
+//
+//    public abstract void flipClass(double Dir);
+//
+//    public abstract void blockEjector(double Pos);
 
 
 

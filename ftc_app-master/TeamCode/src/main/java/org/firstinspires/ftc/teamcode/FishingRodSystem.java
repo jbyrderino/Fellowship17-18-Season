@@ -37,11 +37,11 @@ public class FishingRodSystem extends RelicArmSubsystem {
         rodMotor.setPower(power);
     }
 
-    public FishingRodSystem(HardwareMap hwMap, Telemetry telemetry, String lowerReelLabel, String upperReelLabel, String clawLable, String rodMotorLabel) {
+    public FishingRodSystem(HardwareMap hwMap, Telemetry telemetry, String lowerReelLabel, String upperReelLabel, String clawLabel, String rodMotorLabel) {
         tl = telemetry;
         lowerReel = hwMap.get(Servo.class, lowerReelLabel);
         upperReel = hwMap.get(Servo.class, upperReelLabel);
-        this.claw = hwMap.get(Servo.class, clawLable);
+        this.claw = hwMap.get(Servo.class, clawLabel);
         rodMotor = hwMap.get(DcMotor.class, rodMotorLabel);
         rodMotor.setPower(0.0);
     }

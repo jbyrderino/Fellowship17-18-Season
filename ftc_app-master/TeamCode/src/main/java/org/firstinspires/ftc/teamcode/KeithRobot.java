@@ -12,35 +12,25 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class KeithRobot extends FTCRobot {
     AdafruitIMU imu;
     MecanumDS mds;
-<<<<<<< HEAD
     FishingRodSystem frs;
-=======
     Navigation nav;
->>>>>>> 96a26b5f9af6d607120bdb4da26b4e84b87f09fb
 
     KeithRobot(HardwareMap hardwareMap, Telemetry telemetry) {
         imu = new AdafruitIMU(hardwareMap, "imu");
-        mds = new MecanumDS(hardwareMap, telemetry, imu, "Front Left", "Front Right", "Back Left", "Back Right");
-<<<<<<< HEAD
+        //mds = new MecanumDS(hardwareMap, telemetry, imu, "Front Left", "Front Right", "Back Left", "Back Right");
         frs = new FishingRodSystem(hardwareMap, telemetry, "lowerReel", "upperReel", "claw", "rodMotor");
-=======
         nav = new Navigation(this, telemetry);
->>>>>>> 96a26b5f9af6d607120bdb4da26b4e84b87f09fb
     }
 
     public IMUSystem GetIMUSystem() {
         return imu;
     }
 
-    public DriveSystem GetDriveSystem() {
-        return mds;
-    }
+    public DriveSystem GetDriveSystem() {return null;}
 
-<<<<<<< HEAD
     public RelicArmSubsystem GetRelicArmSubsystem() {
         return frs;
     }
-=======
+
     public Navigation GetNavigationSystem() { return nav; }
->>>>>>> 96a26b5f9af6d607120bdb4da26b4e84b87f09fb
 }

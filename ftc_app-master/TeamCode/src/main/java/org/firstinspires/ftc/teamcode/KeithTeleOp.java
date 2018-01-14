@@ -50,8 +50,8 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Keith - TeleOp", group = "TeleOp")
 
-public class KeithTeleOp extends OpMode {
-
+public class KeithTeleOp { //extends OpMode {
+    /*
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -68,15 +68,17 @@ public class KeithTeleOp extends OpMode {
     /*
      * Code to run ONCE when the driver hits INIT
      */
+    /*
     @Override
     public void init() {
-        keithRobot = new KeithRobot(hardwareMap, telemetry);
+        //keithRobot = new KeithRobot(hardwareMap, telemetry);
         ds = (MecanumDS)(keithRobot.GetDriveSystem());
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
+    /*
     @Override
     public void init_loop() {
     }
@@ -90,6 +92,7 @@ public class KeithTeleOp extends OpMode {
     /*
      * Code to run ONCE when the driver hits PLAY
      */
+    /*
     @Override
     public void start() {
         runtime.reset();
@@ -98,6 +101,7 @@ public class KeithTeleOp extends OpMode {
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
+    /*
     @Override
     public void loop() {
         if (runtime.milliseconds() >= 200) {
@@ -223,8 +227,9 @@ public class KeithTeleOp extends OpMode {
     /*
      * Code to run ONCE after the driver hits STOP
      */
+    /*
     @Override
     public void stop() {
     }
-
+    */
 }

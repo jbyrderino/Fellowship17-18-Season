@@ -14,9 +14,7 @@ public class MotorRetractor extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         HardwareMap hwMap = hardwareMap;
-        //keith = new KeithRobot(hwMap, telemetry);
-        //initialize Mecanum Driving System
-        //ras = keith.GetRelicArmSubsystem();
+
         frs = new FishingRodSystem(hardwareMap, telemetry, "lowerReel", "upperReel", "claw", "rodMotor");
         waitForStart();
         while (opModeIsActive()) {
@@ -24,7 +22,7 @@ public class MotorRetractor extends LinearOpMode {
                 telemetry.addLine("retract");
                 frs.setRodMotorPower(-1.0);
             }else {
-                telemetry.addLine("motor");
+                telemetry.addLine("stop");
                 frs.setRodMotorPower(0.0);
             }
             telemetry.update();

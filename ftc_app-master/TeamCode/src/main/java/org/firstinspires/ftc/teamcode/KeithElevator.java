@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 public class KeithElevator{
 
-<<<<<<< HEAD
 //
 //    private HardwareDevice ElevatorMotor = null;
 //    private HardwareDevice ElevatorServo = null;
@@ -78,7 +77,6 @@ public class KeithElevator{
 //            kickerSetPosition(1.0);
 //        }
 //    }
-=======
 
     private DcMotor ElevatorMotor = null;
     private Servo ElevatorServo = null;
@@ -121,5 +119,4 @@ public class KeithElevator{
         motorPower = mp;
         kickerInit();
     }
->>>>>>> 54ac6654d480ba7fa5af80080b72a97fa119d9c1
 }

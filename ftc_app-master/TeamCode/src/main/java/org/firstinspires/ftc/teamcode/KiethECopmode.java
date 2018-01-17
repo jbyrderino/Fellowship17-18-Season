@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -11,29 +12,36 @@ import com.qualcomm.robotcore.util.Range;
 public class KiethECopmode extends OpMode {
 
    public double Pwr;
-   public HardwareMap hwMap;
-
-   KeithElevator kE = new KeithElevator(hwMap, 0.5);
+   public HardwareMap hwMap = null;
+   public  KeithElevator kE = null;
 
    public void init() {
-       //KeithCarriage.carriageInit();
+	   hwMap = hardwareMap;
+	   kE = new KeithElevator(hwMap, 0.5);
    }
 
-   public void loop() {
-       if (gamepad2.left_bumper){
-           kE.elevatorStart(0.5);
-       }else {
-           kE.elevatorStop();
-       }
+	public void loop(){
 
-       if (gamepad2.right_bumper) {
-           kE.elevatorStart(-0.5);
-       }else {
-           kE.elevatorStop();
-       }
+		boolean actionTaken = false;
 
-       if (gamepad2.dpad_down) {
-           kE.kickerSetPosition(1.0);
-       }
-   }
+		if (!gamepad1.left_bumper && !gamepad1.right_bumper || gamepad1.left_bumper && !gamepad1.right_bumper || !gamepad1.left_bumper && gamepad1.right_bumper){
+			if (gamepad1.left_bumper && !gamepad1.right_bumper){
+				actionTaken = true;
+				kE.elevatorStart(0.5);
+			}
+			if (gamepad1.right_bumper && !gamepad1.left_bumper) {
+				actionTaken = true;
+				kE.elevatorStart(-0.5);
+			}
+			if (!actionTaken) {
+				kE.elevatorStop();
+			}
+		} else{
+			kE.elevatorStop();
+		}
+
+		if (gamepad1.dpad_down) {
+			kE.kickerKick();
+		}
+	}
 }

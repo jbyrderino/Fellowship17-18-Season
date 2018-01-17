@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 public class KeithElevator{
+<<<<<<< HEAD
 
 
 //
@@ -80,13 +81,15 @@ public class KeithElevator{
 //    }
 
 
+=======
+>>>>>>> 62ca695ceaa1ca3484f0830bea7ec22eac908b9a
     private DcMotor ElevatorMotor = null;
     private Servo ElevatorServo = null;
     private double motorPower;
 
     KeithElevator (HardwareMap hwmap, double MotorPower) {
         ElevatorMotor = hwmap.get(DcMotor.class, "ElevatorMotor");
-        ElevatorServo = hwmap.get(Servo.class, "ElevatorServo");;
+        ElevatorServo = hwmap.get(Servo.class, "ElevatorServo");
         ElevatorInit(MotorPower);
     }
 
@@ -121,5 +124,8 @@ public class KeithElevator{
         motorPower = mp;
         kickerInit();
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 62ca695ceaa1ca3484f0830bea7ec22eac908b9a
 }

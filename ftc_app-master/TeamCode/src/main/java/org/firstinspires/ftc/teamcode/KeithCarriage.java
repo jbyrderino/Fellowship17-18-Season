@@ -44,11 +44,11 @@ public class KeithCarriage extends Carriage {
     public static final int LEFT = -1;
     public static final int CENTER = 0;
     public static final int RIGHT = 1;
-    public static final int DIS = 100;
+    public static final int DIS = 50;
 
     public void setState(int state) {
         slideMotor.setPower(Integer.signum(state * DIS - slideMotor.getCurrentPosition()));
-        while (Math.abs(slideMotor.getCurrentPosition() - state * DIS) > 10) {
+        while (Math.abs(slideMotor.getCurrentPosition() - state * DIS) > 5) {
             //wait until finish
         }
         slideMotor.setPower(0.0);

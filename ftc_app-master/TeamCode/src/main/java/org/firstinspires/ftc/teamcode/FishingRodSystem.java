@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -16,6 +17,8 @@ public class FishingRodSystem extends RelicArmSubsystem {
     Servo claw;
     DcMotor rodMotor;
     Telemetry tl;
+    static final double MIN_SERVO_VALUE = 0.09;
+    static final double MAX_SERVO_VALUE = 0.91;
 
     //position in range [0,1]->[0,90]
     public void setClawPosition(double position) {
@@ -24,12 +27,26 @@ public class FishingRodSystem extends RelicArmSubsystem {
 
     //power in range [-1,1]
     public void setLowerReelPower(double power) {
-        lowerReel.setPosition(0.5 + power / 2);
+        double servoPower = 0.5 + power / 2;
+        if (servoPower < MIN_SERVO_VALUE) {
+            servoPower = MIN_SERVO_VALUE;
+        }
+        if (servoPower > MAX_SERVO_VALUE) {
+            servoPower = MAX_SERVO_VALUE;
+        }
+        lowerReel.setPosition(servoPower);
     }
 
     //power in range [-1,1]
     public void setUpperReelPower(double power) {
-        upperReel.setPosition(0.5 + power / 2);
+        double servoPower = 0.5 + power / 2;
+        if (servoPower < MIN_SERVO_VALUE) {
+            servoPower = MIN_SERVO_VALUE;
+        }
+        if (servoPower > MAX_SERVO_VALUE) {
+            servoPower = MAX_SERVO_VALUE;
+        }
+        upperReel.setPosition(servoPower);
     }
 
     //power in range [-1,1]
@@ -41,8 +58,12 @@ public class FishingRodSystem extends RelicArmSubsystem {
         tl = telemetry;
         lowerReel = hwMap.get(Servo.class, lowerReelLabel);
         upperReel = hwMap.get(Servo.class, upperReelLabel);
+        setLowerReelPower(0.0);
+        setUpperReelPower(0.0);
         this.claw = hwMap.get(Servo.class, clawLabel);
+        setClawPosition(0.0);
         rodMotor = hwMap.get(DcMotor.class, rodMotorLabel);
+        rodMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rodMotor.setPower(0.0);
     }
 
@@ -87,7 +108,27 @@ public class FishingRodSystem extends RelicArmSubsystem {
 //    }
 
     static int state = 1;
-    static int toggleTime = 1000;//TBDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+    static int toggleTime = 900;
+    boolean tiltActive = false;
+    double tiltStart = 0;
+
+    public void tiltToggleStart() {
+        setLowerReelPower(state);
+        setUpperReelPower(-state);
+        tiltActive = true;
+        tiltStart = System.currentTimeMillis();
+    }
+
+    public boolean tiltToggleVerify() {
+        if (System.currentTimeMillis() - tiltStart >= toggleTime) {
+            tiltActive = false;
+            setLowerReelPower(0);
+            setUpperReelPower(0);
+            state = -state;
+            return true;
+        }
+        return false;
+    }
 
     public void tiltToggle() {
         setLowerReelPower(state);//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -105,8 +146,15 @@ public class FishingRodSystem extends RelicArmSubsystem {
         setClawPosition(claw.getPosition() == 0.0 ? 1.0 : 0.0);
     }
 
+    public double getRatio () { return ratio; }
     public void incRatio(double inc) {
         ratio += inc;
+        if (ratio < 0) {
+            ratio = 0;
+        }
+        if (ratio > 1) {
+            ratio = 1;
+        }
     }
 
     static double ratio = 0.5;//TBDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD

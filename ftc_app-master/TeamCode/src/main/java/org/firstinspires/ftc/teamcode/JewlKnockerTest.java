@@ -19,7 +19,7 @@ public class JewlKnockerTest extends LinearOpMode {
         //initialize hardwareMap
         HardwareMap hwMap = hardwareMap;
 
-        jewlKnockerSystem = new KeithJewlKnocker(hwMap, "JewlKnocker", telemetry);
+        jewlKnockerSystem = new KeithJewlKnocker(hwMap, "JewlBase", "JewlKnocker", telemetry);
         waitForStart();
 
         while (true) {
@@ -35,6 +35,15 @@ public class JewlKnockerTest extends LinearOpMode {
                 pressed = true;
                 jewlKnockerSystem.knockerDown();
             }
+            if (gamepad1.dpad_left) {
+                pressed = true;
+                jewlKnockerSystem.baseKnockerRotateLeft();
+            }
+            if (gamepad1.dpad_right) {
+                pressed = true;
+                jewlKnockerSystem.baseKnockerRotateRight();
+            }
+
             if (pressed) {
                 sleep(200);
             }

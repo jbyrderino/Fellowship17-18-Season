@@ -19,6 +19,8 @@ public class FishingRodSystem extends RelicArmSubsystem {
     Telemetry tl;
     static final double MIN_SERVO_VALUE = 0.09;
     static final double MAX_SERVO_VALUE = 0.91;
+    double clawOpenPosition = 0.3;
+    double clawClosedPosition = 0.62;
 
     //position in range [0,1]->[0,90]
     public void setClawPosition(double position) {
@@ -61,7 +63,7 @@ public class FishingRodSystem extends RelicArmSubsystem {
         setLowerReelPower(0.0);
         setUpperReelPower(0.0);
         this.claw = hwMap.get(Servo.class, clawLabel);
-        setClawPosition(0.0);
+        setClawPosition(clawOpenPosition);
         rodMotor = hwMap.get(DcMotor.class, rodMotorLabel);
         rodMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rodMotor.setPower(0.0);
@@ -143,7 +145,7 @@ public class FishingRodSystem extends RelicArmSubsystem {
     }
 
     public void gripperToggle() {
-        setClawPosition(claw.getPosition() == 0.0 ? 1.0 : 0.0);
+        setClawPosition(claw.getPosition() <= clawOpenPosition ? clawClosedPosition : clawOpenPosition);
     }
 
     public double getRatio () { return ratio; }

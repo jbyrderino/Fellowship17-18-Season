@@ -24,13 +24,14 @@ public class MecanumDS extends DriveSystem {
     public DcMotor BackRight = null;
 
     static long RAMP_UP_TIME = 1000;
-    static long RAMP_DOWN_DISTANCE = 1000;
-    static double SPIN_SLOWDOWN_THRESHOLD = 180.0f;
+    static long RAMP_DOWN_DISTANCE = 500;
+    static double SPIN_SLOWDOWN_THRESHOLD = 540.0f;
 
-    double minPowerSpin = 0;
-    double minPowerForward = 0;
-    double minPowerSide = 0;
+    static double minPowerMove = 0.03;
+    static double minPowerSpin = 0.02;
+
     Telemetry tl = null;
+    boolean debugTelemetry = false;
 
     MecanumDS(HardwareMap hwMap, Telemetry telemetry, IMUSystem imuSys, String flLabel, String frLabel, String blLabel, String brLabel) {
         tl = telemetry;
@@ -45,6 +46,11 @@ public class MecanumDS extends DriveSystem {
         FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         setMotorPower(0, 0, 0, 0);
 
         setEncoders(true);
@@ -53,7 +59,9 @@ public class MecanumDS extends DriveSystem {
     public void setMotorPower(double FL, double FR, double BL, double BR) {
         //normalize range to [-1,1]
         Utilities.PowerLevels normalizedPower = Utilities.NormalizePower(new Utilities.PowerLevels(FL, FR, BL, BR), 1);
-        tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", normalizedPower.powerBL, normalizedPower.powerFR, normalizedPower.powerBL, normalizedPower.powerBR);
+        if (debugTelemetry) {
+            tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", normalizedPower.powerBL, normalizedPower.powerFR, normalizedPower.powerBL, normalizedPower.powerBR);
+        }
         FrontLeft.setPower(normalizedPower.powerFL);
         FrontRight.setPower(normalizedPower.powerFR);
         BackLeft.setPower(normalizedPower.powerBL);
@@ -101,7 +109,7 @@ public class MecanumDS extends DriveSystem {
     boolean ExecuteSpin (double headingGoal, double maxPower, double minPower, double tolerance) {
         double currentHeading = imu.GetHeading();
         long originalTime = System.currentTimeMillis();
-        double targetPower = minPower + Math.abs(headingGoal - currentHeading) / SPIN_SLOWDOWN_THRESHOLD;
+        double targetPower = maxPower;
         if (targetPower > maxPower) {
             targetPower = maxPower;
         }
@@ -121,7 +129,10 @@ public class MecanumDS extends DriveSystem {
                 currentPower = Utilities.Calculate_S_Curve(currentPower, minPower, slowDownDegrees, 0, Math.abs(headingGoal - currentHeading));
             }
 
-            tl.addData("", "CP: %.3f, CH: %.3f", currentPower, currentHeading);
+            if (debugTelemetry) {
+                tl.addData("", "TargetPower: %.3f, SlowDegrees: %.3f", targetPower, slowDownDegrees);
+                tl.addData("", "CP: %.3f, CH: %.3f", currentPower, currentHeading);
+            }
 
             if(currentHeading > headingGoal) {
                 setMotorPower(currentPower, -currentPower, currentPower, -currentPower);
@@ -130,9 +141,17 @@ public class MecanumDS extends DriveSystem {
                 setMotorPower(-currentPower, currentPower, -currentPower, currentPower);
             }
 
-            tl.update();
+            // if we got to the end, let's wait for another 200 ms to settle down
+            if (currentHeading > (headingGoal - tolerance) && currentHeading < (headingGoal + tolerance)) {
+                setMotorPower(0, 0, 0, 0);
+                long startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime <= 500);
+            }
         }
         setMotorPower(0, 0, 0, 0);
+        if (debugTelemetry) {
+            tl.addData("", "Final angle: %.3f", imu.GetHeading());
+        }
         return true;
     }
 
@@ -218,12 +237,13 @@ public class MecanumDS extends DriveSystem {
 
             //TODO - apply any correction we might need due to drift
 
-            tl.addData("", "FLE: %d, FRE: %d, BLE: %d, BRE: %d", FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition(), BackLeft.getCurrentPosition(), BackRight.getCurrentPosition());
-            tl.addData("", "OrgEnc: %.3f, CurrEnc: %.3f", originalEncoderValue, currentEncoderValue);
-            tl.addData("", "Dist: %.3f, DiffD: %.3f", distance, diffEncoderValue);
-            tl.addData("", "Modifier: %.3f", modifier);
-            tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", localFLPower, localFRPower, localBLPower, localBRPower);
-            tl.update();
+            if (debugTelemetry) {
+                tl.addData("", "FLE: %d, FRE: %d, BLE: %d, BRE: %d", FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition(), BackLeft.getCurrentPosition(), BackRight.getCurrentPosition());
+                tl.addData("", "OrgEnc: %.3f, CurrEnc: %.3f", originalEncoderValue, currentEncoderValue);
+                tl.addData("", "Dist: %.3f, DiffD: %.3f", distance, diffEncoderValue);
+                tl.addData("", "Modifier: %.3f", modifier);
+                tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", localFLPower, localFRPower, localBLPower, localBRPower);
+            }
 
             setMotorPower(localFLPower, localFRPower, localBLPower, localBRPower);
         }
@@ -239,25 +259,19 @@ public class MecanumDS extends DriveSystem {
         //distance check
         assert distance >= 0;
 
-        //make sure encoders are on
-        // BUGBUG - enable this???
-        // setEncoders(true);
+        //make sure encoders are on, our minimal speeds
+        //won't work with encoders off
+        setEncoders(true);
+
         //reset heading to zero
         imu.ResetHeading();
 
         if (distance > 0) {
-            ExecuteMove(direction, distance, power, 0.03, 50);
+            ExecuteMove(direction, distance, power, minPowerMove, 50);
         }
         if (spin != 0) {
-            ExecuteSpin(spin, power, 0.03, 0.1);
-            tl.addData("", "Heading after loop: %.2f", imu.GetHeading());
+            ExecuteSpin(spin, power, minPowerSpin, 0.1);
         }
-
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime <= 1000) {};
-
-        tl.addData("", "Current heading: %.2f", imu.GetHeading());
-        tl.update();
 
         return true;
     }

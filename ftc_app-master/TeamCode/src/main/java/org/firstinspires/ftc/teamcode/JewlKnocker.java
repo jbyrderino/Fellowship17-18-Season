@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public abstract class JewlKnocker {
 
-    Servo servoKnocker;
-
     public abstract void knockerDown();
 
     public abstract void knockerUp();
+
+    public abstract double getBasePosition();
 
     public abstract double getKnockerPosition();
 
@@ -22,7 +22,7 @@ public abstract class JewlKnocker {
 
     public abstract void knockLeft();
 
-    public abstract void knockright();
+    public abstract void knockRight();
 }
 
 

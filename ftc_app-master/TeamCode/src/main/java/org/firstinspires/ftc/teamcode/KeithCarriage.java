@@ -41,14 +41,39 @@ public class KeithCarriage extends Carriage {
         rServo = hwMap.get(Servo.class, RSLabel);
     }
 
-    public static final int LEFT = -1;
+    //TBD
+    public static final int LEFT = -50;
     public static final int CENTER = 0;
-    public static final int RIGHT = 1;
-    public static final int DIS = 50;
+    public static final int RIGHT = 50;
+    public boolean slideActive = false;
+    public int destination;
 
-    public void setState(int state) {
-        slideMotor.setPower(Integer.signum(state * DIS - slideMotor.getCurrentPosition()));
-        while (Math.abs(slideMotor.getCurrentPosition() - state * DIS) > 5) {
+    public void slideStart(int dest) {
+        if (!slideActive) {
+            return;
+        }
+        if (Math.abs(dest - slideMotor.getCurrentPosition()) > 5) {
+            slideActive = true;
+            destination = dest;
+            slideMotor.setPower(Integer.signum(dest - slideMotor.getCurrentPosition()));
+        }
+    }
+
+    public boolean slideVerify() {
+        if (!slideActive) {
+            return true;
+        }
+        if (Math.abs(destination - slideMotor.getCurrentPosition()) <= 5) {
+            slideMotor.setPower(0);
+            slideActive = false;
+            return true;
+        }
+        return false;
+    }
+
+    public void slideTo(int state) {
+        slideMotor.setPower(Integer.signum(state - slideMotor.getCurrentPosition()));
+        while (Math.abs(state - slideMotor.getCurrentPosition()) > 5) {
             //wait until finish
         }
         slideMotor.setPower(0.0);
@@ -59,10 +84,34 @@ public class KeithCarriage extends Carriage {
     }
 
     boolean currentState;
-    static final int UP = 100;
+    static final int UP = 30;
     static final int DOWN = 0;
+    boolean flipperToggleActive = false;
 
-    public void flipToggle() {
+    public void flipperToggleStart() {
+        if (!flipperToggleActive) {
+            return;
+        }
+        flipperToggleActive = true;
+        flipMotor.setPower(currentState ? 1.0 : -1.0);
+    }
+
+    //return true iff flipper has reached destination or isn't active
+    public boolean flipperToggleVerify() {
+        if (!flipperToggleActive) {
+            return true;
+        }
+        if ((currentState ? UP : DOWN) - flipMotor.getCurrentPosition() > 5) {
+            flipMotor.setPower(0.0);
+            currentState = !currentState;
+            flipperToggleActive = false;
+            return true;
+        }
+        return false;
+    }
+
+    //test function
+    public void flipperToggle() {
         flipMotor.setPower(currentState ? 1.0 : -1.0);
         while ((currentState ? UP : DOWN) - flipMotor.getCurrentPosition() > 5) {
             //wait until finish

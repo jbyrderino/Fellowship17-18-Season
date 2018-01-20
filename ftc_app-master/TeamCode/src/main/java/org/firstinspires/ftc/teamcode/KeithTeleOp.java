@@ -78,6 +78,9 @@ public class KeithTeleOp extends OpMode {
 
     // Variables that control the harvester system
     // TODO
+    //Carriage System will be integrated with elevator System
+    boolean slideActive = false;
+    boolean flipActive = false;
 
     // Variables that control switching from
     // the harvester system to the relic arm
@@ -90,8 +93,8 @@ public class KeithTeleOp extends OpMode {
     @Override
     public void init() {
         keithRobot = new KeithRobot(hardwareMap, telemetry);
-        ds = (MecanumDS)(keithRobot.GetDriveSystem());
-        frs = (FishingRodSystem)(keithRobot.GetRelicArmSubsystem());
+        ds = (MecanumDS) (keithRobot.GetDriveSystem());
+        frs = (FishingRodSystem) (keithRobot.GetRelicArmSubsystem());
     }
 
     /*
@@ -101,7 +104,7 @@ public class KeithTeleOp extends OpMode {
     public void init_loop() {
     }
 
-    double TransformInterval (double Value, double SourceStart, double SourceEnd, double TargetStart, double TargetEnd) {
+    double TransformInterval(double Value, double SourceStart, double SourceEnd, double TargetStart, double TargetEnd) {
         double sourceRange = SourceEnd - SourceStart;
         double targetRange = TargetEnd - TargetStart;
         return TargetStart + (Value - SourceStart) * targetRange / sourceRange;
@@ -138,7 +141,7 @@ public class KeithTeleOp extends OpMode {
                 switchSelectionTime = System.currentTimeMillis();
             }
         }
-        CallDriveSystem ();
+        CallDriveSystem();
         if (System.currentTimeMillis() - switchSelectionTime > 300) {
             if (harvesterActive) {
                 CallHarvesterSystem();
@@ -149,12 +152,12 @@ public class KeithTeleOp extends OpMode {
         telemetry.update();
     }
 
-    void CallHarvesterSystem () {
+    void CallHarvesterSystem() {
         telemetry.addLine("================ Harvester ===================");
 
     }
 
-    void CallRelicArmSystem () {
+    void CallRelicArmSystem() {
         telemetry.addLine("================ Relic Arm ===================");
 
         // deal with arm extending/retracting
@@ -279,7 +282,7 @@ public class KeithTeleOp extends OpMode {
         telemetry.addData("", "Ratio(Bumpers): %.2f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
     }
 
-    void CallDriveSystem () {
+    void CallDriveSystem() {
         // Get the input for the driving system options
         if ((runtime.milliseconds() - dsSelectionTime) >= 300) {
             boolean dsSelection = false;

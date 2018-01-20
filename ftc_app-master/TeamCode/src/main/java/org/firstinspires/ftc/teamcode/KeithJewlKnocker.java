@@ -13,28 +13,64 @@ import static android.os.SystemClock.sleep;
 
 public class KeithJewlKnocker extends JewlKnocker {
 
+    Servo knockerBase = null;
     Servo servoKnocker = null;
     Telemetry tl = null;
 
-    KeithJewlKnocker (HardwareMap hwMap, String label, Telemetry telemetry) {
-        servoKnocker = hwMap.servo.get(label);
+    KeithJewlKnocker (HardwareMap hwMap, String labelBase, String labelKnocker, Telemetry telemetry) {
+        knockerBase = hwMap.servo.get(labelBase);
+        knockerBase.setPosition(0.20);
+        servoKnocker = hwMap.servo.get(labelKnocker);
+        servoKnocker.setPosition(0.97);
         tl = telemetry;
     }
 
+    public void setBasePosition (double position) {
+        knockerBase.setPosition(position);
+    }
+    public void setKnockerPosition (double position) {
+        servoKnocker.setPosition(position);
+    }
+
+    public double getBasePosition() {
+        double servoPosition = knockerBase.getPosition();
+        return servoPosition;
+    }
     public double getKnockerPosition() {
         double servoPosition = servoKnocker.getPosition();
-
         return servoPosition;
     }
     public void knockerDown() {
-        servoKnocker.setPosition(.7);
-        sleep(1000);
+        servoKnocker.setPosition(.55);
+        sleep(300);
     }
 
     public void knockerUp(){
-        servoKnocker.setPosition(.2);
-        sleep(1000);
+        servoKnocker.setPosition(.95);
+        sleep(300);
     }
 
+    public void baseKnockerRotateLeft() {
+        knockerBase.setPosition(.20);
+        sleep(300);
+    }
 
+    public void baseKnockerRotateRight(){
+        knockerBase.setPosition(.76);
+        sleep(300);
+    }
+
+    public void knockLeft() {
+        knockerBase.setPosition(.56);
+        sleep(500);
+        knockerBase.setPosition(.76);
+        sleep(300);
+    }
+
+    public void knockRight() {
+        knockerBase.setPosition(.96);
+        sleep(500);
+        knockerBase.setPosition(.76);
+        sleep(300);
+    }
 }

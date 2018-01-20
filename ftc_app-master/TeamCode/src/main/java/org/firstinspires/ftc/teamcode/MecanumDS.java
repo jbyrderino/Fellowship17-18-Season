@@ -6,9 +6,6 @@ import android.util.Log;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
-import com.sun.tools.javac.util.Context;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.File;
@@ -20,335 +17,283 @@ import java.io.IOException;
  * Created by Joshua on 10/28/2017.
  */
 
+public class MecanumDS extends DriveSystem {
+    public DcMotor FrontLeft = null;
+    public DcMotor FrontRight = null;
+    public DcMotor BackLeft = null;
+    public DcMotor BackRight = null;
 
-public class MecanumDS {//extends DriveSystem {
-    /*public DcMotor FrontLeft = null;
-	public DcMotor FrontRight = null;
-	public DcMotor BackLeft = null;
-	public DcMotor BackRight = null;
+    static long RAMP_UP_TIME = 1000;
+    static long RAMP_DOWN_DISTANCE = 500;
+    static double SPIN_SLOWDOWN_THRESHOLD = 540.0f;
 
-	static long RAMP_UP_TIME = 1000;
-	static long RAMP_DOWN_DISTANCE = 1000;
-	static double SPIN_SLOWDOWN_THRESHOLD = 180.0f;
+    static double minPowerMove = 0.03;
+    static double minPowerSpin = 0.02;
 
-	double minPowerSpin = 0;
-	double minPowerForward = 0;
-	double minPowerSide = 0;
-	Telemetry tl = null;
+    Telemetry tl = null;
+    boolean debugTelemetry = false;
 
-	MecanumDS(HardwareMap hwMap, Telemetry telemetry, IMUSystem imuSys, String flLabel, String frLabel, String blLabel, String brLabel) {
-		tl = telemetry;
-		imu = imuSys;
+    MecanumDS(HardwareMap hwMap, Telemetry telemetry, IMUSystem imuSys, String flLabel, String frLabel, String blLabel, String brLabel) {
+        tl = telemetry;
+        imu = imuSys;
 
-		FrontLeft = hwMap.get(DcMotor.class, flLabel);
-		FrontRight = hwMap.get(DcMotor.class, frLabel);
-		BackLeft = hwMap.get(DcMotor.class, blLabel);
-		BackRight = hwMap.get(DcMotor.class, brLabel);
+        FrontLeft = hwMap.get(DcMotor.class, flLabel);
+        FrontRight = hwMap.get(DcMotor.class, frLabel);
+        BackLeft = hwMap.get(DcMotor.class, blLabel);
+        BackRight = hwMap.get(DcMotor.class, brLabel);
 
-		//Left motors on Keith robot are mounted backwards.
-		FrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-		BackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Left motors on Keith robot are mounted backwards.
+        FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-		setMotorPower(0, 0, 0, 0);
+        FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-		setEncoders(true);
-	}
+        setMotorPower(0, 0, 0, 0);
 
-	public void setMotorPower(double FL, double FR, double BL, double BR) {
-		//normalize range to [-1,1]
-		Utilities.PowerLevels normalizedPower = Utilities.NormalizePower(new Utilities.PowerLevels(FL, FR, BL, BR), 1);
-		tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", normalizedPower.powerBL, normalizedPower.powerFR, normalizedPower.powerBL, normalizedPower.powerBR);
-		FrontLeft.setPower(normalizedPower.powerFL);
-		FrontRight.setPower(normalizedPower.powerFR);
-		BackLeft.setPower(normalizedPower.powerBL);
-		BackRight.setPower(normalizedPower.powerBR);
-	}
+        setEncoders(true);
+    }
 
-	public void setEncoders(boolean allow) {
-		if (allow) {
-			FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-			FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-			BackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-			BackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		} else {
-			FrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-			FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-			BackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-			BackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		}
-	}
+    public void setMotorPower(double FL, double FR, double BL, double BR) {
+        //normalize range to [-1,1]
+        Utilities.PowerLevels normalizedPower = Utilities.NormalizePower(new Utilities.PowerLevels(FL, FR, BL, BR), 1);
+        if (debugTelemetry) {
+            tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", normalizedPower.powerBL, normalizedPower.powerFR, normalizedPower.powerBL, normalizedPower.powerBR);
+        }
+        FrontLeft.setPower(normalizedPower.powerFL);
+        FrontRight.setPower(normalizedPower.powerFR);
+        BackLeft.setPower(normalizedPower.powerBL);
+        BackRight.setPower(normalizedPower.powerBR);
+    }
 
-	static final double MAJOR_FIX_COEFFICENT = 2.5;
-//  static final double MINOR_FIX_COEFFICENT = 1;
+    public void setEncoders(boolean allow) {
+        if (allow) {
+            FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else {
+            FrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            BackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            BackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
 
-	public double GetAverageEncodersValue () {
-		double flAbs = Math.abs(FrontLeft.getCurrentPosition());
-		double frAbs = Math.abs(FrontRight.getCurrentPosition());
-		double blAbs = Math.abs(BackLeft.getCurrentPosition());
-		double brAbs = Math.abs(BackRight.getCurrentPosition());
-		return (flAbs + frAbs + blAbs + brAbs) / 4;
-	}
+    public double GetAverageEncodersValue () {
+        double flAbs = Math.abs(FrontLeft.getCurrentPosition());
+        double frAbs = Math.abs(FrontRight.getCurrentPosition());
+        double blAbs = Math.abs(BackLeft.getCurrentPosition());
+        double brAbs = Math.abs(BackRight.getCurrentPosition());
 
-	public void ResetEncoders () {
-		DcMotor.RunMode flMode=FrontLeft.getMode();
-		DcMotor.RunMode frMode=FrontRight.getMode();
-		DcMotor.RunMode blMode=BackLeft.getMode();
-		DcMotor.RunMode brMode=BackRight.getMode();
-		FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		FrontLeft.setMode(flMode);
-		FrontRight.setMode(frMode);
-		BackLeft.setMode(blMode);
-		BackRight.setMode(brMode);
-	}
+        return (flAbs + frAbs + blAbs + brAbs) / 4;
+    }
 
-	static final double FIX_COEFFICENT = 2.0;
+    public void ResetEncoders () {
+        DcMotor.RunMode flMode=FrontLeft.getMode();
+        DcMotor.RunMode frMode=FrontRight.getMode();
+        DcMotor.RunMode blMode=BackLeft.getMode();
+        DcMotor.RunMode brMode=BackRight.getMode();
+        FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FrontLeft.setMode(flMode);
+        FrontRight.setMode(frMode);
+        BackLeft.setMode(blMode);
+        BackRight.setMode(brMode);
+    }
 
+    boolean ExecuteSpin (double headingGoal, double maxPower, double minPower, double tolerance) {
+        double currentHeading = imu.GetHeading();
+        long originalTime = System.currentTimeMillis();
+        double targetPower = maxPower;
+        if (targetPower > maxPower) {
+            targetPower = maxPower;
+        }
+        double slowDownDegrees = SPIN_SLOWDOWN_THRESHOLD * (targetPower - minPower);
+        while (currentHeading > (headingGoal + tolerance) || currentHeading < (headingGoal - tolerance)) {
 
-	boolean ExecuteSpin (double headingGoal, double maxPower, double minPower, double tolerance) {
+            double currentPower = targetPower;
+            long diffTime = System.currentTimeMillis() - originalTime;
+            if (diffTime <= RAMP_UP_TIME) {
+                //apply the "s" curve on the power based on time for acceleration
+                currentPower = Utilities.Calculate_S_Curve(0, currentPower, 0, RAMP_UP_TIME, diffTime);
+            }
 
-		double currentHeading = imu.GetHeading();
-		double targetPower = minPower + Math.abs(headingGoal - currentHeading) / SPIN_SLOWDOWN_THRESHOLD;
-		long originalTime = System.currentTimeMillis();
+            currentHeading = imu.GetHeading();
+            if (Math.abs(headingGoal - currentHeading) <= slowDownDegrees) {
+                //apply the "s" curve on the power based on the remaining number of degrees for deceleration
+                currentPower = Utilities.Calculate_S_Curve(currentPower, minPower, slowDownDegrees, 0, Math.abs(headingGoal - currentHeading));
+            }
 
-		if (targetPower > maxPower) {
-			targetPower = maxPower;
-		}
-		double slowDownDegrees = SPIN_SLOWDOWN_THRESHOLD * (targetPower - minPower);
+            if (debugTelemetry) {
+                tl.addData("", "TargetPower: %.3f, SlowDegrees: %.3f", targetPower, slowDownDegrees);
+                tl.addData("", "CP: %.3f, CH: %.3f", currentPower, currentHeading);
+            }
 
-		while (currentHeading > (headingGoal + tolerance) || currentHeading < (headingGoal - tolerance)) {
+            if(currentHeading > headingGoal) {
+                setMotorPower(currentPower, -currentPower, currentPower, -currentPower);
+            }
+            if(currentHeading < headingGoal) {
+                setMotorPower(-currentPower, currentPower, -currentPower, currentPower);
+            }
 
-			double currentPower = targetPower;
-			long diffTime = System.currentTimeMillis() - originalTime;
+            // if we got to the end, let's wait for another 200 ms to settle down
+            if (currentHeading > (headingGoal - tolerance) && currentHeading < (headingGoal + tolerance)) {
+                setMotorPower(0, 0, 0, 0);
+                long startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime <= 500);
+            }
+        }
+        setMotorPower(0, 0, 0, 0);
+        if (debugTelemetry) {
+            tl.addData("", "Final angle: %.3f", imu.GetHeading());
+        }
+        return true;
+    }
 
-			if (diffTime <= RAMP_UP_TIME) {
-				//apply the "s" curve on the power based on time for acceleration
-				currentPower = Utilities.Calculate_S_Curve(0, currentPower, 0, RAMP_UP_TIME, diffTime);
-			}
+    boolean ExecuteMove (double direction, double distance, double maxPower, double minPower, double tolerance) {
+        //coordinate conversion
+        double directionR = Math.toRadians(direction);
+        double x = maxPower * Math.sin(-directionR);
+        double y = maxPower * Math.cos(directionR);
 
-			currentHeading = imu.GetHeading();
+        //power configuration
+        double frontLeftPower = y + x;
+        double frontRightPower = y - x;
+        double backLeftPower = y - x;
+        double backRightPower = y + x;
 
-			if (Math.abs(headingGoal - currentHeading) <= slowDownDegrees) {
-				//apply the "s" curve on the power based on the remaining number of degrees for deceleration
-				currentPower = Utilities.Calculate_S_Curve(currentPower, minPower, slowDownDegrees, 0, Math.abs(headingGoal - currentHeading));
-			}
+        //normalize range to [-1,1]
+        double highValue = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
+        highValue = Math.max(highValue, Math.abs(backLeftPower));
+        highValue = Math.max(highValue, Math.abs(backRightPower));
+        frontLeftPower = frontLeftPower / highValue * maxPower;
+        frontRightPower = frontRightPower / highValue * maxPower;
+        backLeftPower = backLeftPower / highValue * maxPower;
+        backRightPower = backRightPower / highValue * maxPower;
 
-			tl.addData("", "CP: %.3f, CH: %.3f", currentPower, currentHeading);
+        // in order to ramp up or down the power this function will use a modifier
+        // which is a value between 0 and 1 that will be multiplied with the expected
+        // power for each motor, effectively obtaining the same power pattern but
+        // with lower values.
+        // In order to do this properly we need to find out the minimum value for
+        // the modifier, otherwise we are running the risk of some motors getting
+        // power level below the minimum power that would make them move. But we
+        // will only do this for the motors for which the absolute power is greater
+        // than the minimum power, otherwise
+        double minModifier = 1;
+        double tempModifier = 1;
+        tempModifier = minPower / Math.abs(frontLeftPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+        tempModifier = minPower / Math.abs(frontRightPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+        tempModifier = minPower / Math.abs(backLeftPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
+        tempModifier = minPower / Math.abs(backRightPower);
+        if (tempModifier < minModifier) {
+            minModifier = tempModifier;
+        }
 
-			if(currentHeading > headingGoal) {
-				setMotorPower(currentPower, -currentPower, currentPower, -currentPower);
-			}
+        //record starting time
+        long originalTime = System.currentTimeMillis();
 
-			if(currentHeading < headingGoal) {
-				setMotorPower(-currentPower, currentPower, -currentPower, currentPower);
-			}
+        ResetEncoders();
+        double originalEncoderValue = GetAverageEncodersValue();
 
-			tl.update();
-		}
-		setMotorPower(0, 0, 0, 0);
-		return true;
-	}
+        while(true) {
+            double currentEncoderValue = GetAverageEncodersValue();
+            double diffEncoderValue = currentEncoderValue - originalEncoderValue;
+            if (diffEncoderValue >= (distance - tolerance)) {
+                break;
+            }
+            long diffTime = System.currentTimeMillis() - originalTime;
+            double modifier = 1;
+            if (diffTime <= RAMP_UP_TIME) {
+                //apply the "s" curve on the power based on time for acceleration
+                modifier = Utilities.Calculate_S_Curve(0, 1, 0, RAMP_UP_TIME, diffTime);
+            }
 
-	boolean ExecuteMove (double direction, double distance, double maxPower, double minPower, double tolerance) {
-		//coordinate conversion
-		double directionR = Math.toRadians(direction);
-		double x = maxPower * Math.sin(-directionR);
-		double y = maxPower * Math.cos(directionR);
+            if ((distance - diffEncoderValue) <= RAMP_DOWN_DISTANCE) {
+                //apply the "s" curve on the power based on the remaining distance for deceleration
+                double localModifier = Utilities.Calculate_S_Curve(1, minModifier, RAMP_DOWN_DISTANCE, 0, distance - diffEncoderValue);
+                if (localModifier < modifier) {
+                    modifier = localModifier;
+                }
+            }
+            double localFLPower = frontLeftPower * modifier;
+            double localFRPower = frontRightPower * modifier;
+            double localBLPower = backLeftPower * modifier;
+            double localBRPower = backRightPower * modifier;
 
-		//power configuration
-		FrontLeft.getCurrentPosition();
+            //TODO - apply any correction we might need due to drift
 
-		double frontLeftPower = y - x;
-		double frontRightPower = y + x;
-		double backLeftPower = y + x;
-		double backRightPower = y - x;
+            if (debugTelemetry) {
+                tl.addData("", "FLE: %d, FRE: %d, BLE: %d, BRE: %d", FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition(), BackLeft.getCurrentPosition(), BackRight.getCurrentPosition());
+                tl.addData("", "OrgEnc: %.3f, CurrEnc: %.3f", originalEncoderValue, currentEncoderValue);
+                tl.addData("", "Dist: %.3f, DiffD: %.3f", distance, diffEncoderValue);
+                tl.addData("", "Modifier: %.3f", modifier);
+                tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", localFLPower, localFRPower, localBLPower, localBRPower);
+            }
 
-		//normalize range to [-1,1]
-		double highValue = Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower));
-		highValue = Math.max(highValue, Math.abs(backLeftPower));
-		highValue = Math.max(highValue, Math.abs(backRightPower));
-		frontLeftPower = frontLeftPower / highValue * maxPower;
-		frontRightPower = frontRightPower / highValue * maxPower;
-		backLeftPower = backLeftPower / highValue * maxPower;
-		backRightPower = backRightPower / highValue * maxPower;
+            setMotorPower(localFLPower, localFRPower, localBLPower, localBRPower);
+        }
+        setMotorPower(0, 0, 0, 0);
+        return true;
+    }
 
-		// in order to ramp up or down the power this function will use a modifier
-		// which is a value between 0 and 1 that will be multiplied with the expected
-		// power for each motor, effectively obtaining the same power pattern but
-		// with lower values.
-		// In order to do this properly we need to find out the minimum value for
-		// the modifier, otherwise we are running the risk of some motors getting
-		// power level below the minimum power that would make them move. But we
-		// will only do this for the motors for which the absolute power is greater
-		// than the minimum power, otherwise
+    public boolean Move(double power, double direction, double spin, double distance, int timeout) {
+        //power range check
+        assert 0 <= power && power <= 1;
+        //spin check
+        assert -180 <= spin && spin <= 180;
+        //distance check
+        assert distance >= 0;
 
-		double minModifier = 1;
-		double tempModifier = 1;
-		tempModifier = minPower / Math.abs(frontLeftPower);
-		if (tempModifier < minModifier) {
-			minModifier = tempModifier;
-		}
-		tempModifier = minPower / Math.abs(frontRightPower);
-		if (tempModifier < minModifier) {
-			minModifier = tempModifier;
-		}
-		tempModifier = minPower / Math.abs(backLeftPower);
-		if (tempModifier < minModifier) {
-			minModifier = tempModifier;
-		}
-		tempModifier = minPower / Math.abs(backRightPower);
-		if (tempModifier < minModifier) {
-			minModifier = tempModifier;
-		}
+        //make sure encoders are on, our minimal speeds
+        //won't work with encoders off
+        setEncoders(true);
 
-		//record starting time
-		long startTime = System.currentTimeMillis();
-		//stop robot(if in motion)
-		FrontLeft.setPower(0);
-		FrontRight.setPower(0);
-		BackLeft.setPower(0);
-		BackRight.setPower(0);
-		//reset heading to zero
-		imu.ResetHeading();
-		StringBuffer output = new StringBuffer();
-		//main loop
+        //reset heading to zero
+        imu.ResetHeading();
 
-		do {
-			//do stuff depending on what the power and direction is:
+        if (distance > 0) {
+            ExecuteMove(direction, distance, power, minPowerMove, 50);
+        }
+        if (spin != 0) {
+            ExecuteSpin(spin, power, minPowerSpin, 0.1);
+        }
 
-			double heading = imu.GetHeading();
-			tl.addLine("current heading " + heading);
+        return true;
+    }
 
-			double ratio = heading / 90.0;
-			double deltaP = MAJOR_FIX_COEFFICENT * ratio;
+    final static String fileName = "data.txt";
+    final static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/instinctcoder/readwrite/";
 
-			output.append("curr heading " + heading);
-			output.append("deltaP " + deltaP);
-
-			tl.addLine("delta p " + deltaP);
-
-			double max = Math.max(Math.abs(frontLeftPower + deltaP), Math.abs(backLeftPower + deltaP));
-			max = Math.max(max, Math.max(Math.abs(frontRightPower - deltaP), Math.abs(backRightPower - deltaP)));
-
-			if (max > 1.0) {
-				//clip if out of range
-				setMotorPower((frontLeftPower + deltaP) / max, (frontRightPower - deltaP) / max, (backLeftPower + deltaP) / max, (backRightPower - deltaP) / max);
-			} else {
-				setMotorPower(frontLeftPower + deltaP, frontRightPower - deltaP, backLeftPower + deltaP, backRightPower - deltaP);
-			}
-
-			long originalTime = System.currentTimeMillis();
-
-			ResetEncoders();
-			double originalEncoderValue = GetAverageEncodersValue();
-
-		while(true) {
-			double currentEncoderValue = GetAverageEncodersValue();
-			double diffEncoderValue = currentEncoderValue - originalEncoderValue;
-			if (diffEncoderValue >= (distance - tolerance)) {
-				break;
-			}
-			long diffTime = System.currentTimeMillis() - originalTime;
-			double modifier = 1;
-			if (diffTime <= RAMP_UP_TIME) {
-				//apply the "s" curve on the power based on time for acceleration
-				modifier = Utilities.Calculate_S_Curve(0, 1, 0, RAMP_UP_TIME, diffTime);
-			}
-
-			if ((distance - diffEncoderValue) <= RAMP_DOWN_DISTANCE) {
-				//apply the "s" curve on the power based on the remaining distance for deceleration
-				double localModifier = Utilities.Calculate_S_Curve(1, minModifier, RAMP_DOWN_DISTANCE, 0, distance - diffEncoderValue);
-				if (localModifier < modifier) {
-					modifier = localModifier;
-				}
-
-			}
-			double localFLPower = frontLeftPower * modifier;
-			double localFRPower = frontRightPower * modifier;
-			double localBLPower = backLeftPower * modifier;
-			double localBRPower = backRightPower * modifier;
-
-			//TODO - apply any correction we might need due to drift
-
-			tl.addData("", "FLE: %d, FRE: %d, BLE: %d, BRE: %d", FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition(), BackLeft.getCurrentPosition(), BackRight.getCurrentPosition());
-			tl.addData("", "Test");
-			tl.addData("", "OrgEnc: %.3f, CurrEnc: %.3f", originalEncoderValue, currentEncoderValue);
-			tl.addData("", "Dist: %.3f, DiffD: %.3f", distance, diffEncoderValue);
-			tl.addData("", "Modifier: %.3f", modifier);
-			tl.addData("", "FL: %.3f, FR: %.3f, BL: %.3f, BR: %.3f", localFLPower, localFRPower, localBLPower, localBRPower);
-			tl.update();
-		}
-
-		while (System.currentTimeMillis() - startTime <= distance);
-		//stop robot
-		saveToFile(output.toString());
-		tl.addLine("file outputted");
-		FrontLeft.setPower(0);
-		FrontRight.setPower(0);
-		BackLeft.setPower(0);
-		BackRight.setPower(0);
-		//timeout detection
-//        if(System.currentTimeMillis()-startTime>=timeout){
-//            return false;
-//        }
-//            setMotorPower(localFLPower, localFRPower, localBLPower, localBRPower);
-//        }
-		setMotorPower(0, 0, 0, 0);
-		return true;
-	}
-
-	public boolean Move(double power, double direction, double spin, double distance, int timeout) {
-		//power range check
-		assert 0 <= power && power <= 1;
-		//spin check
-		assert -180 <= spin && spin <= 180;
-		//distance check
-		assert distance >= 0;
-
-		//make sure encoders are on
-		setEncoders(true);
-		//reset heading to zero
-		imu.ResetHeading();
-
-		if (distance > 0) {
-			ExecuteMove(direction, distance, power, 0.03, 50);
-		}
-		if (spin != 0) {
-			ExecuteSpin(spin, power, 0.03, 0.1);
-			tl.addData("", "Heading after loop: %.2f", imu.GetHeading());
-		}
-
-		long startTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - startTime <= 1000) {};
-
-		tl.addData("", "Current heading: %.2f", imu.GetHeading());
-		tl.update();
-
-		return true;
-	}
-
-	final static String fileName = "data.txt";
-	final static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/instinctcoder/readwrite/";
-
-	public static boolean saveToFile(String data) {
-		try {
-			new File(path).mkdir();
-			File file = new File(path + fileName);
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			FileOutputStream fileOutputStream = new FileOutputStream(file, true);
-			fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
-			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
-
-
-	}*/
+    public static boolean saveToFile(String data) {
+        try {
+            new File(path).mkdir();
+            File file = new File(path + fileName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file, true);
+            fileOutputStream.write((data + System.getProperty("line.separator")).getBytes());
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

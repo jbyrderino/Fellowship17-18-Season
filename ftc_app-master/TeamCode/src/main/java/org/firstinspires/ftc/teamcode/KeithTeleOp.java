@@ -50,40 +50,61 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Keith - TeleOp", group = "TeleOp")
 
-public class KeithTeleOp { //extends OpMode {
-    /*
+public class KeithTeleOp extends OpMode {
+
     // Declare OpMode members.
 
     private ElapsedTime runtime = new ElapsedTime();
 
     KeithRobot keithRobot = null;
+    boolean debugTelemetry = false;
+
+    // Variables that control the driving system
     MecanumDS ds = null;
     boolean linearMode = false;
     boolean allowEncoders = true;
-    boolean debugTelemetry = false;
-    double MaxPower = 1.0;
-    double MaxDomain = 7;
+    double maxDrivingPower = 1.0;
     boolean engageMotors = true;
+    double dsSelectionTime = 0;
+
+    // Variables that control the relic arm system
+    FishingRodSystem frs = null;
+    boolean relicArmMoving = false;
+    boolean relicArmAnalog = false;
+    boolean gripperMoving = false;
+    boolean gripperAnalog = false;
+    boolean tiltActive = false;
+    double frsSelectionTime = 0;
+
+    // Variables that control the harvester system
+    // TODO
+    //Carriage System will be integrated with elevator System
+    boolean slideActive = false;
+    boolean flipActive = false;
+
+    // Variables that control switching from
+    // the harvester system to the relic arm
+    boolean harvesterActive = true;
+    double switchSelectionTime = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
-    /*
     @Override
     public void init() {
-        //keithRobot = new KeithRobot(hardwareMap, telemetry);
-        ds = (MecanumDS)(keithRobot.GetDriveSystem());
+        keithRobot = new KeithRobot(hardwareMap, telemetry);
+        ds = (MecanumDS) (keithRobot.GetDriveSystem());
+        frs = (FishingRodSystem) (keithRobot.GetRelicArmSubsystem());
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
-    /*
     @Override
     public void init_loop() {
     }
 
-    double TransformInterval (double Value, double SourceStart, double SourceEnd, double TargetStart, double TargetEnd) {
+    double TransformInterval(double Value, double SourceStart, double SourceEnd, double TargetStart, double TargetEnd) {
         double sourceRange = SourceEnd - SourceStart;
         double targetRange = TargetEnd - TargetStart;
         return TargetStart + (Value - SourceStart) * targetRange / sourceRange;
@@ -92,48 +113,214 @@ public class KeithTeleOp { //extends OpMode {
     /*
      * Code to run ONCE when the driver hits PLAY
      */
-    /*
     @Override
     public void start() {
-        runtime.reset();
+        dsSelectionTime = runtime.milliseconds();
+        frsSelectionTime = runtime.milliseconds();
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
-    /*
     @Override
     public void loop() {
-        if (runtime.milliseconds() >= 200) {
-            boolean selection = false;
+        if (gamepad2.start) {
+            if (gamepad2.x) {
+                harvesterActive = true;
+                switchSelectionTime = System.currentTimeMillis();
+            }
+            if (gamepad2.y) {
+                harvesterActive = false;
+                switchSelectionTime = System.currentTimeMillis();
+            }
+        }
+        CallDriveSystem();
+        if (System.currentTimeMillis() - switchSelectionTime > 300) {
+            if (harvesterActive) {
+                CallHarvesterSystem();
+            } else {
+                CallRelicArmSystem();
+            }
+        }
+        telemetry.update();
+    }
+
+    void CallHarvesterSystem() {
+        telemetry.addLine("================ Harvester ===================");
+
+    }
+
+    void CallRelicArmSystem() {
+        telemetry.addLine("================ Relic Arm ===================");
+
+        // deal with arm extending/retracting
+        boolean relicArmCommand = false;
+        if (gamepad2.dpad_right) {
+            relicArmCommand = true;
+            if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                relicArmMoving = true;
+                frs.extendOn(1);
+            }
+        }
+        if (gamepad2.dpad_left) {
+            relicArmCommand = true;
+            if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                relicArmMoving = true;
+                relicArmCommand = true;
+                frs.extendOn(-1);
+            }
+        }
+        if ((gamepad2.left_trigger > 0.1) || (gamepad2.right_trigger > 0.1)) {
+            relicArmCommand = true;
+            if ((!gripperMoving) && (!tiltActive) && (!relicArmMoving || relicArmAnalog)) {
+                relicArmMoving = true;
+                relicArmAnalog = true;
+                double moveValue = gamepad2.right_trigger - gamepad2.left_trigger;
+                frs.setRodMotorPower(moveValue);
+            }
+        }
+        if ((!relicArmCommand) && relicArmMoving) {
+            relicArmAnalog = false;
+            relicArmMoving = false;
+            frs.extendOff();
+        }
+
+        // deal with the gripper lowering/retracting
+        boolean gripperCommand = false;
+        if (gamepad2.dpad_up) {
+            gripperCommand = true;
+            if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                gripperMoving = true;
+                frs.gripperMoveOn(1);
+            }
+        }
+        if (gamepad2.dpad_down) {
+            gripperCommand = true;
+            if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                gripperMoving = true;
+                frs.gripperMoveOn(-1);
+            }
+        }
+        if (gamepad2.b) {
+            gripperCommand = true;
+            if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                gripperMoving = true;
+                frs.setUpperReelPower(1);
+            }
+        }
+        if (gamepad2.x) {
+            gripperCommand = true;
+            if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                gripperMoving = true;
+                frs.setLowerReelPower(1);
+            }
+        }
+        if ((Math.abs(gamepad2.left_stick_y) > 0.1) || (Math.abs(gamepad2.right_stick_y) > 0.1)) {
+            gripperCommand = true;
+            if ((!relicArmMoving) && (!tiltActive) && ((!gripperMoving) || gripperAnalog)) {
+                gripperMoving = true;
+                gripperAnalog = true;
+                if (Math.abs(gamepad2.left_stick_y) > 0.1) {
+                    frs.setLowerReelPower(-gamepad2.left_stick_y);
+                }
+                if (Math.abs(gamepad2.right_stick_y) > 0.1) {
+                    frs.setUpperReelPower(-gamepad2.right_stick_y);
+                }
+            }
+        }
+        if ((!gripperCommand) && gripperMoving) {
+            gripperMoving = false;
+            gripperAnalog = false;
+            frs.gripperMoveOff();
+        }
+
+        // non-continuous optaions
+        if ((runtime.milliseconds() - frsSelectionTime) >= 300) {
+            boolean frsSelection = false;
+
+            // deal with the claw opening/closing
+            if (gamepad2.a) {
+                frsSelection = true;
+                frs.gripperToggle();
+            }
+
+            // modify the conversion ration between motor and servos
+            if (gamepad2.right_bumper) {
+                frsSelection = true;
+                frs.incRatio(0.01);
+            }
+            if (gamepad2.left_bumper) {
+                frsSelection = true;
+                frs.incRatio(-0.01);
+            }
+
+            // tilt the claw
+            if (gamepad2.y) {
+                if ((!relicArmMoving) && (!gripperMoving) && (!tiltActive)) {
+                    frsSelection = true;
+                    tiltActive = true;
+                    frs.tiltToggleStart();
+                }
+            }
+
+            if (frsSelection) {
+                frsSelectionTime = runtime.milliseconds();
+            }
+        }
+        if (tiltActive) {
+            if (frs.tiltToggleVerify()) {
+                tiltActive = false;
+            }
+        }
+        telemetry.addData("", "Ratio(Bumpers): %.2f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
+    }
+
+    void CallDriveSystem() {
+        // Get the input for the driving system options
+        if ((runtime.milliseconds() - dsSelectionTime) >= 300) {
+            boolean dsSelection = false;
             if (gamepad1.left_bumper) {
-                selection = true;
-                MaxPower = MaxPower - 0.1;
+                dsSelection = true;
+                maxDrivingPower = maxDrivingPower - 0.1;
+                if (maxDrivingPower > 1) {
+                    maxDrivingPower = 1;
+                }
+                if (maxDrivingPower < 0) {
+                    maxDrivingPower = 0;
+                }
             } else if (gamepad1.right_bumper) {
-                selection = true;
-                MaxPower = MaxPower + 0.1;
+                dsSelection = true;
+                maxDrivingPower = maxDrivingPower + 0.1;
+                if (maxDrivingPower > 1) {
+                    maxDrivingPower = 1;
+                }
+                if (maxDrivingPower < 0) {
+                    maxDrivingPower = 0;
+                }
             }
             if (gamepad1.a) {
-                selection = true;
+                dsSelection = true;
                 linearMode = !linearMode;
             }
             if (gamepad1.b) {
-                selection = true;
+                dsSelection = true;
                 allowEncoders = !allowEncoders;
+                ds.setEncoders(allowEncoders);
             }
             if (gamepad1.x) {
-                selection = true;
+                dsSelection = true;
                 engageMotors = !engageMotors;
             }
-            if (selection) {
-                runtime.reset();
+            if (dsSelection) {
+                dsSelectionTime = runtime.milliseconds();
             }
-        }
-        if (MaxPower > 1) {
-            MaxPower = 1;
-        }
-        if (MaxPower < 0) {
-            MaxPower = 0;
         }
         String Mode = "Lin";
         if (!linearMode) {
@@ -143,17 +330,16 @@ public class KeithTeleOp { //extends OpMode {
         if (!allowEncoders) {
             allowEncodersStr = "N";
         }
-        telemetry.addData("", "Power(Bumpers): %.1f, Input(A): %s, Encoders(B): %s", MaxPower, Mode, allowEncodersStr);
-        telemetry.addLine("==============================================");
-
-        ds.setEncoders(allowEncoders);
+        telemetry.addData("", "Power(Bumpers): %.1f, Input(A): %s, Encoders(B): %s", maxDrivingPower, Mode, allowEncodersStr);
 
         // Get the input from the joysticks
         double LeftX = gamepad1.left_stick_x;
         double LeftY = -gamepad1.left_stick_y;
         double RightX = gamepad1.right_stick_x;
         double RightY = -gamepad1.right_stick_y;
-        telemetry.addData("", "LX: %.3f, LY: %.3f, RX: %.3f, RY: %.3f", LeftX, LeftY, RightX, RightY);
+        if (debugTelemetry) {
+            telemetry.addData("", "LX: %.3f, LY: %.3f, RX: %.3f, RY: %.3f", LeftX, LeftY, RightX, RightY);
+        }
 
         double minExpX = -5;
         double maxExpX = 2;
@@ -174,7 +360,9 @@ public class KeithTeleOp { //extends OpMode {
                         angleLeft = Math.toRadians(180) + angleLeft;
                     }
                 }
-                telemetry.addData("", "AngleL: %.1f", Math.toDegrees(angleLeft));
+                if (debugTelemetry) {
+                    telemetry.addData("", "AngleL: %.1f", Math.toDegrees(angleLeft));
+                }
                 double diagLeft = Range.clip(Math.sqrt(Math.pow(LeftX, 2) + Math.pow(LeftY, 2)), 0, 1);
                 diagLeft = TransformInterval(diagLeft, 0, 1, minExpX, maxExpX);
                 diagLeft = Math.exp(diagLeft);
@@ -198,7 +386,9 @@ public class KeithTeleOp { //extends OpMode {
                         angleRight = Math.toRadians(180) + angleRight;
                     }
                 }
-                telemetry.addData("", "AngleR: %.1f", Math.toDegrees(angleRight));
+                if (debugTelemetry) {
+                    telemetry.addData("", "AngleR: %.1f", Math.toDegrees(angleRight));
+                }
                 double diagRight = Range.clip(Math.sqrt(Math.pow(RightX, 2) + Math.pow(RightY, 2)), 0, 1);
                 diagRight = TransformInterval(diagRight, 0, 1, minExpX, maxExpX);
                 diagRight = Math.exp(diagRight);
@@ -208,28 +398,25 @@ public class KeithTeleOp { //extends OpMode {
             }
         }
 
+        LeftX = LeftX * maxDrivingPower;
+        LeftY = LeftY * maxDrivingPower;
+        RightX = RightX * maxDrivingPower;
+        RightY = RightY * maxDrivingPower;
         Utilities.PowerLevels powerLevels = new Utilities.PowerLevels(
-                LeftY - LeftX,
-                RightY + RightX,
                 LeftY + LeftX,
-                RightY - RightX);
-        telemetry.addData("", "FL(IP): %.2f, FR(IP): %.2f, BL(IP): %.2f, BR(IP): %.2f", powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
+                RightY - RightX,
+                LeftY - LeftX,
+                RightY + RightX);
+        if (debugTelemetry) {
+            telemetry.addData("", "FL(IP): %.2f, FR(IP): %.2f, BL(IP): %.2f, BR(IP): %.2f", powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
+        }
 
-        powerLevels = Utilities.NormalizePower(powerLevels, MaxPower);
-        telemetry.addData("", "FL(PL): %.2f, FR(PL): %.2f, BL(PL): %.2f, BR(PL): %.2f", powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
+        powerLevels = Utilities.NormalizePower(powerLevels, maxDrivingPower);
+        if (debugTelemetry) {
+            telemetry.addData("", "FL(PL): %.2f, FR(PL): %.2f, BL(PL): %.2f, BR(PL): %.2f", powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
+        }
         if (engageMotors) {
             ds.setMotorPower(powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
         }
-
-        telemetry.update();
     }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    /*
-    @Override
-    public void stop() {
-    }
-    */
 }

@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class SpinTest extends LinearOpMode {
 
     KeithRobot keith;
-    public DriveSystem ds = null;
+    public MecanumDS ds = null;
 
     @Override
     public void runOpMode() {
@@ -22,30 +22,15 @@ public class SpinTest extends LinearOpMode {
 
         keith = new KeithRobot(hwMap, telemetry);
         //initialize Mecanum Driving System
-        ds = keith.GetDriveSystem();
+        ds = (MecanumDS)(keith.GetDriveSystem());
         waitForStart();
 
-        double movePower = 0.5;
-        double moveDistance = 2000;
-        double spinPower = 0.3;
+        double movePower = 0.1;
+        double moveDistance = 1000;
+        double spinPower = 0.1;
         double spinValue = 90;
 
-        /*
-        while (true) {
-            boolean exit = false;
-            while (!gamepad1.x) {
-                if (gamepad1.y) {
-                    sleep(200);
-                    exit = true;
-                    break;
-                }
-            }
-            if (exit) {
-                break;
-            }
-            ds.Calibrate();
-        }
-        */
+        double selectionTime = 0;
 
         while (true) {
             if (gamepad1.y) {
@@ -87,11 +72,48 @@ public class SpinTest extends LinearOpMode {
                     ds.Move(movePower, -90, 0, moveDistance, 0);
                 }
             }
-            if (gamepad1.left_bumper || gamepad1.left_trigger > 0) {
+            if (gamepad1.left_bumper) {
                 ds.Move(spinPower, 0, spinValue, 0, 0);
             }
-            if (gamepad1.b || gamepad1.right_bumper || gamepad1.right_trigger > 0) {
+            if (gamepad1.right_bumper) {
                 ds.Move(spinPower, 0, -spinValue, 0, 0);
+            }
+
+            if ((System.currentTimeMillis() - selectionTime) >= 300) {
+                boolean selection = false;
+
+                // deal with the claw opening/closing
+                if (gamepad2.right_bumper) {
+                    selection = true;
+                    spinPower += 0.01;
+                    movePower += 0.01;
+                    telemetry.addData("", "Motor power: %.2f, Spin power: %.2f", movePower, spinPower);
+                    telemetry.update();
+                }
+                if (gamepad2.left_bumper) {
+                    selection = true;
+                    spinPower -= 0.01;
+                    movePower -= 0.01;
+                    telemetry.addData("", "Motor power: %.2f, Spin power: %.2f", movePower, spinPower);
+                    telemetry.update();
+                }
+
+                if (gamepad2.x) {
+                    selection = true;
+                    moveDistance -= 10;
+                    telemetry.addData("", "Move distance: %.2f", moveDistance);
+                    telemetry.update();
+                }
+                if (gamepad2.b) {
+                    selection = true;
+                    moveDistance += 10;
+                    telemetry.addData("", "Move distance: %.2f", moveDistance);
+                    telemetry.update();
+                }
+
+                if (selection) {
+                    selectionTime = System.currentTimeMillis();
+                }
             }
         }
 

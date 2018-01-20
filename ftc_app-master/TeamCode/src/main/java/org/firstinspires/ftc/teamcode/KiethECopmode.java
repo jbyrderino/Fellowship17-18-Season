@@ -17,7 +17,7 @@ public class KiethECopmode extends OpMode {
 
    public void init() {
 	   hwMap = hardwareMap;
-	   kE = new KeithElevator(hwMap, 0.5);
+	   //kE = new KeithElevator(hwMap, 0.5);
    }
 
 	public void loop(){

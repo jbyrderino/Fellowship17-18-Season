@@ -19,8 +19,12 @@ public class JewlKnockerTest extends LinearOpMode {
         //initialize hardwareMap
         HardwareMap hwMap = hardwareMap;
 
-        jewlKnockerSystem = new KeithJewlKnocker(hwMap, "JewlKnocker", telemetry);
+        KeithRobot keith = new KeithRobot(hardwareMap, telemetry);;
+        jewlKnockerSystem = keith.GetJewelKnockerSubsystem();
         waitForStart();
+
+        double basePosition = jewlKnockerSystem.getBasePosition();
+        double knockerPosition = jewlKnockerSystem.getKnockerPosition();
 
         while (true) {
             boolean pressed = false;
@@ -35,9 +39,62 @@ public class JewlKnockerTest extends LinearOpMode {
                 pressed = true;
                 jewlKnockerSystem.knockerDown();
             }
-            if (pressed) {
-                sleep(200);
+            if (gamepad1.dpad_left) {
+                pressed = true;
+                jewlKnockerSystem.baseKnockerRotateLeft();
             }
+            if (gamepad1.dpad_right) {
+                pressed = true;
+                jewlKnockerSystem.baseKnockerRotateRight();
+            }
+            if (gamepad1.right_bumper) {
+                pressed = true;
+                jewlKnockerSystem.knockRight();
+            }
+            if (gamepad1.left_bumper) {
+                pressed = true;
+                jewlKnockerSystem.knockLeft();
+            }
+
+            if (gamepad2.dpad_up) {
+                pressed = true;
+                knockerPosition += 0.01;
+                if (knockerPosition > 1) {
+                    knockerPosition = 1;
+                }
+                jewlKnockerSystem.setKnockerPosition(knockerPosition);
+            }
+            if (gamepad2.dpad_down) {
+                pressed = true;
+                knockerPosition -= 0.01;
+                if (knockerPosition < 0) {
+                    knockerPosition = 0;
+                }
+                jewlKnockerSystem.setKnockerPosition(knockerPosition);
+            }
+            if (gamepad2.dpad_right) {
+                pressed = true;
+                basePosition += 0.01;
+                if (basePosition > 1) {
+                    basePosition = 1;
+                }
+                jewlKnockerSystem.setBasePosition(basePosition);
+            }
+            if (gamepad2.dpad_left) {
+                pressed = true;
+                basePosition -= 0.01;
+                if (basePosition < 0) {
+                    basePosition = 0;
+                }
+                jewlKnockerSystem.setBasePosition(basePosition);
+            }
+
+            if (pressed) {
+                sleep(300);
+            }
+
+            telemetry.addData("", "BasePos: %.2f, KnockerPos: %.2f", basePosition, knockerPosition);
+            telemetry.update();
         }
 
         //jewlKnockerSystem.knockerDown();

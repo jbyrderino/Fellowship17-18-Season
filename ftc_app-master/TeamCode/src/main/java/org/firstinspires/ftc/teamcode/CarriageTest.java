@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by 28761 on 1/16/2018.
  */
 
+@TeleOp(name = "CarriageTestOp", group = "Iterative Opmode")
 public class CarriageTest extends LinearOpMode {
 
     public KeithCarriage kc;
@@ -36,11 +38,11 @@ public class CarriageTest extends LinearOpMode {
             }
             if (gamepad1.a) {
                 telemetry.addLine("left servo toggle");
-                kc.holderToggle(false);
+                kc.holderToggle(KeithCarriage.LEFTS);
             }
             if (gamepad1.b) {
                 telemetry.addLine("right servo toggle");
-                kc.holderToggle(true);
+                kc.holderToggle(KeithCarriage.RIGHTS);
             }
             telemetry.update();
         }

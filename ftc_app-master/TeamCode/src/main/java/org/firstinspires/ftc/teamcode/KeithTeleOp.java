@@ -79,6 +79,7 @@ public class KeithTeleOp extends OpMode {
     // Variables that control the harvester system
     // TODO
     //Carriage System will be integrated with elevator System
+    Harvester hvs;
     boolean slideActive = false;
     boolean flipActive = false;
 
@@ -133,10 +134,12 @@ public class KeithTeleOp extends OpMode {
     public void loop() {
         if (gamepad2.start) {
             if (gamepad2.x) {
+                //start+x switch to harvester mode
                 harvesterActive = true;
                 switchSelectionTime = System.currentTimeMillis();
             }
             if (gamepad2.y) {
+                //start+y switch to relic Arm mode
                 harvesterActive = false;
                 switchSelectionTime = System.currentTimeMillis();
             }
@@ -152,9 +155,44 @@ public class KeithTeleOp extends OpMode {
         telemetry.update();
     }
 
+    boolean isHarvesterVacant() {
+        return  !slideActive & !flipActive;
+    }
+
     void CallHarvesterSystem() {
         telemetry.addLine("================ Harvester ===================");
+        if (gamepad2.dpad_left) {
+            telemetry.addLine("command: slide left");
+            if (isHarvesterVacant()) {
+                telemetry.addLine("System is vacant, command being executed");
+                slideActive = true;
+                //TODO
+            }
+        }
+        if (gamepad2.dpad_up) {
+            telemetry.addLine("command: slide center");
+            if (isHarvesterVacant()) {
+                telemetry.addLine("System is vacant, command being executed");
+                slideActive = true;
+                //TODO
+            }
+        }
+        if (gamepad2.dpad_right) {
+            telemetry.addLine("command: slide right");
+            if (isHarvesterVacant()) {
+                telemetry.addLine("System is vacant, command being executed");
+                slideActive = true;
+                //TODO
+            }
+        }
 
+        if (slideActive) {
+
+        }
+        if (flipActive) {
+
+        }
+        telemetry.update();
     }
 
     void CallRelicArmSystem() {

@@ -120,15 +120,16 @@ public class KeithCarriage extends Carriage {
         flipMotor.setPower(0);
     }
 
-    static boolean holded;
     static final double hold = 0.9;
     static final double release = 0.1;
+    static final boolean LEFTS = true;
+    static final boolean RIGHTS = false;
 
     public void holderToggle(boolean side) {
         if (side) {
-            lServo.setPosition(holded ? release : hold);
+            lServo.setPosition(lServo.getPosition() == hold ? release : hold);
         } else {
-            lServo.setPosition(holded ? release : hold);
+            rServo.setPosition(rServo.getPosition() == hold ? release : hold);
         }
     }
 

@@ -151,7 +151,7 @@ public abstract class AutoUtilities {
                 } else {
                     telemetry.addData("RGB", "is null");
                 }
-
+/*
                 if ((RSum > 200 && GSum < 50 && BSum < 50) | (RSum > GSum + 100 && RSum > BSum +100)){
                     rColor = "Red";
                 } else if ((RSum < 70 && GSum > 70 && BSum > 170) | (BSum > RSum + 100 && BSum > GSum + 50)){
@@ -161,7 +161,7 @@ public abstract class AutoUtilities {
                 }
 
                 telemetry.addData("Color:", rColor);
-
+*/
                 break;
             }
         }

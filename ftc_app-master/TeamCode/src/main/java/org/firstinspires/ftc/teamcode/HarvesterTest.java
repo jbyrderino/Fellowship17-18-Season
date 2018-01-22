@@ -9,9 +9,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 
 @TeleOp(name = "CarriageTestOp", group = "Iterative Opmode")
-public class CarriageTest extends LinearOpMode {
+public class HarvesterTest extends LinearOpMode {
 
     public KeithCarriage kc;
+    public KeithElevator ke;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,6 +21,10 @@ public class CarriageTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            ke.ElevatorInit(0);
+            ke.kickerInit();
+            ke.kickerReset();
+
             if (gamepad1.dpad_right) {
                 telemetry.addLine("Carriage go right");
                 kc.slideTo(KeithCarriage.RIGHT);
@@ -44,6 +49,17 @@ public class CarriageTest extends LinearOpMode {
                 telemetry.addLine("right servo toggle");
                 kc.holderToggle(KeithCarriage.RIGHTS);
             }
+
+            if (gamepad1.left_bumper) {
+                ke.elevatorStart(0.5);
+            }
+            if (gamepad1.right_bumper) {
+                ke.elevatorStop();
+            }
+            if (gamepad1.y) {
+                ke.kickerKick();
+            }
+
             telemetry.update();
         }
     }

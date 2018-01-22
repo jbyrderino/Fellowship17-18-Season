@@ -59,6 +59,8 @@ public class KeithTeleOp extends OpMode {
     KeithRobot keithRobot = null;
     boolean debugTelemetry = false;
 
+    KeithJewlKnocker jwl = null;
+
     // Variables that control the driving system
     MecanumDS ds = null;
     boolean linearMode = false;
@@ -108,6 +110,7 @@ public class KeithTeleOp extends OpMode {
         frs = (FishingRodSystem) (keithRobot.GetRelicArmSubsystem());
         ele = (KeithElevator) (keithRobot.GetKeithElevator());
         car = (KeithCarriage) (keithRobot.GetKeithCarriage());
+        jwl = (KeithJewlKnocker) (keithRobot.GetJewelKnockerSubsystem());
     }
 
     /*
@@ -144,6 +147,8 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void loop() {
+        jwl.setBasePosition(0.2);
+
         if (gamepad2.start) {
             if (gamepad2.x) {
                 //start+x switch to harvester mode
@@ -235,11 +240,11 @@ public class KeithTeleOp extends OpMode {
         }
 
 
-        if (gamepad2.right_trigger <= rTrigger2 && gamepad2.right_trigger != 0 && gamepad2.left_trigger == 0){
+        if (gamepad2.right_trigger <= rTrigger2 && gamepad2.left_trigger != 0 && gamepad2.right_trigger == 0){
             telemetry.addLine("command: elevator reverse");
             ele.elevatorStart(pwrReverse);
         }
-        if (gamepad2.left_trigger <= lTrigger2 && gamepad2.left_trigger != 0 && gamepad2.right_trigger == 0) {
+        if (gamepad2.left_trigger <= lTrigger2 && gamepad2.right_trigger != 0 && gamepad2.left_trigger == 0) {
             telemetry.addLine("command: elevator forward");
             ele.elevatorStart(pwrForward);
         }

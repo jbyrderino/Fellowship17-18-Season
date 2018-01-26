@@ -117,6 +117,7 @@ public abstract class AutoUtilities {
                     int GSum = 0;
                     int BSum = 0;
                     int count = 0;
+                    String rColor = null;
                     for (int i = ox; i < ox + 3; i++) {
                         for (int j = oy; j > oy - 3; j--) {
                             if (0 < i && i < bm.getWidth() && 0 < j && j < bm.getHeight()) {
@@ -150,6 +151,17 @@ public abstract class AutoUtilities {
                 } else {
                     telemetry.addData("RGB", "is null");
                 }
+/*
+                if ((RSum > 200 && GSum < 50 && BSum < 50) | (RSum > GSum + 100 && RSum > BSum +100)){
+                    rColor = "Red";
+                } else if ((RSum < 70 && GSum > 70 && BSum > 170) | (BSum > RSum + 100 && BSum > GSum + 50)){
+                    rColor = "Blue";
+                } else {
+                    rColor = "Other";
+                }
+
+                telemetry.addData("Color:", rColor);
+*/
                 break;
             }
         }

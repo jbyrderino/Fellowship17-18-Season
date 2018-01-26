@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Keith - ElevatorCarriage", group = "TeleOp")
 
@@ -13,11 +10,11 @@ public class KiethECopmode extends OpMode {
 
    public double Pwr;
    public HardwareMap hwMap = null;
-   public  KeithElevator kE = null;
+   public KeithElevator kE = null;
 
    public void init() {
 	   hwMap = hardwareMap;
-	   kE = new KeithElevator(hwMap, 0.5);
+	   //kE = new KeithElevator(hwMap, 0.5);
    }
 
 	public void loop(){

@@ -59,6 +59,8 @@ public class KeithTeleOp extends OpMode {
     KeithRobot keithRobot = null;
     boolean debugTelemetry = false;
 
+    KeithJewlKnocker jwl = null;
+
     // Variables that control the driving system
     MecanumDS ds = null;
     boolean linearMode = false;
@@ -77,8 +79,19 @@ public class KeithTeleOp extends OpMode {
     double frsSelectionTime = 0;
 
     // Variables that control the harvester system
-    // TODO
+    KeithElevator ele = null;
+    KeithCarriage car = null;
+    //Reverse should always be between -1.0 and 0.0, positive should always be between 0.0 and 1.0
+    double pwrReverse = -0.5;
+    double pwrForward = 0.5;
+    double lTrigger2 = 1.0;
+    double rTrigger2 = 1.0;
+
+
+
+
     //Carriage System will be integrated with elevator System
+    Harvester hvs;
     boolean slideActive = false;
     boolean flipActive = false;
 
@@ -95,6 +108,9 @@ public class KeithTeleOp extends OpMode {
         keithRobot = new KeithRobot(hardwareMap, telemetry);
         ds = (MecanumDS) (keithRobot.GetDriveSystem());
         frs = (FishingRodSystem) (keithRobot.GetRelicArmSubsystem());
+        ele = (KeithElevator) (keithRobot.GetKeithElevator());
+        car = (KeithCarriage) (keithRobot.GetKeithCarriage());
+        jwl = (KeithJewlKnocker) (keithRobot.GetJewelKnockerSubsystem());
     }
 
     /*
@@ -131,12 +147,16 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void loop() {
+        jwl.setBasePosition(0.2);
+
         if (gamepad2.start) {
             if (gamepad2.x) {
+                //start+x switch to harvester mode
                 harvesterActive = true;
                 switchSelectionTime = System.currentTimeMillis();
             }
             if (gamepad2.y) {
+                //start+y switch to relic Arm mode
                 harvesterActive = false;
                 switchSelectionTime = System.currentTimeMillis();
             }
@@ -152,9 +172,89 @@ public class KeithTeleOp extends OpMode {
         telemetry.update();
     }
 
+    boolean isHarvesterVacant() {
+        return  !slideActive & !flipActive;
+    }
+    boolean isElevatorEmpty() { return false; };
+
     void CallHarvesterSystem() {
         telemetry.addLine("================ Harvester ===================");
 
+        //Carriage code
+        //Controls for carriage
+        if (gamepad2.dpad_left) {
+            telemetry.addLine("command: slide left");
+
+            /*if (isHarvesterVacant()) {
+                telemetry.addLine("System is vacant, command being executed");
+                slideActive = true;
+                car.setState(KeithCarriage.LEFT);
+
+            }*/
+
+            car.slideMotor.setPower(-0.8);
+        }
+        if (gamepad2.dpad_up) {
+            telemetry.addLine("command: slide center");
+            /*if (isHarvesterVacant()) {
+                telemetry.addLine("System is vacant, command being executed");
+                slideActive = true;
+                car.setState(KeithCarriage.CENTER);
+            }*/
+
+        }
+        if (gamepad2.dpad_right) {
+            telemetry.addLine("command: slide right");
+            /*if (isHarvesterVacant()) {
+                telemetry.addLine("System is vacant, command being executed");
+                slideActive = true;
+                car.setState(KeithCarriage.RIGHT);
+            }*/
+            car.slideMotor.setPower(0.8);
+        }
+
+        if (!gamepad2.dpad_right && !gamepad2.dpad_left){
+            car.slideMotor.setPower(0.0);
+        }
+
+        //Carriage feedback
+        if (slideActive) {
+            //car.slideActive = true;
+        }
+        if (flipActive) {
+            //car.flipperToggleActive = true;
+        }
+
+
+
+        //Kicker and Elevator Code
+        //Kicker and Elevator controls
+        if (gamepad2.a && !gamepad2.b) {
+            telemetry.addLine("command: kick");
+            ele.kickerKick();
+        }
+
+        if (gamepad2.b && !gamepad2.a) {
+            telemetry.addLine("command: kicker reset");
+            ele.kickerReset();
+        }
+
+
+        if (gamepad2.right_trigger <= rTrigger2 && gamepad2.left_trigger != 0 && gamepad2.right_trigger == 0){
+            telemetry.addLine("command: elevator reverse");
+            ele.elevatorStart(pwrReverse);
+        }
+        if (gamepad2.left_trigger <= lTrigger2 && gamepad2.right_trigger != 0 && gamepad2.left_trigger == 0) {
+            telemetry.addLine("command: elevator forward");
+            ele.elevatorStart(pwrForward);
+        }
+        if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0){
+            ele.elevatorStop();
+        }
+
+
+
+        telemetry.update();
     }
 
     void CallRelicArmSystem() {

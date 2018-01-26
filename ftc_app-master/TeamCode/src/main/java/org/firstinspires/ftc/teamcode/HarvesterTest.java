@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by 28761 on 1/16/2018.
  */
 
-public class CarriageTest extends LinearOpMode {
+@TeleOp(name = "CarriageTestOp", group = "Iterative Opmode")
+public class HarvesterTest extends LinearOpMode {
 
     public KeithCarriage kc;
+//    public KeithElevator ke;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -18,12 +21,16 @@ public class CarriageTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+//            ke.ElevatorInit(0);
+//            ke.kickerInit();
+//            ke.kickerReset();
+            telemetry.addLine(String.format("slideMotorTick: %d", kc.slideMotor.getCurrentPosition()));
             if (gamepad1.dpad_right) {
                 telemetry.addLine("Carriage go right");
                 kc.slideTo(KeithCarriage.RIGHT);
             }
             if (gamepad1.dpad_left) {
-                telemetry.addLine("Carriage go right");
+                telemetry.addLine("Carriage go left");
                 kc.slideTo(KeithCarriage.LEFT);
             }
             if (gamepad1.dpad_up) {
@@ -36,12 +43,23 @@ public class CarriageTest extends LinearOpMode {
             }
             if (gamepad1.a) {
                 telemetry.addLine("left servo toggle");
-                kc.holderToggle(false);
+                kc.holderToggle(KeithCarriage.LEFTS);
             }
             if (gamepad1.b) {
                 telemetry.addLine("right servo toggle");
-                kc.holderToggle(true);
+                kc.holderToggle(KeithCarriage.RIGHTS);
             }
+
+//            if (gamepad1.left_bumper) {
+//                ke.elevatorStart(0.5);
+//            }
+//            if (gamepad1.right_bumper) {
+//                ke.elevatorStop();
+//            }
+//            if (gamepad1.y) {
+//                ke.kickerKick();
+//            }
+
             telemetry.update();
         }
     }

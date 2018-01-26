@@ -39,7 +39,7 @@ public class VuforiaTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         //set camera direction
-        params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        params.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         //set license key
         params.vuforiaLicenseKey = "AZngjFj/////AAAAGXl4r+gz20bgi78ZEfdDoSM3BRzoPWF85Z/GS524liytojbME/4mrMSgTIJrEsW1IxxgIy6Po9DKP08uYMrcCpsVG1gd800G3RIRQ0KNtQnC7onvphQ2RBZ+3JXkfdYLct13YRM1TzbJLWaS4Lz5bSMMRpSTJU8zSwzAZ1fIdqwXBevZZMkd+LKtIogK+wl1fBo/SaDcrrSW/BIePFCbk1bBG1eaAetcLjEUngrGYBtmD+PdYbefaBFwuzV+eQDU0E671GNILzDhirYTAcFfe/+F2WK9VgAVZfycin4Iv06GyebuSfTiIsE65jhoXY9FQy3ZWnwZGHcID0e/KRG/+CYdk9A+ltYPi7qfrMh/lk5/";
         //set camera feedback just for fun
@@ -103,6 +103,7 @@ public class VuforiaTest extends LinearOpMode {
                         int GSum = 0;
                         int BSum = 0;
                         int count = 0;
+                        String rColor = null;
                         for (int i = ox; i < ox + 3; i++) {
                             for (int j = oy; j > oy - 3; j--) {
                                 if (0 < i && i < bm.getWidth() && 0 < j && j < bm.getHeight()) {
@@ -137,7 +138,15 @@ public class VuforiaTest extends LinearOpMode {
                             }
                         }
 
-                        telemetry.addData("Color ", " Red: " + RSum + " Green: " + GSum + " Blue: " + BSum);
+                        if ((RSum > 200 && GSum < 50 && BSum < 50) | (RSum > GSum + 100 && RSum > BSum +100)){
+                            rColor = "Red";
+                        } else if ((RSum < 70 && GSum > 70 && BSum > 170) | (BSum > RSum + 100 && BSum > GSum + 50)){
+                            rColor = "Blue";
+                        } else {
+                            rColor = "Other";
+                        }
+
+                        telemetry.addData("Color:", rColor);
 
 //                        if (0 < x && x < bm.getWidth() && 0 < y && y < bm.getHeight()) {
 //                            int color = bm.getPixel(x, y);

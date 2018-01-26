@@ -18,21 +18,6 @@ public class KeithCarriage extends Carriage {
     Servo rServo = null;
     Telemetry tl;
 
-//    KeithCarriage(DcMotor cM, DcMotor fM, Servo lS, Servo rS) {
-//        slideMotor = cM;
-//        flipMotor = fM;
-//        lServo = lS;
-//        rServo = rS;
-//    }
-
-//    public void carriageInit() {
-//        lServo.scaleRange(0.0, 1.0);
-//        lServo.setPosition(0.0);
-//
-//        rServo.scaleRange(0.0, 1.0);
-//        rServo.setPosition(0.0);
-//    }
-
     public KeithCarriage(HardwareMap hwMap, Telemetry telemetry, String SMLabel, String FMLabel, String LSLabel, String RSLabel) {
         tl = telemetry;
         slideMotor = hwMap.get(DcMotor.class, SMLabel);
@@ -42,11 +27,12 @@ public class KeithCarriage extends Carriage {
     }
 
     //TBD
-    public static final int LEFT = -50;
+    public static final int LEFT = 1100;
     public static final int CENTER = 0;
-    public static final int RIGHT = 50;
+    public static final int RIGHT = -1100;
     public boolean slideActive = false;
     public int destination;
+
 
     public void slideStart(int dest) {
         if (!slideActive) {
@@ -72,8 +58,19 @@ public class KeithCarriage extends Carriage {
     }
 
     public void slideTo(int state) {
-        slideMotor.setPower(Integer.signum(state - slideMotor.getCurrentPosition()));
-        while (Math.abs(state - slideMotor.getCurrentPosition()) > 5) {
+        if (Math.abs(state - slideMotor.getCurrentPosition()) < 5) {
+            tl.addLine(String.format("target:%d, tick:%d", state, slideMotor.getCurrentPosition()));
+            tl.addLine("in position");
+            tl.update();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        slideMotor.setPower(0.2 * Integer.signum(state - slideMotor.getCurrentPosition()));
+        while (Math.abs(state - slideMotor.getCurrentPosition()) > 10) {
             //wait until finish
         }
         slideMotor.setPower(0.0);
@@ -120,17 +117,52 @@ public class KeithCarriage extends Carriage {
         flipMotor.setPower(0);
     }
 
-    static boolean holded;
-    static final double hold = 0.9;
-    static final double release = 0.1;
+    static final double holdL = 0.8;
+    static final double releaseL = 0.2;
+    static final double holdR = 0.6;
+    static final double releaseR = 0.1;
+    static final boolean LEFTS = true;
+    static final boolean RIGHTS = false;
 
     public void holderToggle(boolean side) {
         if (side) {
-            lServo.setPosition(holded ? release : hold);
+            tl.addLine("LEFT " + String.format("to %s", lServo.getPosition() == holdL ? "release" : "hold"));
+            tl.update();
+            lServo.setPosition(lServo.getPosition() == holdL ? releaseL : holdL);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else {
-            lServo.setPosition(holded ? release : hold);
+            tl.addLine("RIGHT " + String.format("to %s", rServo.getPosition() == holdR ? "release" : "hold"));
+            tl.update();
+            rServo.setPosition(rServo.getPosition() == holdR ? releaseR : holdR);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+//	public static final int DIS = 100;
 
+
+    public void flipToggle() {
+        flipMotor.setPower(currentState ? 1.0 : -1.0);
+        while ((currentState ? UP : DOWN) - flipMotor.getCurrentPosition() > 5) {
+            //wait until finish
+        }
+        currentState = !currentState;
+        flipMotor.setPower(0);
+    }
+
+//    public void setState(int state) {
+//		slideMotor.setPower(Integer.signum(state * DIS - slideMotor.getCurrentPosition()));
+//		while (Math.abs(slideMotor.getCurrentPosition() - state * DIS) > 10) {
+//			//wait until finish
+//		}
+//		slideMotor.setPower(0.0);
+//	}
 }

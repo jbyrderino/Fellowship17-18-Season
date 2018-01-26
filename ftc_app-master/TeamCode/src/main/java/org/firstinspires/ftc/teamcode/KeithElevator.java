@@ -3,122 +3,67 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-public class KeithElevator{
+public class KeithElevator {
+	private DcMotor ElevatorMotor = null;
+	private Servo ElevatorServo = null;
+	private double motorPower;
+	public boolean UP;
+	public double upPos = 0.0;
+	public double downPos = 0.5;
 
+	KeithElevator(HardwareMap hwmap, String elevatorMotor, String elevatorServo, double MotorPower) {
+		ElevatorMotor = hwmap.get(DcMotor.class, elevatorMotor);
+		ElevatorServo = hwmap.get(Servo.class, elevatorServo);
+		ElevatorInit(MotorPower);
+	}
 
-//
-//    private HardwareDevice ElevatorMotor = null;
-//    private HardwareDevice ElevatorServo = null;
-//    private double motorPower;
-//
-//    //Temporary until controller class is finished
-//    private boolean lBumperPressed;
-//    private boolean rBumperPressed;
-//    private boolean DPadDownPressed;
-//
-//    KeithElevator (HardwareMap hwmap, double MotorPower) {
-//        ElevatorMotor = hwmap.get("ElevatorMotor");
-//        ElevatorServo = hwmap.get("ElevatorMotor");
-//        ElevatorInit(MotorPower);
-//    }
-//
-//    @Override
-//    public void elevatorStart(double Pwr) {
-//        ElevatorMotor.setPower(Pwr);
-//    }
-//
-//    public void elevatorStop() {
-//        ElevatorMotor.setPower(0.0);
-//    }
-//
-//    public void kickerInit(){
-//        ElevatorServo.scaleRange(0.0, 1.0);
-//        ElevatorServo.setPosition(0.0);
-//    }
-//
-//    public void kickerSetPosition(double Pos) {
-//        ElevatorServo.setPosition(Pos);
-//    }
-//
-//    public void kickerReset() {
-//        ElevatorServo.setPosition(0.0);
-//    }
-//
-//    public void ElevatorInit(double mp) {
-//        motorPower = mp;
-//        kickerInit();
-//    }
-//
-//    public void ElevatorRun() {
-//        kickerReset();
-//        elevatorStop();
-//
-//        if (lBumperPressed){
-//            elevatorStart(motorPower);
-//
-//            while (true) {
-//                 if (lBumperPressed) {
-//                    elevatorStop();
-//                }
-//            }
-//        }
-//        if (rBumperPressed) {
-//            elevatorStart(-motorPower);
-//
-//            while (true) {
-//                if (lBumperPressed) {
-//                    elevatorStop();
-//                }
-//            }
-//        }
-//
-//        if (DPadDownPressed) {
-//            kickerSetPosition(1.0);
-//        }
-//    }
+	public void elevatorStart(double Pwr) {
+		ElevatorMotor.setPower(Pwr);
+	}
+
+	public void elevatorStop() {
+		ElevatorMotor.setPower(0.0);
+	}
+
+	public void kickerInit(){
+		ElevatorServo.scaleRange(0.0, 1.0);
+		ElevatorServo.setPosition(downPos);
+	}
+
+	public double getKickerPosition(){
+		return ElevatorServo.getPosition();
+	}
+
+	public boolean isKickerUp(){
+		if (getKickerPosition() == upPos){
+			UP = true;
+		}
+		if (getKickerPosition() <= downPos) {
+			UP = false;
+		}
+
+		return UP;
+	}
 
 
-    private DcMotor ElevatorMotor = null;
-    private Servo ElevatorServo = null;
-    private double motorPower;
+	public void kickerSetPosition(double Pos) {
+		ElevatorServo.setPosition(Pos);
+	}
 
-    KeithElevator (HardwareMap hwmap, double MotorPower) {
-        ElevatorMotor = hwmap.get(DcMotor.class, "ElevatorMotor");
-        ElevatorServo = hwmap.get(Servo.class, "ElevatorServo");
-        ElevatorInit(MotorPower);
-    }
+	public void kickerReset() {
+		ElevatorServo.setPosition(downPos);
+		while (getKickerPosition() < downPos){}
+	}
 
-    public void elevatorStart(double Pwr) {
-        ElevatorMotor.setPower(Pwr);
-    }
+	public void kickerKick() {
+		kickerSetPosition(upPos);
 
-    public void elevatorStop() {
-        ElevatorMotor.setPower(0.0);
-    }
+		while (getKickerPosition() > upPos){}
+	}
 
-    public void kickerInit(){
-        ElevatorServo.scaleRange(0.0, 1.0);
-        ElevatorServo.setPosition(0.0);
-    }
-
-    public void kickerSetPosition(double Pos) {
-        ElevatorServo.setPosition(Pos);
-    }
-
-    public void kickerReset() {
-        ElevatorServo.setPosition(0.0);
-    }
-
-    public void kickerKick() {
-        kickerReset();
-        kickerSetPosition(1.0);
-        kickerReset();
-    }
-
-    public void ElevatorInit(double mp) {
-        motorPower = mp;
-        kickerInit();
-    }
+	public void ElevatorInit(double mp) {
+		motorPower = mp;
+		kickerInit();
+	}
 }

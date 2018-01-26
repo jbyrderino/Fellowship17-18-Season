@@ -14,18 +14,20 @@ public class KeithRobot extends FTCRobot {
     MecanumDS mds;
     FishingRodSystem frs;
     KeithJewlKnocker jks;
+    KeithElevator ele;
+    KeithCarriage car;
 
     KeithRobot(HardwareMap hardwareMap, Telemetry telemetry) {
         imu = new BoschIMU(hardwareMap, "imu");
         mds = new MecanumDS(hardwareMap, telemetry, imu, "Front Left", "Front Right", "Back Left", "Back Right");
         frs = new FishingRodSystem(hardwareMap, telemetry, "lowerReel", "upperReel", "claw", "rodMotor");
         jks = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker", telemetry);
+        ele = new KeithElevator(hardwareMap, "HarvesterMain", "Kicker", 1.0);
+        car = new KeithCarriage(hardwareMap,telemetry, "slideMotor", "flipMotor", "lServo","rServo");
 
-        // TODO - remove this code once elevator/carriage set the servos
-        // TODO - to good default values in their contructor/init
-        Servo carriageLeftServo = hardwareMap.servo.get("CarriageLeft");
+        Servo carriageLeftServo = hardwareMap.servo.get("lServo");
         carriageLeftServo.setPosition(0.35);
-        Servo carriageRightServo = hardwareMap.servo.get("CarriageRight");
+        Servo carriageRightServo = hardwareMap.servo.get("rServo");
         carriageRightServo.setPosition(0.42);
         Servo kickerServo = hardwareMap.servo.get("Kicker");
         kickerServo.setPosition(0.52);
@@ -46,4 +48,8 @@ public class KeithRobot extends FTCRobot {
     public KeithJewlKnocker GetJewelKnockerSubsystem() {
         return jks;
     }
+
+    public KeithElevator GetKeithElevator() { return ele; }
+
+    public KeithCarriage GetKeithCarriage() { return car; }
 }

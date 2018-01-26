@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class HarvesterTest extends LinearOpMode {
 
     public KeithCarriage kc;
-    public KeithElevator ke;
+//    public KeithElevator ke;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -21,16 +21,16 @@ public class HarvesterTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            ke.ElevatorInit(0);
-            ke.kickerInit();
-            ke.kickerReset();
-
+//            ke.ElevatorInit(0);
+//            ke.kickerInit();
+//            ke.kickerReset();
+            telemetry.addLine(String.format("slideMotorTick: %d", kc.slideMotor.getCurrentPosition()));
             if (gamepad1.dpad_right) {
                 telemetry.addLine("Carriage go right");
                 kc.slideTo(KeithCarriage.RIGHT);
             }
             if (gamepad1.dpad_left) {
-                telemetry.addLine("Carriage go right");
+                telemetry.addLine("Carriage go left");
                 kc.slideTo(KeithCarriage.LEFT);
             }
             if (gamepad1.dpad_up) {
@@ -50,15 +50,15 @@ public class HarvesterTest extends LinearOpMode {
                 kc.holderToggle(KeithCarriage.RIGHTS);
             }
 
-            if (gamepad1.left_bumper) {
-                ke.elevatorStart(0.5);
-            }
-            if (gamepad1.right_bumper) {
-                ke.elevatorStop();
-            }
-            if (gamepad1.y) {
-                ke.kickerKick();
-            }
+//            if (gamepad1.left_bumper) {
+//                ke.elevatorStart(0.5);
+//            }
+//            if (gamepad1.right_bumper) {
+//                ke.elevatorStop();
+//            }
+//            if (gamepad1.y) {
+//                ke.kickerKick();
+//            }
 
             telemetry.update();
         }

@@ -211,15 +211,6 @@ public class KeithTeleOp extends OpMode {
             car.holderToggle(KeithCarriage.RIGHTS);
         }
 
-
-        //Carriage feedback
-        if (slideActive) {
-            //car.slideActive = true;
-        }
-        if (flipActive) {
-            //car.flipperToggleActive = true;
-        }
-
         //Kicker and Elevator Code
         //Kicker and Elevator controls
         if (gamepad2.a && !gamepad2.b) {
@@ -233,11 +224,11 @@ public class KeithTeleOp extends OpMode {
         }
 
 
-        if (gamepad2.right_trigger <= rTrigger2 && gamepad2.left_trigger != 0 && gamepad2.right_trigger == 0){
+        if (gamepad2.left_trigger <= lTrigger2 && gamepad2.left_trigger != 0.0 && gamepad2.right_trigger == 0.0){
             telemetry.addLine("command: elevator reverse");
             ele.elevatorStart(pwrReverse);
         }
-        if (gamepad2.left_trigger <= lTrigger2 && gamepad2.right_trigger != 0 && gamepad2.left_trigger == 0) {
+        if (gamepad2.right_trigger <= rTrigger2 && gamepad2.right_trigger != 0.0 && gamepad2.left_trigger == 0.0) {
             telemetry.addLine("command: elevator forward");
             ele.elevatorStart(pwrForward);
         }

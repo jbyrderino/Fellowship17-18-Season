@@ -390,19 +390,10 @@ public class KeithTeleOp extends OpMode {
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
 
-        if (gamepad1.right_bumper && isMult == false) {
-            multTemp = multConst;
-            isMult = true;
-        }
-        if (gamepad1.left_bumper && isMult == true) {
-            multTemp = motorConst;
-            isMult = false;
-        }
-
-        ds.FrontLeft.setPower(v1*multTemp);
-        ds.FrontRight.setPower(v2*multTemp);
-        ds.BackLeft.setPower(v3*multTemp);
-        ds.BackRight.setPower(v4*multTemp);
+        ds.FrontLeft.setPower(v1);
+        ds.FrontRight.setPower(v2);
+        ds.BackLeft.setPower(v3);
+        ds.BackRight.setPower(v4);
     }
 
     void CallDriveSystem() {

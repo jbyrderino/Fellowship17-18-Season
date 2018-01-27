@@ -21,7 +21,7 @@ public class KeithJewlKnocker extends JewlKnocker {
         knockerBase = hwMap.servo.get(labelBase);
         knockerBase.setPosition(0.25);
         servoKnocker = hwMap.servo.get(labelKnocker);
-        servoKnocker.setPosition(0.97);
+        servoKnocker.setPosition(0.75);
         tl = telemetry;
     }
 
@@ -41,36 +41,36 @@ public class KeithJewlKnocker extends JewlKnocker {
         return servoPosition;
     }
     public void knockerDown() {
-        servoKnocker.setPosition(.55);
-        sleep(300);
+        servoKnocker.setPosition(.3);
+        sleep(500);
     }
 
     public void knockerUp(){
         servoKnocker.setPosition(.95);
-        sleep(300);
+        sleep(500);
     }
 
     public void baseKnockerRotateLeft() {
         knockerBase.setPosition(.20);
-        sleep(300);
+        sleep(500);
     }
 
     public void baseKnockerRotateRight(){
         knockerBase.setPosition(.76);
-        sleep(300);
+        sleep(500);
     }
 
     public void knockLeft() {
         knockerBase.setPosition(.56);
         sleep(500);
         knockerBase.setPosition(.76);
-        sleep(300);
+        sleep(500);
     }
 
     public void knockRight() {
         knockerBase.setPosition(.96);
         sleep(500);
         knockerBase.setPosition(.76);
-        sleep(300);
+        sleep(500);
     }
 }

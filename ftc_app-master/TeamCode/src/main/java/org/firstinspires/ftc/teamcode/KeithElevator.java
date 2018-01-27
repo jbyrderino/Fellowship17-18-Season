@@ -10,7 +10,7 @@ public class KeithElevator {
 	private double motorPower;
 	public boolean UP;
 	public double upPos = 0.0;
-	public double downPos = 0.5;
+	public double downPos = 0.4;
 
 	KeithElevator(HardwareMap hwmap, String elevatorMotor, String elevatorServo, double MotorPower) {
 		ElevatorMotor = hwmap.get(DcMotor.class, elevatorMotor);
@@ -47,9 +47,7 @@ public class KeithElevator {
 	}
 
 
-	public void kickerSetPosition(double Pos) {
-		ElevatorServo.setPosition(Pos);
-	}
+	public void kickerSetPosition(double Pos) { ElevatorServo.setPosition(Pos); }
 
 	public void kickerReset() {
 		ElevatorServo.setPosition(downPos);

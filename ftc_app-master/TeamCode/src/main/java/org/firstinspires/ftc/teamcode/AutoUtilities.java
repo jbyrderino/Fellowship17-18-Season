@@ -50,6 +50,14 @@ public abstract class AutoUtilities {
         return (rgb & 0x1f);
     }
 
+    static void sleep(long millis){
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     static VuforiaLocalizer VuforiaInitialize() {
         //do all the initialization needed
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -90,7 +98,8 @@ public abstract class AutoUtilities {
         long startTime = System.currentTimeMillis();
         while (System.currentTimeMillis() - startTime < 5000) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            //vuMark != RelicRecoveryVuMark.UNKNOWN || vuMark == RelicRecoveryVuMark.UNKNOWN
+            if (true) {
                 telemetry.addData("", "Found pictogram: %s", vuMark);
                 // we found the pictogram, let's try to find the jewel color now
                 OpenGLMatrix rawPose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getRawPose();
@@ -355,23 +364,5 @@ public abstract class AutoUtilities {
         }
         return true;
     }
-    public static void ElevatorAuto (KeithElevator elevator, double power, Telemetry telemetry) {
-        elevator.elevatorStart(power);
-        telemetry.addData("", "Start Elevator.");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        elevator.kickerKick();
-        telemetry.addData("", "Kick Glyph.");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        elevator.kickerReset();
-        elevator.elevatorStop();
-        telemetry.addData("", "Stop Elevator and Retract Kicker.");
-    }
+    //ADD CARRIAGE CODE!
 }

@@ -69,6 +69,12 @@ public class KeithTeleOp extends OpMode {
     boolean engageMotors = true;
     double dsSelectionTime = 0;
 
+    // Variables for the test drive system
+    double multConst = 0.2;
+    double motorConst = 0.0;
+    double multTemp;
+    boolean isMult;
+
     // Variables that control the relic arm system
     FishingRodSystem frs = null;
     boolean relicArmMoving = false;
@@ -84,7 +90,7 @@ public class KeithTeleOp extends OpMode {
     double lTrigger2 = 1.0;
     double rTrigger2 = 1.0;
     //Reverse should always be between -1.0 and 0.0, positive should always be between 0.0 and 1.0
-    double pwrForward = 0.6;
+    double pwrForward = 1.0;
     double pwrReverse = -pwrForward;
 
 
@@ -384,10 +390,19 @@ public class KeithTeleOp extends OpMode {
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
 
-        ds.FrontLeft.setPower(v1);
-        ds.FrontRight.setPower(v2);
-        ds.BackLeft.setPower(v3);
-        ds.BackRight.setPower(v4);
+        if (gamepad1.right_bumper && isMult == false) {
+            multTemp = multConst;
+            isMult = true;
+        }
+        if (gamepad1.left_bumper && isMult == true) {
+            multTemp = motorConst;
+            isMult = false;
+        }
+
+        ds.FrontLeft.setPower(v1*multTemp);
+        ds.FrontRight.setPower(v2*multTemp);
+        ds.BackLeft.setPower(v3*multTemp);
+        ds.BackRight.setPower(v4*multTemp);
     }
 
     void CallDriveSystem() {

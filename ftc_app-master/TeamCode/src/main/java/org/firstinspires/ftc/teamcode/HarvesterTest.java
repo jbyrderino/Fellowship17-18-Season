@@ -14,6 +14,8 @@ public class HarvesterTest extends LinearOpMode {
     public KeithCarriage kc;
 //    public KeithElevator ke;
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         HardwareMap hwMap = hardwareMap;
@@ -27,14 +29,20 @@ public class HarvesterTest extends LinearOpMode {
             telemetry.addLine(String.format("slideMotorTick: %d", kc.slideMotor.getCurrentPosition()));
             if (gamepad1.dpad_right) {
                 telemetry.addLine("Carriage go right");
+                telemetry.update();
+                sleep(100);
                 kc.slideTo(KeithCarriage.RIGHT);
             }
             if (gamepad1.dpad_left) {
                 telemetry.addLine("Carriage go left");
+                telemetry.update();
+                sleep(100);
                 kc.slideTo(KeithCarriage.LEFT);
             }
             if (gamepad1.dpad_up) {
                 telemetry.addLine("Carriage go center");
+                telemetry.update();
+                sleep(100);
                 kc.slideTo(KeithCarriage.CENTER);
             }
             if (gamepad1.x) {

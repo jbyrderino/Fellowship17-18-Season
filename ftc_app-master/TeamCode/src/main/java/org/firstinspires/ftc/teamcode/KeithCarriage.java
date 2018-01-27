@@ -29,9 +29,9 @@ public class KeithCarriage extends Carriage {
     }
 
     //TBD
-    public static final int LEFT = 1100;
+    public static final int LEFT = 1000;
     public static final int CENTER = 0;
-    public static final int RIGHT = -1100;
+    public static final int RIGHT = -1000;
     public boolean slideActive = false;
     public int destination;
 
@@ -118,7 +118,7 @@ public class KeithCarriage extends Carriage {
         tl.addLine(String.format("current state: %s", currentState ? "up" : "down"));
         tl.addLine(String.format("goto: %s", currentState ? "down" : "up"));
         tl.update();
-        flipMotor.setPower(currentState == false ? 0.75 : -0.1);
+        flipMotor.setPower(currentState == false ? 0.75 : -0.125);
         while (Math.abs((currentState ? DOWN : UP) - flipMotor.getCurrentPosition()) > 5) {
             //wait until finish
             tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));

@@ -31,10 +31,10 @@ public class KiethECopmode extends OpMode {
 				kE.elevatorStart(-0.5);
 			}
 			if (!actionTaken) {
-				kE.elevatorStop();
+				//kE.elevatorStop();
 			}
 		} else{
-			kE.elevatorStop();
+			//kE.elevatorStop();
 		}
 
 		if (gamepad1.dpad_down) {

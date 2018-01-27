@@ -99,7 +99,7 @@ public abstract class AutoUtilities {
         while (System.currentTimeMillis() - startTime < 5000) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             //vuMark != RelicRecoveryVuMark.UNKNOWN || vuMark == RelicRecoveryVuMark.UNKNOWN
-            if (true) {
+            if (true == true) {
                 telemetry.addData("", "Found pictogram: %s", vuMark);
                 // we found the pictogram, let's try to find the jewel color now
                 OpenGLMatrix rawPose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getRawPose();
@@ -177,13 +177,19 @@ public abstract class AutoUtilities {
         return new VuforiaInfo(vuMark, jewelColor);
     }
 
+    static public void CarriageGrip (KeithCarriage carriage) {
+        carriage.slideTo(KeithCarriage.CENTER);
+        sleep(500);
+        carriage.holderToggle(KeithCarriage.RIGHTS);
+    }
+
     static public void KnockJewel (KeithJewlKnocker jewlKnocker, boolean leftSide) {
         jewlKnocker.baseKnockerRotateRight();
         jewlKnocker.knockerDown();
         if (leftSide) {
-            jewlKnocker.knockLeft();
-        } else {
             jewlKnocker.knockRight();
+        } else {
+            jewlKnocker.knockLeft();
         }
         jewlKnocker.knockerUp();
         jewlKnocker.baseKnockerRotateLeft();
@@ -198,7 +204,7 @@ public abstract class AutoUtilities {
                 // back again a little bit.
 
                 // Move back
-                if (!ds.Move (movePower, 180, 0, 1270, 5000)) {
+                if (!ds.Move (movePower, 180, 0, 1300, 5000)) {
                     // we seem to have timed out. Let's not continue this anymore
                     // it's not safe to try to go further as we don't really know
                     // our current position anymore
@@ -216,7 +222,7 @@ public abstract class AutoUtilities {
                 }
 
                 // Move back
-                if (!ds.Move (movePower, 180, 0, 390, 5000)) {
+                if (!ds.Move (movePower, 180, 0, 310, 5000)) {
                     // we seem to have timed out. Let's not continue this anymore
                     // it's not safe to try to go further as we don't really know
                     // our current position anymore
@@ -266,7 +272,7 @@ public abstract class AutoUtilities {
                 }
 
                 // Move back
-                if (!ds.Move (movePower, 180, 0, 260, 5000)) {
+                if (!ds.Move (movePower, 180, 0, 180, 5000)) {
                     // we seem to have timed out. Let's not continue this anymore
                     // it's not safe to try to go further as we don't really know
                     // our current position anymore
@@ -282,7 +288,7 @@ public abstract class AutoUtilities {
                 // back a little bit.
 
                 // Move forward
-                if (!ds.Move (movePower, 0, 0, 1290, 5000)) {
+                if (!ds.Move (movePower, 0, 0, 1300, 5000)) {
                     // we seem to have timed out. Let's not continue this anymore
                     // it's not safe to try to go further as we don't really know
                     // our current position anymore
@@ -300,7 +306,7 @@ public abstract class AutoUtilities {
                 }
 
                 // Move back
-                if (!ds.Move (movePower, 180, 0, 420, 5000)) {
+                if (!ds.Move (movePower, 180, 0, 340, 5000)) {
                     // we seem to have timed out. Let's not continue this anymore
                     // it's not safe to try to go further as we don't really know
                     // our current position anymore
@@ -350,7 +356,7 @@ public abstract class AutoUtilities {
                 }
 
                 // Move back
-                if (!ds.Move (movePower, 180, 0, 320, 5000)) {
+                if (!ds.Move (movePower, 180, 0, 240, 5000)) {
                     // we seem to have timed out. Let's not continue this anymore
                     // it's not safe to try to go further as we don't really know
                     // our current position
@@ -364,5 +370,16 @@ public abstract class AutoUtilities {
         }
         return true;
     }
-    //ADD CARRIAGE CODE!
+
+    static public void CarriageFlip (KeithCarriage carriage) {
+        carriage.slideTo(KeithCarriage.RIGHT);
+        sleep(2000);
+        carriage.flipperToggle();
+        sleep(2000);
+        carriage.holderToggle(KeithCarriage.RIGHTS);
+        sleep(2000);
+        carriage.flipperToggle();
+        sleep(2000);
+        carriage.slideTo(KeithCarriage.CENTER);
+    }
 }

@@ -41,6 +41,7 @@ public class AutoBlue1 extends LinearOpMode {
         MecanumDS ds = (MecanumDS)(keith.GetDriveSystem());
         KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
         KeithElevator ele = keith.GetKeithElevator();
+        KeithCarriage car = keith.GetKeithCarriage();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         int jewelColor = Color.TRANSPARENT;
 
@@ -61,7 +62,7 @@ public class AutoBlue1 extends LinearOpMode {
             jewelColor = vuforiaInfo.jewelColor;
         }
 
-        //ADD CARRIAGE CODE!
+        AutoUtilities.CarriageGrip(car);
 
         // At this point we should have a pictogram and a color for the
         // jewel that is close to the pictogram, i.e. on the left side of
@@ -99,7 +100,7 @@ public class AutoBlue1 extends LinearOpMode {
             // TODO - implement this
         }
 
-        //ADD CARRIAGE CODE!
+        AutoUtilities.CarriageFlip(car);
 
         // make all the telemetry messages appear
         telemetry.update();

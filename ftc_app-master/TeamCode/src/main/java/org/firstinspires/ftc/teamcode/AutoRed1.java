@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
@@ -21,6 +22,7 @@ public class AutoRed1 extends LinearOpMode {
         KeithRobot keith = new KeithRobot(hardwareMap, telemetry);;
         MecanumDS ds = (MecanumDS)(keith.GetDriveSystem());
         KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
+        KeithElevator ele = keith.GetKeithElevator();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         int jewelColor = Color.TRANSPARENT;
 
@@ -67,15 +69,10 @@ public class AutoRed1 extends LinearOpMode {
             // we were not able to read the cypher, don't do anything
             telemetry.addData("", "Could not read the cypher, nothing to do.");
         } else {
-            // We now know the column into which we are supposed to score our glyph
-            // The glyph is at the top of the elevator at this point. Depending on
-            // the column from vuMark, we need to move the carriage into the position
-            // to receive the glyph, kick the glyph, then move the carriage into the
-            // position so that the glyph is in front of the right column, and then
-            // finally unload the glyph.
             telemetry.addData("", "Cypher column: %s", vuMark);
             // TODO - implement this
         }
+        AutoUtilities.ElevatorAuto(ele, 0.8, telemetry);
 
         // make all the telemetry messages appear
         telemetry.update();

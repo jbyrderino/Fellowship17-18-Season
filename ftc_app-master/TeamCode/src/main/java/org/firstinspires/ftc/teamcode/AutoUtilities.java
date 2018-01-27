@@ -355,4 +355,23 @@ public abstract class AutoUtilities {
         }
         return true;
     }
+    public static void ElevatorAuto (KeithElevator elevator, double power, Telemetry telemetry) {
+        elevator.elevatorStart(power);
+        telemetry.addData("", "Start Elevator.");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        elevator.kickerKick();
+        telemetry.addData("", "Kick Glyph.");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        elevator.kickerReset();
+        elevator.elevatorStop();
+        telemetry.addData("", "Stop Elevator and Retract Kicker.");
+    }
 }

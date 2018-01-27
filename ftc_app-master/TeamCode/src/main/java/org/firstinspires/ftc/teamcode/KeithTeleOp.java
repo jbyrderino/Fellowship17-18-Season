@@ -147,7 +147,7 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void loop() {
-        jwl.setBasePosition(0.2);
+        jwl.setBasePosition(0.25);
 
         if (gamepad2.start) {
             if (gamepad2.x) {

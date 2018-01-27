@@ -111,6 +111,9 @@ public class KeithTeleOp extends OpMode {
         ele = (KeithElevator) (keithRobot.GetKeithElevator());
         car = (KeithCarriage) (keithRobot.GetKeithCarriage());
         jwl = (KeithJewlKnocker) (keithRobot.GetJewelKnockerSubsystem());
+
+        jwl.setBasePosition(0.2);
+        jwl.setKnockerPosition(0.75);
     }
 
     /*
@@ -147,7 +150,6 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void loop() {
-        jwl.setBasePosition(0.2);
 
         if (gamepad2.start) {
             if (gamepad2.x) {

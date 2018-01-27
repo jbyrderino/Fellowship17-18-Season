@@ -47,9 +47,7 @@ public class KeithElevator {
 	}
 
 
-	public void kickerSetPosition(double Pos) {
-		ElevatorServo.setPosition(Pos);
-	}
+	public void kickerSetPosition(double Pos) { ElevatorServo.setPosition(Pos); }
 
 	public void kickerReset() {
 		ElevatorServo.setPosition(downPos);

@@ -43,6 +43,8 @@ public class AutoRed1 extends LinearOpMode {
             jewelColor = vuforiaInfo.jewelColor;
         }
 
+        //ADD CARRIAGE CODE!
+
         // At this point we should have a pictogram and a color for the
         // jewel that is close to the pictogram, i.e. on the left side of
         // the jewel knocker. We will now make a decision about which jewel
@@ -72,7 +74,8 @@ public class AutoRed1 extends LinearOpMode {
             telemetry.addData("", "Cypher column: %s", vuMark);
             // TODO - implement this
         }
-        AutoUtilities.ElevatorAuto(ele, 0.8, telemetry);
+
+        //ADD CARRIAGE CODE!
 
         // make all the telemetry messages appear
         telemetry.update();

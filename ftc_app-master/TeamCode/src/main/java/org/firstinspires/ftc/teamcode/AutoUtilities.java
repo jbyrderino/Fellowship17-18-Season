@@ -50,6 +50,14 @@ public abstract class AutoUtilities {
         return (rgb & 0x1f);
     }
 
+    static void sleep(long millis){
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     static VuforiaLocalizer VuforiaInitialize() {
         //do all the initialization needed
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -91,7 +99,7 @@ public abstract class AutoUtilities {
         while (System.currentTimeMillis() - startTime < 5000) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             //vuMark != RelicRecoveryVuMark.UNKNOWN || vuMark == RelicRecoveryVuMark.UNKNOWN
-            if (true == true) {
+            if (true) {
                 telemetry.addData("", "Found pictogram: %s", vuMark);
                 // we found the pictogram, let's try to find the jewel color now
                 OpenGLMatrix rawPose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getRawPose();

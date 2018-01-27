@@ -19,7 +19,7 @@ public class KeithJewlKnocker extends JewlKnocker {
 
     KeithJewlKnocker (HardwareMap hwMap, String labelBase, String labelKnocker, Telemetry telemetry) {
         knockerBase = hwMap.servo.get(labelBase);
-        knockerBase.setPosition(0.20);
+        knockerBase.setPosition(0.25);
         servoKnocker = hwMap.servo.get(labelKnocker);
         servoKnocker.setPosition(0.97);
         tl = telemetry;

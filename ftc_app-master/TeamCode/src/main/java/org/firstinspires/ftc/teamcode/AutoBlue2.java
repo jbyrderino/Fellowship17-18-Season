@@ -21,6 +21,7 @@ public class AutoBlue2 extends LinearOpMode {
         KeithRobot keith = new KeithRobot(hardwareMap, telemetry);;
         MecanumDS ds = (MecanumDS)(keith.GetDriveSystem());
         KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
+        KeithElevator ele = keith.GetKeithElevator();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         int jewelColor = Color.TRANSPARENT;
 
@@ -76,6 +77,8 @@ public class AutoBlue2 extends LinearOpMode {
             telemetry.addData("", "Cypher column: %s", vuMark);
             // TODO - implement this
         }
+
+        AutoUtilities.ElevatorAuto(ele, 0.8, telemetry);
 
         // make all the telemetry messages appear
         telemetry.update();

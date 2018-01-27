@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,6 +23,7 @@ public class KeithCarriage extends Carriage {
         tl = telemetry;
         slideMotor = hwMap.get(DcMotor.class, SMLabel);
         flipMotor = hwMap.get(DcMotor.class, FMLabel);
+        flipMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         lServo = hwMap.get(Servo.class, LSLabel);
         rServo = hwMap.get(Servo.class, RSLabel);
     }
@@ -69,6 +71,8 @@ public class KeithCarriage extends Carriage {
             }
             return;
         }
+        tl.addLine("Carriage GO");
+        tl.update();
         slideMotor.setPower(0.2 * Integer.signum(state - slideMotor.getCurrentPosition()));
         while (Math.abs(state - slideMotor.getCurrentPosition()) > 10) {
             //wait until finish
@@ -80,10 +84,6 @@ public class KeithCarriage extends Carriage {
         return Math.abs(target - value) < 10;
     }
 
-    boolean currentState;
-    static final int UP = 30;
-    static final int DOWN = 0;
-    boolean flipperToggleActive = false;
 
     public void flipperToggleStart() {
         if (!flipperToggleActive) {
@@ -107,14 +107,35 @@ public class KeithCarriage extends Carriage {
         return false;
     }
 
+    //false: down true:up
+    boolean currentState;
+    static final int UP = 450;
+    static final int DOWN = 0;
+    boolean flipperToggleActive = false;
+
     //test function
     public void flipperToggle() {
-        flipMotor.setPower(currentState ? 1.0 : -1.0);
-        while ((currentState ? UP : DOWN) - flipMotor.getCurrentPosition() > 5) {
+        tl.addLine(String.format("current state: %s", currentState ? "up" : "down"));
+        tl.addLine(String.format("goto: %s", currentState ? "down" : "up"));
+        tl.update();
+        flipMotor.setPower(currentState == false ? 0.75 : -0.1);
+        while (Math.abs((currentState ? DOWN : UP) - flipMotor.getCurrentPosition()) > 5) {
             //wait until finish
+            tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
+            tl.update();
         }
         currentState = !currentState;
-        flipMotor.setPower(0);
+        flipMotor.setPower(0.0);
+        tl.addLine("finish");
+        tl.update();
+    }
+
+    static void sleep(long millis){
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     static final double holdL = 0.8;

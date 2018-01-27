@@ -35,6 +35,7 @@ import java.util.Arrays;
 @Autonomous(name = "Vuforia: Jewel Detection", group = "Concept")
 public class VuforiaTest extends LinearOpMode {
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -121,7 +122,7 @@ public class VuforiaTest extends LinearOpMode {
                             GSum /= count;
                             BSum /= count;
                         }
-                        if (p==100){
+                        if (p == 100) {
                             try {
                                 String filename = "image.png";
                                 File sd = Environment.getExternalStorageDirectory();
@@ -138,9 +139,9 @@ public class VuforiaTest extends LinearOpMode {
                             }
                         }
 
-                        if ((RSum > 200 && GSum < 50 && BSum < 50) | (RSum > GSum + 100 && RSum > BSum +100)){
+                        if ((RSum > 200 && GSum < 50 && BSum < 50) | (RSum > GSum + 100 && RSum > BSum + 100)) {
                             rColor = "Red";
-                        } else if ((RSum < 70 && GSum > 70 && BSum > 170) | (BSum > RSum + 100 && BSum > GSum + 50)){
+                        } else if ((RSum < 70 && GSum > 70 && BSum > 170) | (BSum > RSum + 100 && BSum > GSum + 50)) {
                             rColor = "Blue";
                         } else {
                             rColor = "Other";

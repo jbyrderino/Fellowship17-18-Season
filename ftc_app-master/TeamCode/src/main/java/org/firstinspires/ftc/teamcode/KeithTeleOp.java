@@ -207,15 +207,15 @@ public class KeithTeleOp extends OpMode {
             telemetry.update();
             car.slideTo(KeithCarriage.RIGHT);
         }
-        if (gamepad1.x) {
+        if (gamepad2.x) {
             telemetry.addLine("Flipper toggle");
             car.flipperToggle();
         }
-        if (gamepad1.a) {
+        if (gamepad2.a) {
             telemetry.addLine("left servo toggle");
             car.holderToggle(KeithCarriage.LEFTS);
         }
-        if (gamepad1.b) {
+        if (gamepad2.b) {
             telemetry.addLine("right servo toggle");
             car.holderToggle(KeithCarriage.RIGHTS);
         }

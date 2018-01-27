@@ -41,7 +41,11 @@ public class KeithJewlKnocker extends JewlKnocker {
         return servoPosition;
     }
     public void knockerDown() {
+<<<<<<< HEAD
         servoKnocker.setPosition(.3);
+=======
+        servoKnocker.setPosition(.55);
+>>>>>>> f052989fae9df69d52bf12e2df3fdbfd81549df3
         sleep(500);
     }
 

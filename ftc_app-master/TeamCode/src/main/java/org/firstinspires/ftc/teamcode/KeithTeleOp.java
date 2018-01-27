@@ -84,7 +84,7 @@ public class KeithTeleOp extends OpMode {
     double lTrigger2 = 1.0;
     double rTrigger2 = 1.0;
     //Reverse should always be between -1.0 and 0.0, positive should always be between 0.0 and 1.0
-    double pwrForward = 0.6;
+    double pwrForward = 0.8;
     double pwrReverse = -pwrForward;
 
 

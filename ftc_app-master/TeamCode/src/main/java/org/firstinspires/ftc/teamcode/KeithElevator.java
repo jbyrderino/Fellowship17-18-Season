@@ -12,7 +12,7 @@ public class KeithElevator {
 	private Telemetry t;
 	private double motorPower;
 	public boolean UP;
-	public double upPos = 0.0;
+	public double upPos = 0.07;
 	public double downPos = 0.7;
 
 	KeithElevator(HardwareMap hwmap, Telemetry tel, String elevatorMotor, String elevatorServo, double MotorPower) {

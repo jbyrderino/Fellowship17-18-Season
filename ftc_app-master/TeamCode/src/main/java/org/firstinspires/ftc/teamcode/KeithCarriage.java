@@ -19,6 +19,14 @@ public class KeithCarriage extends Carriage {
     Servo rServo = null;
     Telemetry tl;
 
+    //gripper constants
+    static final double holdL = 1.0;
+    static final double releaseL = 0.2;
+    static final double holdR = 0.9;
+    static final double releaseR = 0.1;
+    static final boolean LEFTS = true;
+    static final boolean RIGHTS = false;
+
     public KeithCarriage(HardwareMap hwMap, Telemetry telemetry, String SMLabel, String FMLabel, String LSLabel, String RSLabel) {
         tl = telemetry;
         slideMotor = hwMap.get(DcMotor.class, SMLabel);
@@ -32,9 +40,16 @@ public class KeithCarriage extends Carriage {
     public static final int LEFT = 1000;
     public static final int CENTER = 0;
     public static final int RIGHT = -1000;
+    public static final double POWER = 0.6;
+    private int currState = 0;
     public boolean slideActive = false;
     public int destination;
+    //threshold of velocity(ticks/ms)
+    public static final double THRESHOLD_VL = 0.8;
 
+    public void powerSlideMotor(double pwr){
+        slideMotor.setPower(pwr);
+    }
 
     public void slideStart(int dest) {
         if (!slideActive) {
@@ -60,22 +75,42 @@ public class KeithCarriage extends Carriage {
     }
 
     public void slideTo(int state) {
+//        if (currState == -1 && state == LEFT) {
+//            slideMotor.setPower(-0.1);
+//            sleep(100);
+//            slideMotor.setPower(0.0);
+//            return;
+//        }
+//        if (currState == 1 && state == RIGHT) {
+//            slideMotor.setPower(0.1);
+//            sleep(100);
+//            slideMotor.setPower(0.0);
+//        }
         if (Math.abs(state - slideMotor.getCurrentPosition()) < 5) {
             tl.addLine(String.format("target:%d, tick:%d", state, slideMotor.getCurrentPosition()));
             tl.addLine("in position");
             tl.update();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(500);
             return;
         }
         tl.addLine("Carriage GO");
         tl.update();
-        slideMotor.setPower(0.2 * Integer.signum(state - slideMotor.getCurrentPosition()));
+        slideMotor.setPower(POWER * Integer.signum(state - slideMotor.getCurrentPosition()));
+        long lastTime = System.currentTimeMillis();
+        int lastTick = slideMotor.getCurrentPosition();
         while (Math.abs(state - slideMotor.getCurrentPosition()) > 10) {
             //wait until finish
+            sleep(5);
+            double dt = System.currentTimeMillis() - lastTime;
+            double dx = slideMotor.getCurrentPosition() - lastTick;
+            double v = dx / dt;
+            tl.addLine("velocity: " + v);
+            tl.update();
+            if (Math.abs(v) < THRESHOLD_VL) {
+                break;
+            }
+            lastTime = System.currentTimeMillis();
+            lastTick = slideMotor.getCurrentPosition();
         }
         slideMotor.setPower(0.0);
     }
@@ -109,6 +144,7 @@ public class KeithCarriage extends Carriage {
 
     //false: down true:up
     boolean currentState;
+    static final int FlipperTimeOut = 1200;
     static final int UP = 450;
     static final int DOWN = 0;
     boolean flipperToggleActive = false;
@@ -119,10 +155,14 @@ public class KeithCarriage extends Carriage {
         tl.addLine(String.format("goto: %s", currentState ? "down" : "up"));
         tl.update();
         flipMotor.setPower(currentState == false ? 0.75 : -0.125);
+        long startTime = System.currentTimeMillis();
         while (Math.abs((currentState ? DOWN : UP) - flipMotor.getCurrentPosition()) > 5) {
             //wait until finish
             tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
             tl.update();
+            if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
+                break;
+            }
         }
         currentState = !currentState;
         flipMotor.setPower(0.0);
@@ -130,7 +170,7 @@ public class KeithCarriage extends Carriage {
         tl.update();
     }
 
-    static void sleep(long millis){
+    static void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -138,12 +178,6 @@ public class KeithCarriage extends Carriage {
         }
     }
 
-    static final double holdL = 0.8;
-    static final double releaseL = 0.2;
-    static final double holdR = 0.6;
-    static final double releaseR = 0.1;
-    static final boolean LEFTS = true;
-    static final boolean RIGHTS = false;
 
     public void holderToggle(boolean side) {
         if (side) {
@@ -170,14 +204,14 @@ public class KeithCarriage extends Carriage {
 //	public static final int DIS = 100;
 
 
-    public void flipToggle() {
-        flipMotor.setPower(currentState ? 1.0 : -1.0);
-        while ((currentState ? UP : DOWN) - flipMotor.getCurrentPosition() > 5) {
-            //wait until finish
-        }
-        currentState = !currentState;
-        flipMotor.setPower(0);
-    }
+//    public void flipToggle() {
+//        flipMotor.setPower(currentState ? 1.0 : -1.0);
+//        while ((currentState ? UP : DOWN) - flipMotor.getCurrentPosition() > 5) {
+//            //wait until finish
+//        }
+//        currentState = !currentState;
+//        flipMotor.setPower(0);
+//    }
 
 //    public void setState(int state) {
 //		slideMotor.setPower(Integer.signum(state * DIS - slideMotor.getCurrentPosition()));

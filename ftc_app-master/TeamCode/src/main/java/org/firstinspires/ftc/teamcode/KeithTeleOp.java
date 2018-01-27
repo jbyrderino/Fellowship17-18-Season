@@ -181,43 +181,36 @@ public class KeithTeleOp extends OpMode {
 
     void CallHarvesterSystem() {
         telemetry.addLine("================ Harvester ===================");
-
         //Carriage code
         //Controls for carriage
         if (gamepad2.dpad_left) {
             telemetry.addLine("command: slide left");
-
-            /*if (isHarvesterVacant()) {
-                telemetry.addLine("System is vacant, command being executed");
-                slideActive = true;
-                car.setState(KeithCarriage.LEFT);
-
-            }*/
-
-            car.slideMotor.setPower(-0.8);
+            telemetry.update();
+            car.slideTo(KeithCarriage.LEFT);
         }
         if (gamepad2.dpad_up) {
             telemetry.addLine("command: slide center");
-            /*if (isHarvesterVacant()) {
-                telemetry.addLine("System is vacant, command being executed");
-                slideActive = true;
-                car.setState(KeithCarriage.CENTER);
-            }*/
-
+            telemetry.update();
+            car.slideTo(KeithCarriage.CENTER);
         }
         if (gamepad2.dpad_right) {
             telemetry.addLine("command: slide right");
-            /*if (isHarvesterVacant()) {
-                telemetry.addLine("System is vacant, command being executed");
-                slideActive = true;
-                car.setState(KeithCarriage.RIGHT);
-            }*/
-            car.slideMotor.setPower(0.8);
+            telemetry.update();
+            car.slideTo(KeithCarriage.RIGHT);
+        }
+        if (gamepad1.x) {
+            telemetry.addLine("Flipper toggle");
+            car.flipperToggle();
+        }
+        if (gamepad1.a) {
+            telemetry.addLine("left servo toggle");
+            car.holderToggle(KeithCarriage.LEFTS);
+        }
+        if (gamepad1.b) {
+            telemetry.addLine("right servo toggle");
+            car.holderToggle(KeithCarriage.RIGHTS);
         }
 
-        if (!gamepad2.dpad_right && !gamepad2.dpad_left){
-            car.slideMotor.setPower(0.0);
-        }
 
         //Carriage feedback
         if (slideActive) {
@@ -226,8 +219,6 @@ public class KeithTeleOp extends OpMode {
         if (flipActive) {
             //car.flipperToggleActive = true;
         }
-
-
 
         //Kicker and Elevator Code
         //Kicker and Elevator controls
@@ -253,8 +244,6 @@ public class KeithTeleOp extends OpMode {
         if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0){
             ele.elevatorStop();
         }
-
-
 
         telemetry.update();
     }

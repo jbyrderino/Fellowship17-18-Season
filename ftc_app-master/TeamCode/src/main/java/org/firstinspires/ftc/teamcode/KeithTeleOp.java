@@ -81,11 +81,12 @@ public class KeithTeleOp extends OpMode {
     // Variables that control the harvester system
     KeithElevator ele = null;
     KeithCarriage car = null;
-    //Reverse should always be between -1.0 and 0.0, positive should always be between 0.0 and 1.0
-    double pwrReverse = -0.5;
-    double pwrForward = 0.5;
     double lTrigger2 = 1.0;
     double rTrigger2 = 1.0;
+    //Reverse should always be between -1.0 and 0.0, positive should always be between 0.0 and 1.0
+    double pwrForward = 0.6;
+    double pwrReverse = -pwrForward;
+
 
 
 
@@ -111,6 +112,9 @@ public class KeithTeleOp extends OpMode {
         ele = (KeithElevator) (keithRobot.GetKeithElevator());
         car = (KeithCarriage) (keithRobot.GetKeithCarriage());
         jwl = (KeithJewlKnocker) (keithRobot.GetJewelKnockerSubsystem());
+        ele.kickerSetPosition(ele.downPos);
+        telemetry.addLine("init...");
+        telemetry.update();
     }
 
     /*
@@ -134,6 +138,8 @@ public class KeithTeleOp extends OpMode {
     public void start() {
         dsSelectionTime = runtime.milliseconds();
         frsSelectionTime = runtime.milliseconds();
+        telemetry.addLine("start...");
+        telemetry.update();
     }
 
     /*
@@ -148,6 +154,8 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void loop() {
+        telemetry.addData("Gamepad2 L trigger float:", gamepad2.left_trigger);
+	    telemetry.addData("Gamepad2 R trigger float:", gamepad2.right_trigger);
 
         jwl.setBasePosition(0.2);
         jwl.setKnockerPosition(0.75);
@@ -164,7 +172,7 @@ public class KeithTeleOp extends OpMode {
                 switchSelectionTime = System.currentTimeMillis();
             }
         }
-        CallDriveSystem();
+        CallTestDriveSystem();
         if (System.currentTimeMillis() - switchSelectionTime > 300) {
             if (harvesterActive) {
                 CallHarvesterSystem();
@@ -182,6 +190,7 @@ public class KeithTeleOp extends OpMode {
 
     void CallHarvesterSystem() {
         telemetry.addLine("================ Harvester ===================");
+
         //Carriage code
         //Controls for carriage
         if (gamepad2.dpad_left) {
@@ -214,6 +223,7 @@ public class KeithTeleOp extends OpMode {
 
         //Kicker and Elevator Code
         //Kicker and Elevator controls
+
         if (gamepad2.a && !gamepad2.b) {
             telemetry.addLine("command: kick");
             ele.kickerKick();
@@ -229,12 +239,12 @@ public class KeithTeleOp extends OpMode {
             telemetry.addLine("command: elevator reverse");
             ele.elevatorStart(pwrReverse);
         }
-        if (gamepad2.right_trigger <= rTrigger2 && gamepad2.right_trigger != 0.0 && gamepad2.left_trigger == 0.0) {
+        if (gamepad2.right_trigger <= 1.0 && gamepad2.right_trigger != 0.0 && gamepad2.left_trigger == 0.0) {
             telemetry.addLine("command: elevator forward");
             ele.elevatorStart(pwrForward);
         }
         if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0){
-            ele.elevatorStop();
+            ele.elevatorStart(0.0);
         }
 
         telemetry.update();
@@ -363,6 +373,21 @@ public class KeithTeleOp extends OpMode {
             }
         }
         telemetry.addData("", "Ratio(Bumpers): %.2f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
+    }
+
+    void CallTestDriveSystem() {
+        double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+        double rightX = gamepad1.right_stick_x;
+        final double v1 = r * Math.cos(robotAngle) + rightX;
+        final double v2 = r * Math.sin(robotAngle) - rightX;
+        final double v3 = r * Math.sin(robotAngle) + rightX;
+        final double v4 = r * Math.cos(robotAngle) - rightX;
+
+        ds.FrontLeft.setPower(v1);
+        ds.FrontRight.setPower(v2);
+        ds.BackLeft.setPower(v3);
+        ds.BackRight.setPower(v4);
     }
 
     void CallDriveSystem() {

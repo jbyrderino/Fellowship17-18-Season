@@ -22,7 +22,7 @@ public class KeithRobot extends FTCRobot {
         mds = new MecanumDS(hardwareMap, telemetry, imu, "Front Left", "Front Right", "Back Left", "Back Right");
         frs = new FishingRodSystem(hardwareMap, telemetry, "lowerReel", "upperReel", "claw", "rodMotor");
         jks = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker", telemetry);
-        ele = new KeithElevator(hardwareMap, "HarvesterMain", "Kicker", 1.0);
+        ele = new KeithElevator(hardwareMap, telemetry, "HarvesterMain", "Kicker", 1.0);
         car = new KeithCarriage(hardwareMap,telemetry, "slideMotor", "flipMotor", "lServo","rServo");
 
         Servo carriageLeftServo = hardwareMap.servo.get("lServo");

@@ -52,7 +52,11 @@ import com.qualcomm.robotcore.util.Range;
 
 public class KeithTeleOp extends OpMode {
 
-    // Declare OpMode members.
+
+
+// Declare OpMode members
+    //TeleOP
+    private static boolean isStopped = false;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -165,6 +169,7 @@ public class KeithTeleOp extends OpMode {
     @Override
     public void stop() {
         if (jewlDetectDebug) {jds.JewlDetectForStop();}
+        isStopped = true;
     }
 
     /*
@@ -546,5 +551,9 @@ public class KeithTeleOp extends OpMode {
         if (engageMotors) {
             ds.setMotorPower(powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
         }
+    }
+
+    public static boolean isIsStopped() {
+        return isStopped;
     }
 }

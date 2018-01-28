@@ -23,32 +23,13 @@ public class KeithElevator {
 		t = tel;
 	}
 
-	public void servoTest(){
-		int ti = 0;
-
-		ElevatorServo.setPosition(0.6);
-		while (ElevatorServo.getPosition() < 0.6 || ti < 10000){ t.addLine("0.6"); ti++;}
-		ti = 0;
-
-		ElevatorServo.setPosition(0.5);
-		while (ElevatorServo.getPosition() < 0.5 || ti < 10000){ t.addLine("0.5"); }
-		ti = 0;
-
-		ElevatorServo.setPosition(0.4);
-		while (ElevatorServo.getPosition() < 0.4){ t.addLine("0.4"); }
-		ElevatorServo.setPosition(0.3);
-		while (ElevatorServo.getPosition() < 0.3){ t.addLine("0.3"); }
-		ElevatorServo.setPosition(0.2);
-		while (ElevatorServo.getPosition() < 0.2){ t.addLine("0.2"); }
-	}
-
 	public void elevatorStart(double Pwr) {
 		ElevatorMotor.setPower(Pwr);
 	}
 
-	/*public void elevatorStop() {
+	public void elevatorStop() {
 		ElevatorMotor.setPower(0.0);
-	}*/
+	}
 
 	public void kickerInit(){
 		ElevatorServo.scaleRange(0.0, 1.0);

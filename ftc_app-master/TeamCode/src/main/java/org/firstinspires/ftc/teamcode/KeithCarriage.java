@@ -154,6 +154,7 @@ public class KeithCarriage extends Carriage {
 
     //test function
     public void flipperToggle() {
+
         tl.addLine(String.format("current state: %s", currentState ? "up" : "down"));
         tl.addLine(String.format("goto: %s", currentState ? "down" : "up"));
         tl.update();
@@ -161,16 +162,20 @@ public class KeithCarriage extends Carriage {
         long startTime = System.currentTimeMillis();
         int target = currentState ? DOWN : UP;
         while (Math.abs(target - flipMotor.getCurrentPosition()) > 5) {
-            //wait until finish
-            tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
-            tl.update();
-            if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
-                break;
-            }
-            if (target == DOWN && flipMotor.getCurrentPosition() < DOWN) {
-                break;
-            }
-            if (target == UP && flipMotor.getCurrentPosition() > UP) {
+            if (!KeithTeleOp.isIsStopped()) {
+                //wait until finish
+                tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
+                tl.update();
+                if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
+                    break;
+                }
+                if (target == DOWN && flipMotor.getCurrentPosition() < DOWN) {
+                    break;
+                }
+                if (target == UP && flipMotor.getCurrentPosition() > UP) {
+                    break;
+                }
+            }else{
                 break;
             }
         }

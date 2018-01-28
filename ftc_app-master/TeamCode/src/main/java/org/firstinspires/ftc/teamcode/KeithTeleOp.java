@@ -70,7 +70,7 @@ public class KeithTeleOp extends OpMode {
     double dsSelectionTime = 0;
 
     // Variables for the test drive system
-    double multConst = 0.2;
+    double multConst = 0.0;
     double motorConst = 0.0;
     double multTemp;
     boolean isMult;
@@ -126,6 +126,9 @@ public class KeithTeleOp extends OpMode {
 
         if (jewlDetectDebug) {jds.JewlDetectForInit(telemetry, hardwareMap);}
 
+        jwl.setBasePosition(0.2);
+        jwl.setKnockerPosition(0.75);
+
         telemetry.addLine("init...");
         telemetry.update();
     }
@@ -174,8 +177,7 @@ public class KeithTeleOp extends OpMode {
 
         if (jewlDetectDebug) {jds.JewlDetectForLoop();}
 
-        jwl.setBasePosition(0.2);
-        jwl.setKnockerPosition(0.75);
+
 
         if (gamepad2.start) {
             if (gamepad2.x) {
@@ -210,6 +212,7 @@ public class KeithTeleOp extends OpMode {
 
         //Carriage code
         //Controls for carriage
+
         if (gamepad2.dpad_left) {
             telemetry.addLine("command: slide left");
             telemetry.update();

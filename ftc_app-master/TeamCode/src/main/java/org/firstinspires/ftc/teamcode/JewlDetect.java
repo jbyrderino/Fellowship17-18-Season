@@ -19,7 +19,7 @@ public class JewlDetect {
 
 	Telemetry t = null;
 	HardwareMap hwMap = null;
-	String jewlColor;
+	boolean jewlColor;
 	private JewelDetector jewelDetector = null;
 
 
@@ -51,12 +51,12 @@ public class JewlDetect {
 		t.addData("Last Order", "Jewel Order: " + jewelDetector.getLastOrder().toString()); // Last Known Result
 	}
 
-	public String JewlColor(){
+	public boolean JewlColor(){
 		if (jewelDetector.getCurrentOrder().toString() == "BLUE_RED"){
-			jewlColor = "BLUE";
+			jewlColor = true;
 		}
 		if (jewelDetector.getCurrentOrder().toString() == "RED_BLUE"){
-			jewlColor = "RED";
+			jewlColor = false;
 		}
 		return jewlColor;
 	}

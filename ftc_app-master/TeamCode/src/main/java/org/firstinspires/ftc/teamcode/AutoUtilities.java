@@ -265,5 +265,7 @@ public abstract class AutoUtilities {
         carriage.flipperToggle();
         sleep(2000);
         carriage.slideTo(KeithCarriage.CENTER);
+        sleep(1000);
+        carriage.slideTo(KeithCarriage.CENTER);
     }
 }

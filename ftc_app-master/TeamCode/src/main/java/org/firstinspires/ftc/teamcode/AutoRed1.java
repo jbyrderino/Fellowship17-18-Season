@@ -26,13 +26,13 @@ public class AutoRed1 extends LinearOpMode {
         KeithCarriage car = keith.GetKeithCarriage();
         JewlDetect jwld = keith.GetKeithJewlDetect();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
-        int jewelColor = Color.TRANSPARENT;
         ele.kickerSetPosition(0.7);
 
         double movePower = 0.1;
         double spinPower = 0.1;
 
         jwld.JewlDetectForInit(telemetry, hardwareMap);
+        telemetry.update();
 
         // All is initialized, wait for the start
         waitForStart();
@@ -45,12 +45,13 @@ public class AutoRed1 extends LinearOpMode {
         // to knock off using the jewel knocker.
         // since we are in the Red zone, we'll try to remove the Blue jewel
 
-        String jewlColor = jwld.JewlColor();
+        telemetry.addData("", jwld.JewlColor());
+        telemetry.update();
 
-        if (jewlColor == "BLUE") {
+        if (jwld.JewlColor() == false) {
             telemetry.addData("", "Left side jewel is BLUE");
             AutoUtilities.KnockJewel(jks, true);
-        } else if (jewlColor == "RED") {
+        } else if (jwld.JewlColor() == true) {
             telemetry.addData("", "Left side jewel is RED");
             AutoUtilities.KnockJewel(jks, false);
         } else {

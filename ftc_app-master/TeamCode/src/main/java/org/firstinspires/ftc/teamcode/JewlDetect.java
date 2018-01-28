@@ -20,6 +20,7 @@ public class JewlDetect {
 	Telemetry t = null;
 	HardwareMap hwMap = null;
 	boolean jewlColor;
+	String jwlDetection;
 	private JewelDetector jewelDetector = null;
 
 
@@ -37,7 +38,7 @@ public class JewlDetect {
 		//Jewel Detector Settings
 		jewelDetector.areaWeight = 0.02;
 		jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
-		//jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
+		//jewelDetector.perfectArea = 6500; <-- For Perfect Area
 		jewelDetector.debugContours = true;
 		jewelDetector.maxDiffrence = 15;
 		jewelDetector.ratioWeight = 15;
@@ -52,11 +53,19 @@ public class JewlDetect {
 	}
 
 	public boolean JewlColor(){
-		if (jewelDetector.getCurrentOrder().toString() == "BLUE_RED"){
-			jewlColor = true;
-		}
-		if (jewelDetector.getCurrentOrder().toString() == "RED_BLUE"){
+
+		jwlDetection = jewelDetector.getCurrentOrder().toString();
+		t.addData("", jwlDetection);
+		t.update();
+
+		if (jwlDetection == "UNKNOWN") {
 			jewlColor = false;
+		}else if (jwlDetection == "RED_BLUE") {
+			jewlColor = false;
+			// it could also mean that the blue jewel is on the right side.
+			//ASK JAMES ABOUT THIS!
+		}else if (jwlDetection == "BLUE_RED") {
+			jewlColor = true;
 		}
 		return jewlColor;
 	}

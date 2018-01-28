@@ -31,6 +31,8 @@ public class AutoRed1 extends LinearOpMode {
         double movePower = 0.1;
         double spinPower = 0.1;
 
+        boolean isBlue;
+
         jwld.JewlDetectForInit(telemetry, hardwareMap);
         telemetry.update();
 
@@ -45,15 +47,16 @@ public class AutoRed1 extends LinearOpMode {
         // to knock off using the jewel knocker.
         // since we are in the Red zone, we'll try to remove the Blue jewel
 
+        isBlue = jwld.JewlColor();
         telemetry.addData("", jwld.JewlColor());
         telemetry.update();
 
-        if (jwld.JewlColor() == false) {
+        if (isBlue == true) {
             telemetry.addData("", "Left side jewel is BLUE");
-            AutoUtilities.KnockJewel(jks, true);
-        } else if (jwld.JewlColor() == true) {
-            telemetry.addData("", "Left side jewel is RED");
             AutoUtilities.KnockJewel(jks, false);
+        } else if (isBlue == false) {
+            telemetry.addData("", "Left side jewel is RED");
+            AutoUtilities.KnockJewel(jks, true);
         } else {
             telemetry.addData("", "Could not find jewel color.");
         }

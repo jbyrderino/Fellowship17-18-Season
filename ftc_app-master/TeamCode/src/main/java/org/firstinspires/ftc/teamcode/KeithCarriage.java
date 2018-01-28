@@ -101,16 +101,16 @@ public class KeithCarriage extends Carriage {
         while (Math.abs(state - slideMotor.getCurrentPosition()) > 10) {
             //wait until finish
             sleep(5);
-            double dt = System.currentTimeMillis() - lastTime;
-            double dx = slideMotor.getCurrentPosition() - lastTick;
-            double v = dx / dt;
-            tl.addLine("velocity: " + v);
-            tl.update();
-            if (Math.abs(v) < THRESHOLD_VL) {
-                break;
-            }
-            lastTime = System.currentTimeMillis();
-            lastTick = slideMotor.getCurrentPosition();
+//            double dt = System.currentTimeMillis() - lastTime;
+//            double dx = slideMotor.getCurrentPosition() - lastTick;
+//            double v = dx / dt;
+//            tl.addLine("velocity: " + v);
+//            tl.update();
+//            if (Math.abs(v) < THRESHOLD_VL) {
+//                break;
+//            }
+//            lastTime = System.currentTimeMillis();
+//            lastTick = slideMotor.getCurrentPosition();
         }
         slideMotor.setPower(0.0);
     }
@@ -163,9 +163,9 @@ public class KeithCarriage extends Carriage {
             if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
                 break;
             }
-            if(flipMotor.getCurrentPosition()<DOWN||UP<flipMotor.getCurrentPosition()){
-                break;
-            }
+//            if(flipMotor.getCurrentPosition() < DOWN || UP < flipMotor.getCurrentPosition()){
+//                break;
+//            }
         }
         currentState = !currentState;
         flipMotor.setPower(0.0);

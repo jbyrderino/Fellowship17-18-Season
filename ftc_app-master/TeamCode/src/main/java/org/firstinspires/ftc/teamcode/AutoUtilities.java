@@ -372,11 +372,7 @@ public abstract class AutoUtilities {
     }
 
     static public void CarriageFlip (KeithCarriage carriage) {
-        int count = 0;
-        while (count <= 5000) {
-            carriage.slideTo(KeithCarriage.RIGHT);
-            count ++;
-        }
+        carriage.slideTo(KeithCarriage.RIGHT);
         sleep(2000);
         carriage.flipperToggle();
         sleep(2000);

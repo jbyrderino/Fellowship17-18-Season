@@ -13,10 +13,7 @@ public class KeithElevator {
 	private double motorPower;
 	public boolean UP;
 	public double upPos = 0.3;
-<<<<<<< HEAD
 
-=======
->>>>>>> b64b3bad5949ed028ff1fb3fd4f3b0f50f3182c6
 	public double downPos = 0.95;
 
 	KeithElevator(HardwareMap hwmap, Telemetry tel, String elevatorMotor, String elevatorServo, double MotorPower) {

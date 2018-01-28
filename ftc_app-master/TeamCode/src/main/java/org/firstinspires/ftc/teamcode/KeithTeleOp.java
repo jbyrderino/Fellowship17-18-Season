@@ -93,7 +93,9 @@ public class KeithTeleOp extends OpMode {
     double pwrForward = 1.0;
     double pwrReverse = -pwrForward;
 
-
+    //Variables that control the Jewl Detection system
+    JewlDetect jds;
+    boolean jewlDetectDebug = false;
 
 
 
@@ -118,7 +120,12 @@ public class KeithTeleOp extends OpMode {
         ele = (KeithElevator) (keithRobot.GetKeithElevator());
         car = (KeithCarriage) (keithRobot.GetKeithCarriage());
         jwl = (KeithJewlKnocker) (keithRobot.GetJewelKnockerSubsystem());
+        jds = (JewlDetect) (keithRobot.GetKeithJewlDetect());
+
         ele.kickerSetPosition(ele.downPos);
+
+        if (jewlDetectDebug) {jds.JewlDetectForInit(telemetry, hardwareMap);}
+
         telemetry.addLine("init...");
         telemetry.update();
     }
@@ -128,7 +135,7 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void init_loop() {
-        ele.kickerReset();
+
     }
 
     double TransformInterval(double Value, double SourceStart, double SourceEnd, double TargetStart, double TargetEnd) {
@@ -144,6 +151,7 @@ public class KeithTeleOp extends OpMode {
     public void start() {
         dsSelectionTime = runtime.milliseconds();
         frsSelectionTime = runtime.milliseconds();
+
         telemetry.addLine("start...");
         telemetry.update();
     }
@@ -153,6 +161,7 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void stop() {
+        if (jewlDetectDebug) {jds.JewlDetectForStop();}
     }
 
     /*
@@ -162,6 +171,8 @@ public class KeithTeleOp extends OpMode {
     public void loop() {
         telemetry.addData("Gamepad2 L trigger float:", gamepad2.left_trigger);
 	    telemetry.addData("Gamepad2 R trigger float:", gamepad2.right_trigger);
+
+        if (jewlDetectDebug) {jds.JewlDetectForLoop();}
 
         jwl.setBasePosition(0.2);
         jwl.setKnockerPosition(0.75);

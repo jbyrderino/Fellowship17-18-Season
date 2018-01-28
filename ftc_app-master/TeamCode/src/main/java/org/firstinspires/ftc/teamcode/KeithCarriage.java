@@ -97,10 +97,13 @@ public class KeithCarriage extends Carriage {
         tl.update();
         slideMotor.setPower(POWER * Integer.signum(state - slideMotor.getCurrentPosition()));
         long lastTime = System.currentTimeMillis();
-        int lastTick = slideMotor.getCurrentPosition();
+//        int lastTick = slideMotor.getCurrentPosition();
         while (Math.abs(state - slideMotor.getCurrentPosition()) > 10) {
             //wait until finish
             sleep(5);
+            if (System.currentTimeMillis()-lastTime>2000){
+                break;
+            }
 //            double dt = System.currentTimeMillis() - lastTime;
 //            double dx = slideMotor.getCurrentPosition() - lastTick;
 //            double v = dx / dt;

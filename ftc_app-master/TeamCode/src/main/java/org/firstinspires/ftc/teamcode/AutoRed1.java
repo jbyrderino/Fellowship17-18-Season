@@ -9,6 +9,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
+import java.util.WeakHashMap;
+
 /**
  * Created by 28761 on 10/7/2017.
  */
@@ -18,71 +20,79 @@ public class AutoRed1 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+            KeithRobot keith = new KeithRobot(hardwareMap, telemetry);
+            MecanumDS ds = (MecanumDS) (keith.GetDriveSystem());
+            KeithElevator ele = keith.GetKeithElevator();
+            KeithCarriage car = keith.GetKeithCarriage();
+            JewlDetect jwld = keith.GetKeithJewlDetect();
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
+            ele.kickerSetPosition(0.7);
+            KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
+            jks.setKnockerPosition(0.65);
+            jks.setBasePosition(0.0);
 
-        KeithRobot keith = new KeithRobot(hardwareMap, telemetry);;
-        MecanumDS ds = (MecanumDS)(keith.GetDriveSystem());
-        KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
-        KeithElevator ele = keith.GetKeithElevator();
-        KeithCarriage car = keith.GetKeithCarriage();
-        JewlDetect jwld = keith.GetKeithJewlDetect();
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
-        ele.kickerSetPosition(0.7);
+            double movePower = 0.1;
+            double spinPower = 0.1;
 
-        double movePower = 0.1;
-        double spinPower = 0.1;
+            boolean isBlue;
 
-        boolean isBlue;
+            jwld.JewlDetectForInit(telemetry, hardwareMap);
+            telemetry.update();
 
-        jwld.JewlDetectForInit(telemetry, hardwareMap);
-        telemetry.update();
+            // All is initialized, wait for the start
+            waitForStart();
 
-        // All is initialized, wait for the start
-        waitForStart();
+            while (opModeIsActive()) {
 
-        AutoUtilities.CarriageGrip(car);
+                AutoUtilities.CarriageGrip(car, opModeIsActive());
 
-        // At this point we should have a pictogram and a color for the
-        // jewel that is close to the pictogram, i.e. on the left side of
-        // the jewel knocker. We will now make a decision about which jewel
-        // to knock off using the jewel knocker.
-        // since we are in the Red zone, we'll try to remove the Blue jewel
+                // At this point we should have a pictogram and a color for the
+                // jewel that is close to the pictogram, i.e. on the left side of
+                // the jewel knocker. We will now make a decision about which jewel
+                // to knock off using the jewel knocker.
+                // since we are in the Red zone, we'll try to remove the Blue jewel
 
-        isBlue = jwld.JewlColor();
-        telemetry.addData("", jwld.JewlColor());
-        telemetry.update();
+                isBlue = jwld.JewlColor();
+                telemetry.addData("", jwld.JewlColor());
+                telemetry.update();
 
-        if (isBlue == true) {
-            telemetry.addData("", "Left side jewel is BLUE");
-            AutoUtilities.KnockJewel(jks, false);
-        } else if (isBlue == false) {
-            telemetry.addData("", "Left side jewel is RED");
-            AutoUtilities.KnockJewel(jks, true);
-        } else {
-            telemetry.addData("", "Could not find jewel color.");
+                if (isBlue == true) {
+                    telemetry.addData("", "Left side jewel is BLUE");
+                    AutoUtilities.KnockJewel(jks, true, opModeIsActive());
+                } else if (isBlue == false) {
+                    telemetry.addData("", "Left side jewel is RED");
+                    AutoUtilities.KnockJewel(jks, false, opModeIsActive());
+                } else {
+                    telemetry.addData("", "Could not find jewel color.");
+                }
+                telemetry.update();
+                // irrespective of whether we knocked the jewel or not, we are now
+                // going to navigate towards the glyph box. We are in the Red zone
+                // and we are close to the relic recovery area.
+                AutoUtilities.ExecuteMovesRed(ds, movePower, spinPower, Color.RED, true, telemetry, opModeIsActive());
+
+                // At this point we should be in front of the glyph box. Let's unload
+                // the block we have based on the cypher that we read
+                if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                    // we were not able to read the cypher, don't do anything
+                    telemetry.addData("", "Could not read the cypher, nothing to do.");
+                } else {
+                    telemetry.addData("", "Cypher column: %s", vuMark);
+                    // TODO - implement this
+                }
+
+                AutoUtilities.CarriageFlip(car, opModeIsActive());
+
+                ds.Move(0.1, 0, 0, 200, 1000);
+                sleep(1000);
+                ds.Move(0.1, 180, 0, 500, 1000);
+
+                // make all the telemetry messages appear
+                telemetry.update();
+
+                //Stop
+                stop();
+            }
         }
-        telemetr1y.update();
-        // irrespective of whether we knocked the jewel or not, we are now
-        // going to navigate towards the glyph box. We are in the Red zone
-        // and we are close to the relic recovery area.
-        AutoUtilities.ExecuteMoves(ds, movePower, spinPower, Color.RED, true, telemetry);
-
-        // At this point we should be in front of the glyph box. Let's unload
-        // the block we have based on the cypher that we read
-        if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            // we were not able to read the cypher, don't do anything
-            telemetry.addData("", "Could not read the cypher, nothing to do.");
-        } else {
-            telemetry.addData("", "Cypher column: %s", vuMark);
-            // TODO - implement this
-        }
-
-        AutoUtilities.CarriageFlip(car);
-
-        // make all the telemetry messages appear
-        telemetry.update();
-
-        // we are done. Wait here for the time to run out, it'll give a chance to
-        // the operator to read the telemetry results.
-        while (opModeIsActive());
     }
-}
+

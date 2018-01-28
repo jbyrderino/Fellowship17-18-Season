@@ -58,10 +58,10 @@ public class AutoRed1 extends LinearOpMode {
 
                 if (isBlue == true) {
                     telemetry.addData("", "Left side jewel is BLUE");
-                    AutoUtilities.KnockJewel(jks, true, opModeIsActive());
+                    AutoUtilities.KnockJewel(jks, false, opModeIsActive());
                 } else if (isBlue == false) {
                     telemetry.addData("", "Left side jewel is RED");
-                    AutoUtilities.KnockJewel(jks, false, opModeIsActive());
+                    AutoUtilities.KnockJewel(jks, true, opModeIsActive());
                 } else {
                     telemetry.addData("", "Could not find jewel color.");
                 }

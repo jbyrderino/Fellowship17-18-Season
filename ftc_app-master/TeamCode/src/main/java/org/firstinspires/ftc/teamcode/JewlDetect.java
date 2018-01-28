@@ -57,16 +57,22 @@ public class JewlDetect {
 		jwlDetection = jewelDetector.getCurrentOrder().toString();
 		t.addData("", jwlDetection);
 		t.update();
-
-		if (jwlDetection == "UNKNOWN") {
-			jewlColor = false;
-		}else if (jwlDetection == "RED_BLUE") {
-			jewlColor = false;
-			// it could also mean that the blue jewel is on the right side.
-			//ASK JAMES ABOUT THIS!
-		}else if (jwlDetection == "BLUE_RED") {
+		if (jewelDetector.getCurrentOrder()==JewelDetector.JewelOrder.BLUE_RED){
 			jewlColor = true;
+		}else  if (jewelDetector.getCurrentOrder()==JewelDetector.JewelOrder.RED_BLUE){
+			jewlColor = false;
+		}else {
+			//do nothing
 		}
+
+//		if (jwlDetection.equals("RED_BLUE")) {
+//			jewlColor = false;
+//		}else if (jwlDetection.equals("BLUE_RED")) {
+//			jewlColor = true;
+//		}else {
+//			//do nothing
+//		}
+
 		return jewlColor;
 	}
 

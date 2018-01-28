@@ -47,7 +47,7 @@ public class KeithCarriage extends Carriage {
     //threshold of velocity(ticks/ms)
     public static final double THRESHOLD_VL = 0.8;
 
-    public void powerSlideMotor(double pwr){
+    public void powerSlideMotor(double pwr) {
         slideMotor.setPower(pwr);
     }
 
@@ -156,16 +156,20 @@ public class KeithCarriage extends Carriage {
         tl.update();
         flipMotor.setPower(currentState == false ? 0.75 : -0.125);
         long startTime = System.currentTimeMillis();
-        while (Math.abs((currentState ? DOWN : UP) - flipMotor.getCurrentPosition()) > 5) {
+        int target = currentState ? DOWN : UP;
+        while (Math.abs(target - flipMotor.getCurrentPosition()) > 5) {
             //wait until finish
             tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
             tl.update();
             if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
                 break;
             }
-//            if(flipMotor.getCurrentPosition() < DOWN || UP < flipMotor.getCurrentPosition()){
-//                break;
-//            }
+            if (target == DOWN && flipMotor.getCurrentPosition() < DOWN) {
+                break;
+            }
+            if (target == UP && flipMotor.getCurrentPosition() > UP) {
+                break;
+            }
         }
         currentState = !currentState;
         flipMotor.setPower(0.0);

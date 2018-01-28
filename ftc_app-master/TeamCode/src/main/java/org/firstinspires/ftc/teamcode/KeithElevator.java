@@ -13,11 +13,7 @@ public class KeithElevator {
 	private double motorPower;
 	public boolean UP;
 	public double upPos = 0.3;
-<<<<<<< HEAD
-	public double downPos = 1.0;
-=======
 	public double downPos = 0.95;
->>>>>>> 0376f959ac5e758b160c8d099aafe4db1dadc742
 
 	KeithElevator(HardwareMap hwmap, Telemetry tel, String elevatorMotor, String elevatorServo, double MotorPower) {
 		ElevatorMotor = hwmap.get(DcMotor.class, elevatorMotor);

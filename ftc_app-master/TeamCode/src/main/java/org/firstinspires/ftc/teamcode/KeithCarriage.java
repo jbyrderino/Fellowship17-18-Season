@@ -20,7 +20,7 @@ public class KeithCarriage extends Carriage {
     Telemetry tl;
 
     //gripper constants
-    static final double holdL = 1.0;
+    static final double holdL = 0.9;
     static final double releaseL = 0.2;
     static final double holdR = 0.9;
     static final double releaseR = 0.1;

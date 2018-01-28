@@ -60,7 +60,7 @@ public class AutoRed1 extends LinearOpMode {
         } else {
             telemetry.addData("", "Could not find jewel color.");
         }
-
+        telemetr1y.update();
         // irrespective of whether we knocked the jewel or not, we are now
         // going to navigate towards the glyph box. We are in the Red zone
         // and we are close to the relic recovery area.

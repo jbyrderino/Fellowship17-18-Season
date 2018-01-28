@@ -44,6 +44,7 @@ public class AutoRed2 extends LinearOpMode {
         // to knock off using the jewel knocker.
         // since we are in the Red zone, we'll try to remove the Blue jewel
 
+
         isBlue = jwld.JewlColor();
         telemetry.addData("", jwld.JewlColor());
         telemetry.update();
@@ -57,7 +58,8 @@ public class AutoRed2 extends LinearOpMode {
         } else {
             telemetry.addData("", "Could not find jewel color.");
         }
-
+        telemetry.update();
+        sleep(5000);
         // irrespective of whether we knocked the jewel or not, we are now
         // going to navigate towards the glyph box. We are in the Red zone
         // and we are opposite to the relic recovery area.

@@ -210,7 +210,7 @@ public abstract class AutoUtilities {
 
                 // Move back
                 if (opModeIsActive) {
-                    if (!ds.Move(movePower, 180, 0, 180, 5000) && opModeIsActive) {
+                    if (!ds.Move(movePower, 180, 0, 120, 5000) && opModeIsActive) {
                         // we seem to have timed out. Let's not continue this anymore
                         // it's not safe to try to go further as we don't really know
                         // our current position anymore
@@ -318,7 +318,7 @@ public abstract class AutoUtilities {
 
                 // Move back
                 if (opModeIsActive) {
-                    if (!ds.Move(movePower, 180, 0, 240, 5000) && opModeIsActive) {
+                    if (!ds.Move(movePower, 180, 0, 180, 5000) && opModeIsActive) {
                         // we seem to have timed out. Let's not continue this anymore
                         // it's not safe to try to go further as we don't really know
                         // our current position

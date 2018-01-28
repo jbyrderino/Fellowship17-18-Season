@@ -54,7 +54,7 @@ public class JewlDetect {
 
 	public boolean JewlColor(){
 
-		jwlDetection = jewelDetector.getCurrentOrder().toString();
+//		jwlDetection = jewelDetector.getCurrentOrder().toString();
 		t.addData("", jwlDetection);
 		t.update();
 		if (jewelDetector.getCurrentOrder()==JewelDetector.JewelOrder.BLUE_RED){

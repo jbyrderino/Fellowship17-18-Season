@@ -16,6 +16,7 @@ public class KeithRobot extends FTCRobot {
     KeithJewlKnocker jks;
     KeithElevator ele;
     KeithCarriage car;
+    JewlDetect jds;
 
     KeithRobot(HardwareMap hardwareMap, Telemetry telemetry) {
         imu = new BoschIMU(hardwareMap, "imu");
@@ -24,6 +25,7 @@ public class KeithRobot extends FTCRobot {
         jks = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker", telemetry);
         ele = new KeithElevator(hardwareMap, telemetry, "HarvesterMain", "Kicker", 1.0);
         car = new KeithCarriage(hardwareMap,telemetry, "slideMotor", "flipMotor", "lServo","rServo");
+        jds = new JewlDetect();
 
         Servo carriageLeftServo = hardwareMap.servo.get("lServo");
         carriageLeftServo.setPosition(0.35);
@@ -52,4 +54,6 @@ public class KeithRobot extends FTCRobot {
     public KeithElevator GetKeithElevator() { return ele; }
 
     public KeithCarriage GetKeithCarriage() { return car; }
+
+    public JewlDetect GetKeithJewlDetect() { return  jds; }
 }

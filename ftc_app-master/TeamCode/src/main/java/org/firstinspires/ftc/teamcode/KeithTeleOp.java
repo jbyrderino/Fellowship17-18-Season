@@ -55,14 +55,13 @@ public class KeithTeleOp extends OpMode {
 
 
 // Declare OpMode members
-    //TeleOP
+    //TeleOP Varriables
     private static boolean isStopped = false;
-
     private ElapsedTime runtime = new ElapsedTime();
 
-    KeithRobot keithRobot = null;
     boolean debugTelemetry = false;
 
+    KeithRobot keithRobot = null;
     KeithJewlKnocker jwl = null;
 
     // Variables that control the driving system
@@ -177,10 +176,11 @@ public class KeithTeleOp extends OpMode {
      */
     @Override
     public void loop() {
+
+        //Debug info
         telemetry.addData("Gamepad2 L trigger float:", gamepad2.left_trigger);
 	    telemetry.addData("Gamepad2 R trigger float:", gamepad2.right_trigger);
-
-        if (jewlDetectDebug) {jds.JewlDetectForLoop();}
+	    if (jewlDetectDebug) {jds.JewlDetectForLoop();}
 
 
 
@@ -207,10 +207,8 @@ public class KeithTeleOp extends OpMode {
         telemetry.update();
     }
 
-    boolean isHarvesterVacant() {
-        return  !slideActive & !flipActive;
-    }
-    boolean isElevatorEmpty() { return false; };
+
+
 
     void CallHarvesterSystem() {
         telemetry.addLine("================ Harvester ===================");
@@ -551,6 +549,14 @@ public class KeithTeleOp extends OpMode {
         if (engageMotors) {
             ds.setMotorPower(powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
         }
+    }
+
+    boolean isHarvesterVacant() {
+        return  !slideActive & !flipActive;
+    }
+
+    public static boolean isElevatorEmpty() {
+        return false;
     }
 
     public static boolean isIsStopped() {

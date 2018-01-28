@@ -20,6 +20,7 @@ public class JewlDetect {
 	Telemetry t = null;
 	HardwareMap hwMap = null;
 	boolean jewlColor;
+	String jwlDetection;
 	private JewelDetector jewelDetector = null;
 
 
@@ -37,7 +38,7 @@ public class JewlDetect {
 		//Jewel Detector Settings
 		jewelDetector.areaWeight = 0.02;
 		jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
-		//jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
+		//jewelDetector.perfectArea = 6500; <-- For Perfect Area
 		jewelDetector.debugContours = true;
 		jewelDetector.maxDiffrence = 15;
 		jewelDetector.ratioWeight = 15;
@@ -52,12 +53,26 @@ public class JewlDetect {
 	}
 
 	public boolean JewlColor(){
-		if (jewelDetector.getCurrentOrder().toString() == "BLUE_RED"){
+
+//		jwlDetection = jewelDetector.getCurrentOrder().toString();
+		t.addData("", jwlDetection);
+		t.update();
+		if (jewelDetector.getCurrentOrder()==JewelDetector.JewelOrder.BLUE_RED){
 			jewlColor = true;
-		}
-		if (jewelDetector.getCurrentOrder().toString() == "RED_BLUE"){
+		}else  if (jewelDetector.getCurrentOrder()==JewelDetector.JewelOrder.RED_BLUE){
 			jewlColor = false;
+		}else {
+			//do nothing
 		}
+
+//		if (jwlDetection.equals("RED_BLUE")) {
+//			jewlColor = false;
+//		}else if (jwlDetection.equals("BLUE_RED")) {
+//			jewlColor = true;
+//		}else {
+//			//do nothing
+//		}
+
 		return jewlColor;
 	}
 

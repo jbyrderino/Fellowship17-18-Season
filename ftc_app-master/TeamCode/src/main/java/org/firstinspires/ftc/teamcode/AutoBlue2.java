@@ -30,19 +30,8 @@ public class AutoBlue2 extends LinearOpMode {
         double movePower = 0.1;
         double spinPower = 0.1;
 
-        // Initialize the Vuforia system
-        VuforiaLocalizer vuforia = AutoUtilities.VuforiaInitialize();
-
         // All is initialized, wait for the start
         waitForStart();
-
-        // call the Vuforia routine to tell us what pictogram we deal with
-        // and what color is the jewel that is closer to the pictogram
-        AutoUtilities.VuforiaInfo vuforiaInfo = AutoUtilities.GetVuforiaInfo (vuforia, telemetry);
-        if (vuforiaInfo != null) {
-            vuMark = vuforiaInfo.vuMark;
-            jewelColor = vuforiaInfo.jewelColor;
-        }
 
         AutoUtilities.CarriageGrip(car);
 

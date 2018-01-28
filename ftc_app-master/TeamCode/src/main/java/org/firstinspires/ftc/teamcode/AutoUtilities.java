@@ -65,6 +65,8 @@ public abstract class AutoUtilities {
         carriage.holderToggle(KeithCarriage.RIGHTS);
     }
 
+
+
     static public void KnockJewel (KeithJewlKnocker jewlKnocker, boolean leftSide) {
         jewlKnocker.baseKnockerRotateRight();
         jewlKnocker.knockerDown();

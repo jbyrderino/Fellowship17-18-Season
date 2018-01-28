@@ -24,6 +24,7 @@ public class AutoRed1 extends LinearOpMode {
         KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
         KeithElevator ele = keith.GetKeithElevator();
         KeithCarriage car = keith.GetKeithCarriage();
+        JewlDetect jwld = keith.GetKeithJewlDetect();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         int jewelColor = Color.TRANSPARENT;
         ele.kickerSetPosition(0.7);
@@ -31,19 +32,10 @@ public class AutoRed1 extends LinearOpMode {
         double movePower = 0.1;
         double spinPower = 0.1;
 
-        // Initialize the Vuforia system
-        VuforiaLocalizer vuforia = AutoUtilities.VuforiaInitialize();
+        jwld.JewlDetectForInit(telemetry, hardwareMap);
 
         // All is initialized, wait for the start
         waitForStart();
-
-        // call the Vuforia routine to tell us what pictogram we deal with
-        // and what color is the jewel that is closer to the pictogram
-        AutoUtilities.VuforiaInfo vuforiaInfo = AutoUtilities.GetVuforiaInfo (vuforia, telemetry);
-        if (vuforiaInfo != null) {
-            vuMark = vuforiaInfo.vuMark;
-            jewelColor = vuforiaInfo.jewelColor;
-        }
 
         AutoUtilities.CarriageGrip(car);
 
@@ -52,10 +44,13 @@ public class AutoRed1 extends LinearOpMode {
         // the jewel knocker. We will now make a decision about which jewel
         // to knock off using the jewel knocker.
         // since we are in the Red zone, we'll try to remove the Blue jewel
-        if (jewelColor == Color.BLUE) {
+
+        String jewlColor = jwld.JewlColor();
+
+        if (jewlColor == "BLUE") {
             telemetry.addData("", "Left side jewel is BLUE");
             AutoUtilities.KnockJewel(jks, true);
-        } else if (jewelColor == Color.RED) {
+        } else if (jewlColor == "RED") {
             telemetry.addData("", "Left side jewel is RED");
             AutoUtilities.KnockJewel(jks, false);
         } else {

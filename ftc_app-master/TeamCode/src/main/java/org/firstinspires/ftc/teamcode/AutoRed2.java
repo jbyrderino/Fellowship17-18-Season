@@ -25,6 +25,7 @@ public class AutoRed2 extends LinearOpMode {
         KeithCarriage car = keith.GetKeithCarriage();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         int jewelColor = Color.TRANSPARENT;
+        ele.kickerSetPosition(0.7);
 
         double movePower = 0.1;
         double spinPower = 0.1;

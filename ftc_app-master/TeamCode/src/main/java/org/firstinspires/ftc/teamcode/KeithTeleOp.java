@@ -69,6 +69,12 @@ public class KeithTeleOp extends OpMode {
     boolean engageMotors = true;
     double dsSelectionTime = 0;
 
+    // Variables for the test drive system
+    double multConst = 0.2;
+    double motorConst = 0.0;
+    double multTemp;
+    boolean isMult;
+
     // Variables that control the relic arm system
     FishingRodSystem frs = null;
     boolean relicArmMoving = false;
@@ -84,7 +90,7 @@ public class KeithTeleOp extends OpMode {
     double lTrigger2 = 1.0;
     double rTrigger2 = 1.0;
     //Reverse should always be between -1.0 and 0.0, positive should always be between 0.0 and 1.0
-    double pwrForward = 0.6;
+    double pwrForward = 1.0;
     double pwrReverse = -pwrForward;
 
 
@@ -212,11 +218,11 @@ public class KeithTeleOp extends OpMode {
             telemetry.addLine("Flipper toggle");
             car.flipperToggle();
         }
-        if (gamepad2.a) {
+        if (gamepad2.left_bumper) {
             telemetry.addLine("left servo toggle");
             car.holderToggle(KeithCarriage.LEFTS);
         }
-        if (gamepad2.b) {
+        if (gamepad2.right_bumper) {
             telemetry.addLine("right servo toggle");
             car.holderToggle(KeithCarriage.RIGHTS);
         }

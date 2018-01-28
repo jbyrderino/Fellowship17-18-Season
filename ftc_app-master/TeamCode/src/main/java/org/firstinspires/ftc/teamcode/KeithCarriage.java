@@ -163,6 +163,9 @@ public class KeithCarriage extends Carriage {
             if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
                 break;
             }
+//            if(flipMotor.getCurrentPosition() < DOWN || UP < flipMotor.getCurrentPosition()){
+//                break;
+//            }
         }
         currentState = !currentState;
         flipMotor.setPower(0.0);
@@ -184,20 +187,12 @@ public class KeithCarriage extends Carriage {
             tl.addLine("LEFT " + String.format("to %s", lServo.getPosition() == holdL ? "release" : "hold"));
             tl.update();
             lServo.setPosition(lServo.getPosition() == holdL ? releaseL : holdL);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(500);
         } else {
             tl.addLine("RIGHT " + String.format("to %s", rServo.getPosition() == holdR ? "release" : "hold"));
             tl.update();
             rServo.setPosition(rServo.getPosition() == holdR ? releaseR : holdR);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(500);
         }
     }
 

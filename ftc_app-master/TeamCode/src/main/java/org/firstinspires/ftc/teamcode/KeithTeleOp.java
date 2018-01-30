@@ -56,10 +56,11 @@ public class KeithTeleOp extends OpMode {
 
 // Declare OpMode members
     //TeleOP Varriables
-    private static boolean isStopped = false;
+    //private static boolean isStopped = false;
     private ElapsedTime runtime = new ElapsedTime();
 
     boolean debugTelemetry = false;
+    private static boolean isStopped;
 
     KeithRobot keithRobot = null;
     KeithJewlKnocker jwl = null;
@@ -196,7 +197,7 @@ public class KeithTeleOp extends OpMode {
                 switchSelectionTime = System.currentTimeMillis();
             }
         }
-        CallTestDriveSystem();
+        CallDriveSystem();
         if (System.currentTimeMillis() - switchSelectionTime > 300) {
             if (harvesterActive) {
                 CallHarvesterSystem();
@@ -574,7 +575,5 @@ public class KeithTeleOp extends OpMode {
         return false;
     }
 
-    public static boolean isIsStopped() {
-        return isStopped;
-    }
+    //public static boolean isIsStopped() {return isStopped;}
 }

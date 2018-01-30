@@ -162,7 +162,7 @@ public class KeithCarriage extends Carriage {
         long startTime = System.currentTimeMillis();
         int target = currentState ? DOWN : UP;
         while (Math.abs(target - flipMotor.getCurrentPosition()) > 5) {
-            if (!KeithTeleOp.isIsStopped()) {
+            //if (!KeithTeleOp.isIsStopped()) {
                 //wait until finish
                 tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
                 tl.update();
@@ -175,9 +175,9 @@ public class KeithCarriage extends Carriage {
                 if (target == UP && flipMotor.getCurrentPosition() > UP) {
                     break;
                 }
-            }else{
-                break;
-            }
+            //}else{
+            //    break;
+            //}
         }
         currentState = !currentState;
         flipMotor.setPower(0.0);

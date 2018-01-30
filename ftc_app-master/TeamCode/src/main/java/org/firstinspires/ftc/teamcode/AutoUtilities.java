@@ -28,9 +28,9 @@ import java.io.FileOutputStream;
  * Created by Joshua on 10/28/2017.
  */
 
-public abstract class AutoUtilities {
+public class AutoUtilities {
 
-    static void sleep(long millis){
+    static void sleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -53,12 +53,11 @@ public abstract class AutoUtilities {
         //set maximum amount of objects vuforia can trace
         Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
 
-
         return vuforia;
     }
 
 
-    static public void CarriageGrip (KeithCarriage carriage, boolean opModeIsActive) {
+    static public void CarriageGrip(KeithCarriage carriage, boolean opModeIsActive) {
         if (opModeIsActive) {
             carriage.slideTo(KeithCarriage.CENTER);
             sleep(500);
@@ -69,56 +68,36 @@ public abstract class AutoUtilities {
     }
 
 
-
-    static public void KnockJewel (KeithJewlKnocker jewlKnocker, boolean leftSide, boolean opModeIsActive) {
-        if(opModeIsActive) {
-            jewlKnocker.baseKnockerRotateRight();
-        }
-        if (opModeIsActive) {
-            jewlKnocker.knockerDown();
-        }
-        if (leftSide && opModeIsActive) {
+    static public void KnockJewel(KeithJewlKnocker jewlKnocker, boolean leftSide) {
+        jewlKnocker.baseKnockerRotateRight();
+        jewlKnocker.knockerDown();
+        if (leftSide) {
             jewlKnocker.knockRight();
-        } else if (!leftSide && opModeIsActive) {
+        } else {
             jewlKnocker.knockLeft();
         }
-        if (opModeIsActive) {
-            jewlKnocker.knockerUp();
-        }
-        if (opModeIsActive) {
-            jewlKnocker.baseKnockerRotateLeft();
-        }
+        jewlKnocker.knockerUp();
+        jewlKnocker.baseKnockerRotateLeft();
+
     }
 
 
-
-    static public void CarriageFlip (KeithCarriage carriage, boolean opModeIsActive) {
-        if (opModeIsActive) {
+    static public void CarriageFlip(KeithCarriage carriage) {
             carriage.slideTo(KeithCarriage.RIGHT);
             sleep(2000);
-        }
-        if (opModeIsActive) {
             carriage.flipperToggle();
             sleep(2000);
-        }
-        if (opModeIsActive) {
             carriage.holderToggle(KeithCarriage.RIGHTS);
             sleep(2000);
-        }
-        if (opModeIsActive) {
             carriage.flipperToggle();
             sleep(2000);
-        }
-        if (opModeIsActive) {
             carriage.slideTo(KeithCarriage.CENTER);
             sleep(1000);
-        }
-        if (opModeIsActive) {
             carriage.slideTo(KeithCarriage.CENTER);
-        }
+
     }
 
-    public static boolean ExecuteMovesBlue (MecanumDS ds, double movePower, double spinPower, int colorPosition, boolean nextToRelicRecovery, Telemetry telemetry, boolean opModeIsActive) {
+    public static boolean ExecuteMovesBlue(MecanumDS ds, double movePower, double spinPower, int colorPosition, boolean nextToRelicRecovery, Telemetry telemetry, boolean opModeIsActive) {
         if (colorPosition == Color.BLUE && opModeIsActive) {
             if (nextToRelicRecovery) {
                 telemetry.addData("", "Moves: BLUE, next to RelicRecovery");
@@ -226,7 +205,7 @@ public abstract class AutoUtilities {
         return true;
     }
 
-    public static boolean ExecuteMovesRed (MecanumDS ds, double movePower, double spinPower, int colorPosition, boolean nextToRelicRecovery, Telemetry telemetry, boolean opModeIsActive) {
+    public static boolean ExecuteMovesRed(MecanumDS ds, double movePower, double spinPower, int colorPosition, boolean nextToRelicRecovery, Telemetry telemetry, boolean opModeIsActive) {
         if (colorPosition == Color.RED && opModeIsActive) {
             if (nextToRelicRecovery) {
                 telemetry.addData("", "Moves: RED, next to RelicRecovery");

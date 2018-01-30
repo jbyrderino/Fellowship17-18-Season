@@ -61,6 +61,8 @@ public class KeithJewlKnocker extends JewlKnocker {
     }
 
     public void knockLeft() {
+        tl.addLine("knock left");
+        tl.update();
         knockerBase.setPosition(.4);
         sleep(700);
         knockerBase.setPosition(.76);
@@ -68,7 +70,9 @@ public class KeithJewlKnocker extends JewlKnocker {
     }
 
     public void knockRight() {
-        knockerBase.setPosition(.1);
+        tl.addLine("knock right");
+        tl.update();
+        knockerBase.setPosition(.96);
         sleep(700);
         knockerBase.setPosition(.76);
         sleep(500);

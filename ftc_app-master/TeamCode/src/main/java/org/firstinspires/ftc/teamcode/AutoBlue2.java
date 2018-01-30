@@ -56,10 +56,10 @@ public class AutoBlue2 extends LinearOpMode {
 
                 if (isBlue == true) {
                     telemetry.addData("", "Left side jewel is BLUE");
-                    AutoUtilities.KnockJewel(jks, false, opModeIsActive());
+                    AutoUtilities.KnockJewel(jks, false);
                 } else if (isBlue == false) {
                     telemetry.addData("", "Left side jewel is RED");
-                    AutoUtilities.KnockJewel(jks, true, opModeIsActive());
+                    AutoUtilities.KnockJewel(jks, true);
                 } else {
                     telemetry.addData("", "Could not find jewel color.");
                 }
@@ -85,7 +85,7 @@ public class AutoBlue2 extends LinearOpMode {
                     // TODO - implement this
                 }
 
-                AutoUtilities.CarriageFlip(car, opModeIsActive());
+                AutoUtilities.CarriageFlip(car);
 
                 ds.Move(0.1, 0, 0, 300, 1000);
 

@@ -59,7 +59,7 @@ public class HarvesterTest extends LinearOpMode {
             }
 
 //            if (gamepad1.left_bumper) {
-//                ke.elevatorStart(0.5);
+//                ke.elevatorPower(0.5);
 //            }
 //            if (gamepad1.right_bumper) {
 //                ke.elevatorStop();

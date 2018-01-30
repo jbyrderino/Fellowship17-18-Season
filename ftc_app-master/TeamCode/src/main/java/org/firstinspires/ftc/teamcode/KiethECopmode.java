@@ -24,11 +24,11 @@ public class KiethECopmode extends OpMode {
 		if (!gamepad1.left_bumper && !gamepad1.right_bumper || gamepad1.left_bumper && !gamepad1.right_bumper || !gamepad1.left_bumper && gamepad1.right_bumper){
 			if (gamepad1.left_bumper && !gamepad1.right_bumper){
 				actionTaken = true;
-				kE.elevatorStart(0.5);
+				kE.elevatorPower(0.5);
 			}
 			if (gamepad1.right_bumper && !gamepad1.left_bumper) {
 				actionTaken = true;
-				kE.elevatorStart(-0.5);
+				kE.elevatorPower(-0.5);
 			}
 			if (!actionTaken) {
 				//kE.elevatorStop();

@@ -16,24 +16,15 @@ public class KeithElevator {
 
 	public double downPos = 0.95;
 
-	KeithElevator(HardwareMap hwmap, Telemetry tel, String elevatorMotor, String elevatorServo, double MotorPower) {
+	KeithElevator(HardwareMap hwmap, Telemetry tel, String elevatorMotor, String elevatorServo) {
 		ElevatorMotor = hwmap.get(DcMotor.class, elevatorMotor);
 		ElevatorServo = hwmap.get(Servo.class, elevatorServo);
-		ElevatorInit(MotorPower);
 		t = tel;
-	}
-
-	public void elevatorStart(double Pwr) {
-		ElevatorMotor.setPower(Pwr);
-	}
-
-	public void elevatorStop() {
-		ElevatorMotor.setPower(0.0);
-	}
-
-	public void kickerInit(){
 		ElevatorServo.scaleRange(0.0, 1.0);
-		//ElevatorServo.setPosition(downPos);
+	}
+
+	public void elevatorPower(double Pwr) {
+		ElevatorMotor.setPower(Pwr);
 	}
 
 	public double getKickerPosition(){
@@ -65,10 +56,5 @@ public class KeithElevator {
 		kickerSetPosition(upPos);
 		while (ElevatorServo.getPosition() > upPos){ t.addLine("kicker kicking..."); }
 		t.addLine("kicker kicked");
-	}
-
-	public void ElevatorInit(double mp) {
-		motorPower = mp;
-		kickerInit();
 	}
 }

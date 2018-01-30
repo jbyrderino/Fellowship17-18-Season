@@ -51,10 +51,7 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "Keith - TeleOp", group = "TeleOp")
 
 public class KeithTeleOp extends OpMode {
-
-
-
-// Declare OpMode members
+    // Declare OpMode members
     //TeleOP Varriables
     private static boolean isStopped = false;
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,12 +68,6 @@ public class KeithTeleOp extends OpMode {
     double maxDrivingPower = 1.0;
     boolean engageMotors = true;
     double dsSelectionTime = 0;
-
-    // Variables for the test drive system
-    double multConst = 0.0;
-    double motorConst = 0.0;
-    double multTemp;
-    boolean isMult;
 
     // Variables that control the relic arm system
     FishingRodSystem frs = null;
@@ -99,13 +90,6 @@ public class KeithTeleOp extends OpMode {
     //Variables that control the Jewl Detection system
     JewlDetect jds;
     boolean jewlDetectDebug = false;
-
-
-
-    //Carriage System will be integrated with elevator System
-    Harvester hvs;
-    boolean slideActive = false;
-    boolean flipActive = false;
 
     // Variables that control switching from
     // the harvester system to the relic arm
@@ -260,14 +244,14 @@ public class KeithTeleOp extends OpMode {
 
         if (gamepad2.left_trigger <= lTrigger2 && gamepad2.left_trigger != 0.0 && gamepad2.right_trigger == 0.0){
             telemetry.addLine("command: elevator reverse");
-            ele.elevatorStart(pwrReverse);
+            ele.elevatorPower(pwrReverse);
         }
         if (gamepad2.right_trigger <= 1.0 && gamepad2.right_trigger != 0.0 && gamepad2.left_trigger == 0.0) {
             telemetry.addLine("command: elevator forward");
-            ele.elevatorStart(pwrForward);
+            ele.elevatorPower(pwrForward);
         }
         if (gamepad2.left_trigger == 0 && gamepad2.right_trigger == 0){
-            ele.elevatorStart(0.0);
+            ele.elevatorPower(0.0);
         }
 
         telemetry.update();
@@ -398,21 +382,6 @@ public class KeithTeleOp extends OpMode {
         telemetry.addData("", "Ratio(Bumpers): %.2f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
     }
 
-    void CallTestDriveSystemReversed() {
-        double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-        double robotAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-        double rightX = gamepad1.right_stick_x;
-        final double v1 = r * Math.cos(robotAngle) + rightX;
-        final double v2 = r * Math.sin(robotAngle) - rightX;
-        final double v3 = r * Math.sin(robotAngle) + rightX;
-        final double v4 = r * Math.cos(robotAngle) - rightX;
-
-        ds.FrontLeft.setPower(v1);
-        ds.FrontRight.setPower(v2);
-        ds.BackLeft.setPower(v3);
-        ds.BackRight.setPower(v4);
-    }
-
     void CallTestDriveSystem() {
         double r = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
         double robotAngle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y) - Math.PI / 4;
@@ -422,10 +391,14 @@ public class KeithTeleOp extends OpMode {
         final double v3 = r * Math.sin(robotAngle) - rightX;
         final double v4 = r * Math.cos(robotAngle) + rightX;
 
-        ds.FrontLeft.setPower(v1);
-        ds.FrontRight.setPower(v2);
-        ds.BackLeft.setPower(v3);
-        ds.BackRight.setPower(v4);
+        ds.FrontLeft.setPower(v3);
+        ds.FrontRight.setPower(v4);
+        ds.BackLeft.setPower(v1);
+        ds.BackRight.setPower(v2);
+        telemetry.addData("V1", v1);
+        telemetry.addData("V2", v2);
+        telemetry.addData("V3", v3);
+        telemetry.addData("V4", v4);
     }
 
     void CallDriveSystem() {
@@ -566,15 +539,8 @@ public class KeithTeleOp extends OpMode {
         }
     }
 
-    boolean isHarvesterVacant() {
-        return  !slideActive & !flipActive;
-    }
-
-    public static boolean isElevatorEmpty() {
-        return false;
-    }
-
     public static boolean isIsStopped() {
         return isStopped;
     }
 }
+

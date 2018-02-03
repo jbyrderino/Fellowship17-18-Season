@@ -25,14 +25,12 @@ public class NewRed1 extends LinearOpMode {
         jks.setKnockerPosition(0.95);
         jks.setBasePosition(0.2);
         ele.kickerSetPosition(0.7);
-<<<<<<< HEAD
-=======
+
         //Note that this color sensor stuff may not be working.
         //However, the rest of the program(s) should be all good.
 
         //COLOR SENSOR INITIALIZATION
 //        ColorSensor color_sensor = hardwareMap.colorSensor.get("color");
->>>>>>> 4312fc7d9208dc016220572b1b0e7cbadda9680c
 
         //SCORING POSITION EITHER LEFT (-1), CENTER (0), OR RIGHT (1)
         int cryptoPosition = -1;
@@ -47,14 +45,12 @@ public class NewRed1 extends LinearOpMode {
         //  color_sensor.argb(); <--- OVERALL COLOR
         //  color_sensor.red();  <--- RED CHANNEL OF SENSOR
 
-<<<<<<< HEAD
             NewUtilities.KnockJewel(jks, true);
-=======
+
         if (!opModeIsActive()){
             //abort due to turning off OpMode
             return;
         }
->>>>>>> 4312fc7d9208dc016220572b1b0e7cbadda9680c
 
         utility.KnockJewel(jks, true);
 //        if (color_sensor.red() > 200) {

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
@@ -15,15 +16,23 @@ public class NewRed1 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         KeithRobot keith = new KeithRobot(hardwareMap, telemetry);
         MecanumDS ds = (MecanumDS) (keith.GetDriveSystem());
         KeithElevator ele = keith.GetKeithElevator();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
-        jks.setKnockerPosition(0.65);
-        jks.setBasePosition(0.0);
+        NewUtilities utility = new NewUtilities(this);
+        jks.setKnockerPosition(0.95);
+        jks.setBasePosition(0.2);
         ele.kickerSetPosition(0.7);
+<<<<<<< HEAD
+=======
+        //Note that this color sensor stuff may not be working.
+        //However, the rest of the program(s) should be all good.
+
+        //COLOR SENSOR INITIALIZATION
+//        ColorSensor color_sensor = hardwareMap.colorSensor.get("color");
+>>>>>>> 4312fc7d9208dc016220572b1b0e7cbadda9680c
 
         //SCORING POSITION EITHER LEFT (-1), CENTER (0), OR RIGHT (1)
         int cryptoPosition = -1;
@@ -31,16 +40,43 @@ public class NewRed1 extends LinearOpMode {
         double movePower = 0.1;
         double spinPower = 0.1;
 
-        NewUtilities.VuforiaInitialize();
+        utility.VuforiaInitialize();
 
         waitForStart();
 
-        while (opModeIsActive()) {
+        //  color_sensor.argb(); <--- OVERALL COLOR
+        //  color_sensor.red();  <--- RED CHANNEL OF SENSOR
 
+<<<<<<< HEAD
             NewUtilities.KnockJewel(jks, true);
-
-            NewUtilities.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
+=======
+        if (!opModeIsActive()){
+            //abort due to turning off OpMode
+            return;
         }
+>>>>>>> 4312fc7d9208dc016220572b1b0e7cbadda9680c
+
+        utility.KnockJewel(jks, true);
+//        if (color_sensor.red() > 200) {
+//            NewUtilities.KnockJewel(jks, true); // <--- Use either vuforia or color sensor code to find which side to knock.
+//        }else if (color_sensor.blue() > 200) {
+//            NewUtilities.KnockJewel(jks, false); // <--- Use either vuforia or color sensor code to find which side to knock.
+//        }else {
+//            telemetry.addLine("Could not find a jewel color. Do nothing.");
+//        }
+
+        if (!opModeIsActive()){
+            //abort due to turning off OpMode
+            return;
+        }
+
+        utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
+
+//        stop();
+
+//        while (opModeIsActive()) {
+//
+//        }
 
     }
 

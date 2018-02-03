@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode;
 import android.os.Environment;
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.File;
@@ -32,6 +34,19 @@ public class MecanumDS extends DriveSystem {
 
     Telemetry tl = null;
     boolean debugTelemetry = false;
+
+    LinearOpMode lop;
+    boolean useAbortion;
+
+    public void setLinearOpMode(LinearOpMode lop) {
+        if (lop == null) {
+            this.lop = lop;
+            useAbortion = true;
+        } else {
+            this.lop = null;
+            useAbortion = true;
+        }
+    }
 
     MecanumDS(HardwareMap hwMap, Telemetry telemetry, IMUSystem imuSys, String flLabel, String frLabel, String blLabel, String brLabel) {
         tl = telemetry;
@@ -82,7 +97,7 @@ public class MecanumDS extends DriveSystem {
         }
     }
 
-    public double GetAverageEncodersValue () {
+    public double GetAverageEncodersValue() {
         double flAbs = Math.abs(FrontLeft.getCurrentPosition());
         double frAbs = Math.abs(FrontRight.getCurrentPosition());
         double blAbs = Math.abs(BackLeft.getCurrentPosition());
@@ -91,11 +106,11 @@ public class MecanumDS extends DriveSystem {
         return (flAbs + frAbs + blAbs + brAbs) / 4;
     }
 
-    public void ResetEncoders () {
-        DcMotor.RunMode flMode=FrontLeft.getMode();
-        DcMotor.RunMode frMode=FrontRight.getMode();
-        DcMotor.RunMode blMode=BackLeft.getMode();
-        DcMotor.RunMode brMode=BackRight.getMode();
+    public void ResetEncoders() {
+        DcMotor.RunMode flMode = FrontLeft.getMode();
+        DcMotor.RunMode frMode = FrontRight.getMode();
+        DcMotor.RunMode blMode = BackLeft.getMode();
+        DcMotor.RunMode brMode = BackRight.getMode();
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -106,7 +121,7 @@ public class MecanumDS extends DriveSystem {
         BackRight.setMode(brMode);
     }
 
-    boolean ExecuteSpin (double headingGoal, double maxPower, double minPower, double tolerance) {
+    boolean ExecuteSpin(double headingGoal, double maxPower, double minPower, double tolerance) {
         double currentHeading = imu.GetHeading();
         long originalTime = System.currentTimeMillis();
         double targetPower = maxPower;
@@ -115,7 +130,10 @@ public class MecanumDS extends DriveSystem {
         }
         double slowDownDegrees = SPIN_SLOWDOWN_THRESHOLD * (targetPower - minPower);
         while (currentHeading > (headingGoal + tolerance) || currentHeading < (headingGoal - tolerance)) {
-
+            if (useAbortion && !lop.opModeIsActive()) {
+                //abort due to turning off the OpMode
+                break;
+            }
             double currentPower = targetPower;
             long diffTime = System.currentTimeMillis() - originalTime;
             if (diffTime <= RAMP_UP_TIME) {
@@ -134,10 +152,10 @@ public class MecanumDS extends DriveSystem {
                 tl.addData("", "CP: %.3f, CH: %.3f", currentPower, currentHeading);
             }
 
-            if(currentHeading > headingGoal) {
+            if (currentHeading > headingGoal) {
                 setMotorPower(currentPower, -currentPower, currentPower, -currentPower);
             }
-            if(currentHeading < headingGoal) {
+            if (currentHeading < headingGoal) {
                 setMotorPower(-currentPower, currentPower, -currentPower, currentPower);
             }
 
@@ -145,7 +163,7 @@ public class MecanumDS extends DriveSystem {
             if (currentHeading > (headingGoal - tolerance) && currentHeading < (headingGoal + tolerance)) {
                 setMotorPower(0, 0, 0, 0);
                 long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime <= 500);
+                while (System.currentTimeMillis() - startTime <= 500) ;
             }
         }
         setMotorPower(0, 0, 0, 0);
@@ -155,7 +173,7 @@ public class MecanumDS extends DriveSystem {
         return true;
     }
 
-    boolean ExecuteMove (double direction, double distance, double maxPower, double minPower, double tolerance) {
+    boolean ExecuteMove(double direction, double distance, double maxPower, double minPower, double tolerance) {
         //coordinate conversion
         double directionR = Math.toRadians(direction);
         double x = maxPower * Math.sin(-directionR);
@@ -210,7 +228,11 @@ public class MecanumDS extends DriveSystem {
         ResetEncoders();
         double originalEncoderValue = GetAverageEncodersValue();
 
-        while(true) {
+        while (true) {
+            if (useAbortion && !lop.opModeIsActive()) {
+                //abort due to turning off the OpMode
+                break;
+            }
             double currentEncoderValue = GetAverageEncodersValue();
             double diffEncoderValue = currentEncoderValue - originalEncoderValue;
             if (diffEncoderValue >= (distance - tolerance)) {

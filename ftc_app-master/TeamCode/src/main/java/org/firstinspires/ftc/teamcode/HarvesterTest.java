@@ -26,24 +26,28 @@ public class HarvesterTest extends LinearOpMode {
 //            ke.ElevatorInit(0);
 //            ke.kickerInit();
 //            ke.kickerReset();
-            telemetry.addLine(String.format("slideMotorTick: %d", kc.slideMotor.getCurrentPosition()));
+            kc.slideVerify();
+//            telemetry.addLine(String.format("slideMotorTick: %d", kc.slideMotor.getCurrentPosition()));
             if (gamepad1.dpad_right) {
                 telemetry.addLine("Carriage go right");
                 telemetry.update();
                 sleep(100);
-                kc.slideTo(KeithCarriage.RIGHT);
+//                kc.slideTo(KeithCarriage.RIGHT);
+                kc.slideStart(KeithCarriage.RIGHT);
             }
             if (gamepad1.dpad_left) {
                 telemetry.addLine("Carriage go left");
                 telemetry.update();
                 sleep(100);
-                kc.slideTo(KeithCarriage.LEFT);
+//                kc.slideTo(KeithCarriage.LEFT);
+                kc.slideStart(KeithCarriage.LEFT);
             }
             if (gamepad1.dpad_up) {
                 telemetry.addLine("Carriage go center");
                 telemetry.update();
                 sleep(100);
-                kc.slideTo(KeithCarriage.CENTER);
+//                kc.slideTo(KeithCarriage.CENTER);
+                kc.slideStart(KeithCarriage.CENTER);
             }
             if (gamepad1.x) {
                 telemetry.addLine("Flipper toggle");
@@ -68,7 +72,7 @@ public class HarvesterTest extends LinearOpMode {
 //                ke.kickerKick();
 //            }
 
-            telemetry.update();
+//            telemetry.update();
         }
     }
 }

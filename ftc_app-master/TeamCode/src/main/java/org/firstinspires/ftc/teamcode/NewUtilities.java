@@ -56,7 +56,7 @@ public class NewUtilities {
     //position: [-1,left],[0,center],[+1,right]
     public static void CryptoMove(MecanumDS ds, double motorPower, int position, Telemetry telemetry) {
         if (position != 0) {
-            ds.Move(0.2, -90 * position, 0, 1000, 5000);
+            ds.Move(0.2, -90 * position, 0, 250, 5000);
         } else if (position == 0) {
             //do nothing.
         }
@@ -84,6 +84,7 @@ public class NewUtilities {
                 return false;
             }
 
+
             // Turn right 90 degrees
             if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
@@ -94,7 +95,7 @@ public class NewUtilities {
             }
 
             // Move forward
-            if (!ds.Move(movePower, 0, 0, 310, 5000)) {
+            if (!ds.Move(movePower, 0, 0, 150, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
                 // our current position anymore
@@ -103,7 +104,7 @@ public class NewUtilities {
             }
 
             NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-            sleep (3000);
+            sleep(3000);
             NewUtilities.ScoreWithElevator(elevator, telemetry);
 
         } else {
@@ -158,7 +159,7 @@ public class NewUtilities {
             }
 
             NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-            sleep (3000);
+            sleep(3000);
             NewUtilities.ScoreWithElevator(elevator, telemetry);
 
         }
@@ -174,7 +175,8 @@ public class NewUtilities {
             // back a little bit.
 
             // Move forward
-            if (!ds.Move(movePower, 0, 0, 1300, 5000)) {
+            int dx = 1300 + position * 210;
+            if (!ds.Move(movePower, 0, 0, dx, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
                 // our current position anymore
@@ -183,7 +185,7 @@ public class NewUtilities {
             }
 
             // Turn right 90 degrees
-            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
+            if (!ds.Move(spinPower, 0, -88, 0, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
                 // our current position anymore
@@ -192,7 +194,7 @@ public class NewUtilities {
             }
 
             // Move forward
-            if (!ds.Move(movePower, 0, 0, 340, 5000)) {
+            if (!ds.Move(movePower, 0, 0, 300, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
                 // our current position anymore
@@ -200,9 +202,11 @@ public class NewUtilities {
                 return false;
             }
 
-            NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-            sleep (3000);
+            //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
+            sleep(3000);
             NewUtilities.ScoreWithElevator(elevator, telemetry);
+            sleep(4000);
+            ds.Move(movePower, 180, 0, 100, 5000);
 
         } else {
             telemetry.addData("", "Moves: RED, away from RelicRecovery");
@@ -255,8 +259,8 @@ public class NewUtilities {
                 return false;
             }
 
-            NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-            sleep (3000);
+            //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
+            sleep(3000);
             NewUtilities.ScoreWithElevator(elevator, telemetry);
         }
         return true;

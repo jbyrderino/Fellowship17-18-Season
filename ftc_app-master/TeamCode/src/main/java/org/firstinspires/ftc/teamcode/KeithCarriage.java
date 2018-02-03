@@ -36,14 +36,16 @@ public class KeithCarriage extends Carriage {
         rServo = hwMap.get(Servo.class, RSLabel);
     }
 
-    //TBD
+
     public static final int LEFT = 1000;
     public static final int CENTER = 0;
     public static final int RIGHT = -1000;
-    public static final double POWER = 0.6;
-    private int currState = 0;
+    public static final double MAIN_POWER = 0.4;
+    public static final double ADJUST_POWER = 0.1;
+    private int carriageState = 0;
     public boolean slideActive = false;
     public int destination;
+    public long carriageMotionStartTime;
     //threshold of velocity(ticks/ms)
     public static final double THRESHOLD_VL = 0.8;
 
@@ -52,42 +54,55 @@ public class KeithCarriage extends Carriage {
     }
 
     public void slideStart(int dest) {
-        if (!slideActive) {
+        if (slideActive) {
+            tl.addLine("carriage is moving");
+            tl.addLine("another move shall not be executed");
+            tl.update();
+            sleep(500);
             return;
         }
-        if (Math.abs(dest - slideMotor.getCurrentPosition()) > 5) {
-            slideActive = true;
-            destination = dest;
-            slideMotor.setPower(Integer.signum(dest - slideMotor.getCurrentPosition()));
+        if (carriageState == dest) {
+            //already in position
+            tl.addLine(String.format("target:%d, tick:%d", dest, slideMotor.getCurrentPosition()));
+            tl.addLine("in position");
+            tl.update();
+            sleep(500);
+            return;
         }
+
+        slideActive = true;
+        destination = dest;
+        tl.addLine("Carriage GO");
+        tl.update();
+        slideMotor.setPower(MAIN_POWER * Integer.signum(dest - slideMotor.getCurrentPosition()));
+        carriageMotionStartTime = System.currentTimeMillis();
     }
 
     public boolean slideVerify() {
         if (!slideActive) {
+            tl.addLine("verifying motor position: "+slideMotor.getCurrentPosition());
+            tl.update();
             return true;
         }
-        if (Math.abs(destination - slideMotor.getCurrentPosition()) <= 5) {
-            slideMotor.setPower(0);
+        if (Math.abs(destination - slideMotor.getCurrentPosition()) <= 20 || System.currentTimeMillis() - carriageMotionStartTime > 2000) {
+            slideMotor.setPower(0.0);
             slideActive = false;
+            carriageState = destination;
+            tl.addLine("coarse adjust finished");
+            tl.addLine("current slider position " + slideMotor.getCurrentPosition());
+            tl.addLine("starting fine adjustment...");
+            tl.update();
+            sleep(500);
+            autoAdjust();
             return true;
         }
         return false;
     }
 
-    public void slideTo(int state) {
-//        if (currState == -1 && state == LEFT) {
-//            slideMotor.setPower(-0.1);
-//            sleep(100);
-//            slideMotor.setPower(0.0);
-//            return;
-//        }
-//        if (currState == 1 && state == RIGHT) {
-//            slideMotor.setPower(0.1);
-//            sleep(100);
-//            slideMotor.setPower(0.0);
-//        }
-        if (Math.abs(state - slideMotor.getCurrentPosition()) < 5) {
-            tl.addLine(String.format("target:%d, tick:%d", state, slideMotor.getCurrentPosition()));
+    public void slideTo(int target) {
+        if (carriageState == target) {
+            //already in position
+            tl.addLine(String.format("target:%d, tick:%d", target, slideMotor.getCurrentPosition()));
             tl.addLine("in position");
             tl.update();
             sleep(500);
@@ -95,27 +110,41 @@ public class KeithCarriage extends Carriage {
         }
         tl.addLine("Carriage GO");
         tl.update();
-        slideMotor.setPower(POWER * Integer.signum(state - slideMotor.getCurrentPosition()));
-        long lastTime = System.currentTimeMillis();
-//        int lastTick = slideMotor.getCurrentPosition();
-        while (Math.abs(state - slideMotor.getCurrentPosition()) > 10) {
+        slideMotor.setPower(MAIN_POWER * Integer.signum(target - slideMotor.getCurrentPosition()));
+        long startTime = System.currentTimeMillis();
+        while (Math.abs(target - slideMotor.getCurrentPosition()) > 10) {
             //wait until finish
             sleep(5);
-            if (System.currentTimeMillis()-lastTime>2000){
+            if (System.currentTimeMillis() - startTime > 2000) {
+                //timeout
                 break;
             }
-//            double dt = System.currentTimeMillis() - lastTime;
-//            double dx = slideMotor.getCurrentPosition() - lastTick;
-//            double v = dx / dt;
-//            tl.addLine("velocity: " + v);
-//            tl.update();
-//            if (Math.abs(v) < THRESHOLD_VL) {
-//                break;
-//            }
-//            lastTime = System.currentTimeMillis();
-//            lastTick = slideMotor.getCurrentPosition();
         }
         slideMotor.setPower(0.0);
+        carriageState = target;
+        tl.addLine("coarse adjust finished");
+        tl.addLine("current slider position " + slideMotor.getCurrentPosition());
+        tl.addLine("starting fine adjustment...");
+        tl.update();
+        sleep(500);
+        autoAdjust();
+    }
+
+    public void autoAdjust() {
+        slideMotor.setPower(ADJUST_POWER * Integer.signum(carriageState - slideMotor.getCurrentPosition()));
+        long startTime = System.currentTimeMillis();
+        while (Math.abs(carriageState - slideMotor.getCurrentPosition()) > 5) {
+            //wait until finish
+            if (System.currentTimeMillis() - startTime > 500) {
+                //timeout
+                break;
+            }
+        }
+        slideMotor.setPower(0.0);
+        tl.addLine("fine adjustment finished");
+        tl.addLine(String.format("state:%d current position: %d", carriageState, slideMotor.getCurrentPosition()));
+        tl.update();
+        sleep(500);
     }
 
     private boolean inRange(int target, int value) {
@@ -163,18 +192,18 @@ public class KeithCarriage extends Carriage {
         int target = currentState ? DOWN : UP;
         while (Math.abs(target - flipMotor.getCurrentPosition()) > 5) {
             //if (!KeithTeleOp.isIsStopped()) {
-                //wait until finish
-                tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
-                tl.update();
-                if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
-                    break;
-                }
-                if (target == DOWN && flipMotor.getCurrentPosition() < DOWN) {
-                    break;
-                }
-                if (target == UP && flipMotor.getCurrentPosition() > UP) {
-                    break;
-                }
+            //wait until finish
+            tl.addLine(String.format("current position: %d", flipMotor.getCurrentPosition()));
+            tl.update();
+            if (System.currentTimeMillis() - startTime > FlipperTimeOut) {
+                break;
+            }
+            if (target == DOWN && flipMotor.getCurrentPosition() < DOWN) {
+                break;
+            }
+            if (target == UP && flipMotor.getCurrentPosition() > UP) {
+                break;
+            }
             //}else{
             //    break;
             //}

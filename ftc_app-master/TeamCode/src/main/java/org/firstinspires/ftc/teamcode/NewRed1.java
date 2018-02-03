@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
@@ -20,6 +21,7 @@ public class NewRed1 extends LinearOpMode {
         KeithElevator ele = keith.GetKeithElevator();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
         KeithJewlKnocker jks = keith.GetJewelKnockerSubsystem();
+        NewUtilities utility = new NewUtilities(this);
         jks.setKnockerPosition(0.95);
         jks.setBasePosition(0.2);
         ele.kickerSetPosition(0.7);
@@ -35,15 +37,19 @@ public class NewRed1 extends LinearOpMode {
         double movePower = 0.1;
         double spinPower = 0.1;
 
-        NewUtilities.VuforiaInitialize();
+        utility.VuforiaInitialize();
 
         waitForStart();
-
 
         //  color_sensor.argb(); <--- OVERALL COLOR
         //  color_sensor.red();  <--- RED CHANNEL OF SENSOR
 
-        NewUtilities.KnockJewel(jks, true);
+        if (!opModeIsActive()){
+            //abort due to turning off OpMode
+            return;
+        }
+
+        utility.KnockJewel(jks, true);
 //        if (color_sensor.red() > 200) {
 //            NewUtilities.KnockJewel(jks, true); // <--- Use either vuforia or color sensor code to find which side to knock.
 //        }else if (color_sensor.blue() > 200) {
@@ -52,8 +58,14 @@ public class NewRed1 extends LinearOpMode {
 //            telemetry.addLine("Could not find a jewel color. Do nothing.");
 //        }
 
-        NewUtilities.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
-        stop();
+        if (!opModeIsActive()){
+            //abort due to turning off OpMode
+            return;
+        }
+
+        utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
+
+//        stop();
 
 //        while (opModeIsActive()) {
 //

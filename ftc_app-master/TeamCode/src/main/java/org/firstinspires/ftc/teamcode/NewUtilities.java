@@ -30,22 +30,6 @@ public class NewUtilities {
         }
     }
 
-    VuforiaLocalizer VuforiaInitialize() {
-        //do all the initialization needed
-        VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        //set camera direction
-        params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        //set license key
-        params.vuforiaLicenseKey = "AZngjFj/////AAAAGXl4r+gz20bgi78ZEfdDoSM3BRzoPWF85Z/GS524liytojbME/4mrMSgTIJrEsW1IxxgIy6Po9DKP08uYMrcCpsVG1gd800G3RIRQ0KNtQnC7onvphQ2RBZ+3JXkfdYLct13YRM1TzbJLWaS4Lz5bSMMRpSTJU8zSwzAZ1fIdqwXBevZZMkd+LKtIogK+wl1fBo/SaDcrrSW/BIePFCbk1bBG1eaAetcLjEUngrGYBtmD+PdYbefaBFwuzV+eQDU0E671GNILzDhirYTAcFfe/+F2WK9VgAVZfycin4Iv06GyebuSfTiIsE65jhoXY9FQy3ZWnwZGHcID0e/KRG/+CYdk9A+ltYPi7qfrMh/lk5/";
-        //set camera feedback just for fun
-        params.cameraMonitorFeedback = VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES;
-        //initiate vuforia
-        VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(params);
-        //set maximum amount of objects vuforia can trace
-        Vuforia.setHint(HINT.HINT_MAX_SIMULTANEOUS_IMAGE_TARGETS, 4);
-
-        return vuforia;
-    }
 
     public void KnockJewel(KeithJewlKnocker jewlKnocker, boolean leftSide) {
         jewlKnocker.baseKnockerRotateRight();
@@ -253,7 +237,7 @@ public class NewUtilities {
             telemetry.addData("", "Moves: RED, next to RelicRecovery");
             // For our start position, we are facing the glyph box area, so we
             // need to move forward, then turn left 90 degrees, then move
-            // back a little bit.
+            // back a little bit
 
             // Move forward
             int dx = 1300 + position * 210;

@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -13,6 +15,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 @Autonomous(name = "NewRed1: Next to relic recovery", group = "Auto")
 public class NewRed1 extends LinearOpMode {
+
+    OpenGLMatrix lastLocation = null;
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,7 +43,7 @@ public class NewRed1 extends LinearOpMode {
         double movePower = 0.1;
         double spinPower = 0.1;
 
-        utility.VuforiaInitialize();
+
 
         waitForStart();
 

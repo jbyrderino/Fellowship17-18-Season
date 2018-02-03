@@ -171,7 +171,7 @@ public class NewUtilities {
             telemetry.addData("", "Moves: RED, next to RelicRecovery");
             // For our start position, we are facing the glyph box area, so we
             // need to move forward, then turn left 90 degrees, then move
-            // back a little bit.
+            // back a little bit
 
             // Move forward
             if (!ds.Move(movePower, 0, 0, 1300, 5000)) {

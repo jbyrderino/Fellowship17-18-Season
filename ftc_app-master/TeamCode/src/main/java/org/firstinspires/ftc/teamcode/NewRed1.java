@@ -56,13 +56,14 @@ public class NewRed1 extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         telemetry.addData(">", "Press Play to start");
 
-
-
+        //prepare to read cypher
         relicTrackables.activate();
         RelicRecoveryVuMark vuMark = null;
 
+        waitForStart();
+
         //loop 100 times for vuforia to get a stable reading
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10000; i++) {
 
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
@@ -83,6 +84,8 @@ public class NewRed1 extends LinearOpMode {
                     double rY = rot.secondAngle;
                     double rZ = rot.thirdAngle;
                 }
+                //successfully read the cypher
+                break;
             } else {
                 telemetry.addData("VuMark", "not visible");
             }
@@ -90,11 +93,18 @@ public class NewRed1 extends LinearOpMode {
             telemetry.update();
         }
 
+        telemetry.addLine("reading session finished");
+        telemetry.addLine("result:" + vuMark);
+        telemetry.update();
+
+        double movePower = 0.1;
+        double spinPower = 0.1;
+
 
 
         //SCORING POSITION EITHER LEFT (-1), CENTER (0), OR RIGHT (1)
-        int cryptoPosition = 0;
-//        int cryptoPosition = Integer.MAX_VALUE;
+//        int cryptoPosition = 0;
+        int cryptoPosition = Integer.MAX_VALUE;
         if (vuMark.toString().equals("LEFT")) {
             cryptoPosition = 1;
         } else if (vuMark.toString().equals("RIGHT")) {
@@ -103,27 +113,19 @@ public class NewRed1 extends LinearOpMode {
             cryptoPosition = 0;
         }
 
-//        if (cryptoPosition==Integer.MAX_VALUE){
-//            throw new RuntimeException("NO READING");
-//        }
+        if (cryptoPosition == Integer.MAX_VALUE) {
+            throw new RuntimeException("NO READING");
+        }
 
+        telemetry.addLine(String.format("Detected code: %d", cryptoPosition));
+        telemetry.update();
+        sleep(3000);
+        //NewUtilities.KnockJewel(jks, true);
 
-        double movePower = 0.1;
-        double spinPower = 0.1;
-
-
-        waitForStart();
-
-
-<<<<<<< HEAD
-=======
-            //NewUtilities.KnockJewel(jks, true);
-
-        if (!opModeIsActive()){
+        if (!opModeIsActive()) {
             //abort due to turning off OpMode
             return;
         }
->>>>>>> effd8209c913e0191fae13504cc102cafa477d1f
 
         utility.KnockJewel(jks, true);
 
@@ -141,13 +143,7 @@ public class NewRed1 extends LinearOpMode {
             return;
         }
 
-        telemetry.addData("OpMode is active",opModeIsActive());
-        telemetry.update();
-
         utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
-
-        telemetry.addData("OPmode is active",opModeIsActive());
-        telemetry.update();
 
 //        stop();
 

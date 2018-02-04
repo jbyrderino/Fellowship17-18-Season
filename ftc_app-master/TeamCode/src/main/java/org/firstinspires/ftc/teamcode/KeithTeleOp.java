@@ -407,10 +407,10 @@ public class KeithTeleOp extends OpMode{
         final double v3 = r * Math.sin(robotAngle) + rightX*pwrLvl.constant;
         final double v4 = r * Math.cos(robotAngle) - rightX*pwrLvl.constant;
 
-        ds.FrontLeft.setPower(v4);
-        ds.FrontRight.setPower(v3);
-        ds.BackLeft.setPower(v2);
-        ds.BackRight.setPower(v1);
+        ds.FrontLeft.setPower(v3);
+        ds.FrontRight.setPower(v4);
+        ds.BackLeft.setPower(v1);
+        ds.BackRight.setPower(v2);
         telemetry.addData("V1", v1);
         telemetry.addData("V2", v2);
         telemetry.addData("V3", v3);

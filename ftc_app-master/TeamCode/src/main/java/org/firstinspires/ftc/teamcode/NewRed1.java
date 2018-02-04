@@ -50,7 +50,7 @@ public class NewRed1 extends LinearOpMode {
         //  color_sensor.argb(); <--- OVERALL COLOR
         //  color_sensor.red();  <--- RED CHANNEL OF SENSOR
 
-            NewUtilities.KnockJewel(jks, true);
+            //NewUtilities.KnockJewel(jks, true);
 
         if (!opModeIsActive()){
             //abort due to turning off OpMode

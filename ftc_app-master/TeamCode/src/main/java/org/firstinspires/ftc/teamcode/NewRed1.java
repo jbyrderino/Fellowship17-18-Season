@@ -115,6 +115,15 @@ public class NewRed1 extends LinearOpMode {
         waitForStart();
 
 
+<<<<<<< HEAD
+=======
+            //NewUtilities.KnockJewel(jks, true);
+
+        if (!opModeIsActive()){
+            //abort due to turning off OpMode
+            return;
+        }
+>>>>>>> effd8209c913e0191fae13504cc102cafa477d1f
 
         utility.KnockJewel(jks, true);
 

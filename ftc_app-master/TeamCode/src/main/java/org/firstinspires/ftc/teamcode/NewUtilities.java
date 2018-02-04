@@ -30,28 +30,38 @@ public class NewUtilities {
         }
     }
 
+    boolean inRange(int base, int val) {
+        return Math.abs(base - val) <= 1;
+    }
 
-    public void KnockJewel(KeithJewlKnocker jewlKnocker, boolean leftSide) {
+    public static final int RED = 3;
+    public static final int BLUE = 3;
+
+    //stance: [true,red],[false,blue]
+    public void KnockJewel(KeithJewlKnocker jewlKnocker, boolean stance) {
+        if (!lop.opModeIsActive()) {
+            //stop opMODE
+            return;
+        }
         jewlKnocker.baseKnockerRotateRight();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
         }
-        jewlKnocker.knockerDown();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
         }
-        if (leftSide) {
-            jewlKnocker.knockRight();
-        } else {
+        int color = jewlKnocker.detectColor();
+        if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
             jewlKnocker.knockLeft();
+        } else {
+            jewlKnocker.knockRight();
         }
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
         }
-        jewlKnocker.knockerUp();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
@@ -99,7 +109,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -113,7 +123,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -127,7 +137,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -135,7 +145,7 @@ public class NewUtilities {
             CryptoMove(ds, movePower, position, telemetry);
             sleep(3000);
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -156,7 +166,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -170,7 +180,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -184,7 +194,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -198,7 +208,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -212,7 +222,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -220,7 +230,7 @@ public class NewUtilities {
             CryptoMove(ds, movePower, position, telemetry);
             sleep(3000);
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -249,7 +259,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -263,7 +273,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -277,17 +287,17 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
             //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-            sleep(3000);
+
             ScoreWithElevator(elevator, telemetry);
             sleep(4000);
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -309,7 +319,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -323,7 +333,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -337,7 +347,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -351,7 +361,7 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
@@ -365,19 +375,22 @@ public class NewUtilities {
                 return false;
             }
 
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
             //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
             sleep(3000);
-            if (!lop.opModeIsActive()){
+            if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
             ScoreWithElevator(elevator, telemetry);
+            sleep(4000);
+
+            ds.Move(movePower, 180, 0, 100, 5000);
         }
         return true;
     }

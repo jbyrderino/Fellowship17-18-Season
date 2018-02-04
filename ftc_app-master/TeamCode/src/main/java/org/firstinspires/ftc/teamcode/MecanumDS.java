@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.os.Environment;
-import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,15 +35,15 @@ public class MecanumDS extends DriveSystem {
     boolean debugTelemetry = false;
 
     LinearOpMode lop;
-    boolean useAbortion;
+    boolean useAborting;
 
     public void setLinearOpMode(LinearOpMode lop) {
-        if (lop == null) {
+        if (lop != null) {
             this.lop = lop;
-            useAbortion = true;
+            useAborting = true;
         } else {
             this.lop = null;
-            useAbortion = true;
+            useAborting = false;
         }
     }
 
@@ -130,7 +129,7 @@ public class MecanumDS extends DriveSystem {
         }
         double slowDownDegrees = SPIN_SLOWDOWN_THRESHOLD * (targetPower - minPower);
         while (currentHeading > (headingGoal + tolerance) || currentHeading < (headingGoal - tolerance)) {
-            if (useAbortion && !lop.opModeIsActive()) {
+            if (useAborting && !lop.opModeIsActive()) {
                 //abort due to turning off the OpMode
                 break;
             }
@@ -229,7 +228,7 @@ public class MecanumDS extends DriveSystem {
         double originalEncoderValue = GetAverageEncodersValue();
 
         while (true) {
-            if (useAbortion && !lop.opModeIsActive()) {
+            if (useAborting && !lop.opModeIsActive()) {
                 //abort due to turning off the OpMode
                 break;
             }
@@ -289,9 +288,17 @@ public class MecanumDS extends DriveSystem {
         imu.ResetHeading();
 
         if (distance > 0) {
+            if (useAborting && !lop.opModeIsActive()) {
+                //abort due to turning off the OpMode
+                return false;
+            }
             ExecuteMove(direction, distance, power, minPowerMove, 50);
         }
         if (spin != 0) {
+            if (useAborting && !lop.opModeIsActive()) {
+                //abort due to turning off the OpMode
+                return false;
+            }
             ExecuteSpin(spin, power, minPowerSpin, 0.1);
         }
 

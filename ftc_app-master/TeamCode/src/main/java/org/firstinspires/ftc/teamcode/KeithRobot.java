@@ -22,7 +22,7 @@ public class KeithRobot extends FTCRobot {
         imu = new BoschIMU(hardwareMap, "imu");
         mds = new MecanumDS(hardwareMap, telemetry, imu, "Front Left", "Front Right", "Back Left", "Back Right");
         frs = new FishingRodSystem(hardwareMap, telemetry, "lowerReel", "upperReel", "claw", "rodMotor");
-        jks = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker", telemetry);
+        jks = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker","colorSensor", telemetry);
         ele = new KeithElevator(hardwareMap, telemetry, "HarvesterMain", "Kicker");
         car = new KeithCarriage(hardwareMap,telemetry, "slideMotor", "flipMotor", "lServo","rServo");
         jds = new JewlDetect();

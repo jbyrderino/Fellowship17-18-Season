@@ -13,7 +13,7 @@ public class TestJwlKnocker extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        kjk = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker", telemetry);
+        kjk = new KeithJewlKnocker(hardwareMap, "JewlBase", "JewlKnocker", "colorSensor", telemetry);
         waitForStart();
 
         while (opModeIsActive()) {

@@ -71,6 +71,7 @@ public class KeithTeleOp extends OpMode{
     double maxDrivingPower = 1.0;
     boolean engageMotors = true;
     double dsSelectionTime = 0;
+    PowerLvl pwrLvl = PowerLvl.MED;
 
     // Variables that control the relic arm system
     FishingRodSystem frs = null;
@@ -175,6 +176,14 @@ public class KeithTeleOp extends OpMode{
             jds.JewlDetectForLoop();
         }
 
+	    if (gamepad1.left_bumper || gamepad1.right_bumper) {
+        	if (gamepad1.left_bumper && !gamepad1.right_bumper && pwrLvl != PowerLvl.LOW){
+        		pwrLvl = PowerLvl.values()[pwrLvl.ordinal() - 1];
+	        }
+	        if (gamepad1.right_bumper && !gamepad1.left_bumper && pwrLvl != PowerLvl.HIG){
+        		pwrLvl = PowerLvl.values()[pwrLvl.ordinal() + 1];
+	        }
+	    }
 
         if (gamepad2.start) {
             if (gamepad2.x) {
@@ -188,7 +197,8 @@ public class KeithTeleOp extends OpMode{
                 switchSelectionTime = System.currentTimeMillis();
             }
         }
-        CallTestDriveSystem();
+
+        CallTestDriveSystem(pwrLvl);
         if (System.currentTimeMillis() - switchSelectionTime > 300) {
             if (harvesterActive) {
                 CallHarvesterSystem();
@@ -387,23 +397,25 @@ public class KeithTeleOp extends OpMode{
         telemetry.addData("", "Ratio(Bumpers): %.2f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
     }
 
-    void CallTestDriveSystem() {
+    void CallTestDriveSystem(PowerLvl pwrLvl) {
+
         double r = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
         double robotAngle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y) - Math.PI / 4;
         double rightX = gamepad1.right_stick_x;
-        final double v1 = r * Math.cos(robotAngle) - rightX;
-        final double v2 = r * Math.sin(robotAngle) + rightX;
-        final double v3 = r * Math.sin(robotAngle) - rightX;
-        final double v4 = r * Math.cos(robotAngle) + rightX;
+        final double v1 = r * Math.cos(robotAngle) + rightX*pwrLvl.constant;
+        final double v2 = r * Math.sin(robotAngle) - rightX*pwrLvl.constant;
+        final double v3 = r * Math.sin(robotAngle) + rightX*pwrLvl.constant;
+        final double v4 = r * Math.cos(robotAngle) - rightX*pwrLvl.constant;
 
-        ds.FrontLeft.setPower(v3);
-        ds.FrontRight.setPower(v4);
-        ds.BackLeft.setPower(v1);
-        ds.BackRight.setPower(v2);
+        ds.FrontLeft.setPower(v4);
+        ds.FrontRight.setPower(v3);
+        ds.BackLeft.setPower(v2);
+        ds.BackRight.setPower(v1);
         telemetry.addData("V1", v1);
         telemetry.addData("V2", v2);
         telemetry.addData("V3", v3);
         telemetry.addData("V4", v4);
+        telemetry.addData("Power Level", pwrLvl);
     }
 
     void CallDriveSystem() {

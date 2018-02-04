@@ -70,48 +70,50 @@ public class KeithJewlKnocker extends JewlKnocker {
     }
 
     public void knockerDown() {
-        servoKnocker.setPosition(0.55);
-        sleep(500);
+        servoKnocker.setPosition(0.57);
+        if (!sleep(700)) {
+            return;
+        }
     }
 
     public void knockerUp() {
-        servoKnocker.setPosition(.1);
-        sleep(500);
+        servoKnocker.setPosition(0.99);
+        if (!sleep(700)) {
+            return;
+        }
     }
 
-    public void baseKnockerRotateLeft() {
-        knockerBase.setPosition(.45);
+    public void setDownPosition() {
+        knockerBase.setPosition(0.18);
+        servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;
         }
-        servoKnocker.setPosition(.65);
+        knockerBase.setPosition(0.70);
+        servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(.76);
-        if (!sleep(700)) {
-            return;
-        }
-        servoKnocker.setPosition(.55);
+        knockerBase.setPosition(0.70);
+        servoKnocker.setPosition(0.57);
         if (!sleep(1000)) {
             return;
         }
     }
 
-    public void baseKnockerRotateRight() {
-        servoKnocker.setPosition(.55);
+    public void setUpPosition() {
+        knockerBase.setPosition(0.70);
+        servoKnocker.setPosition(0.57);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(.76);
+        knockerBase.setPosition(0.70);
+        servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;
         }
-        servoKnocker.setPosition(.65);
-        if (!sleep(700)) {
-            return;
-        }
-        knockerBase.setPosition(.45);
+        knockerBase.setPosition(0.18);
+        servoKnocker.setPosition(0.99);
         if (!sleep(1000)) {
             return;
         }
@@ -120,11 +122,11 @@ public class KeithJewlKnocker extends JewlKnocker {
     public void knockLeft() {
         tl.addLine("knock left");
         tl.update();
-        knockerBase.setPosition(.1);
+        knockerBase.setPosition(.40);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(.76);
+        knockerBase.setPosition(.70);
         if (!sleep(700)) {
             return;
         }
@@ -133,11 +135,11 @@ public class KeithJewlKnocker extends JewlKnocker {
     public void knockRight() {
         tl.addLine("knock right");
         tl.update();
-        knockerBase.setPosition(.96);
+        knockerBase.setPosition(1.0);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(.76);
+        knockerBase.setPosition(.70);
         if (!sleep(700)) {
             return;
         }

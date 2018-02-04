@@ -18,9 +18,7 @@ public class NewUtilities {
 
     LinearOpMode lop;
 
-    public NewUtilities(LinearOpMode lop) {
-        this.lop = lop;
-    }
+    public NewUtilities(LinearOpMode lop) { this.lop = lop; }
 
     void sleep(long millis) {
         try {
@@ -43,7 +41,7 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
-        jewlKnocker.baseKnockerRotateRight();
+        jewlKnocker.setDownPosition();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
@@ -66,7 +64,7 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
-        jewlKnocker.baseKnockerRotateLeft();
+        jewlKnocker.setUpPosition();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;

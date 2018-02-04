@@ -41,11 +41,11 @@ public class JewlKnockerTest extends LinearOpMode {
             }
             if (gamepad1.dpad_left) {
                 pressed = true;
-                jewlKnockerSystem.baseKnockerRotateLeft();
+                jewlKnockerSystem.setDownPosition();
             }
             if (gamepad1.dpad_right) {
                 pressed = true;
-                jewlKnockerSystem.baseKnockerRotateRight();
+                jewlKnockerSystem.setUpPosition();
             }
             if (gamepad1.right_bumper) {
                 pressed = true;

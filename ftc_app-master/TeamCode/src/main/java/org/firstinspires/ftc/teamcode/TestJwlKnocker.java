@@ -18,26 +18,18 @@ public class TestJwlKnocker extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.x) {
-                kjk.baseKnockerRotateRight();
-                sleep(500);
-                kjk.knockerDown();
+                kjk.setDownPosition();
                 sleep(500);
                 kjk.knockLeft();
                 sleep(500);
-                kjk.knockerUp();
-                sleep(500);
-                kjk.baseKnockerRotateLeft();
+                kjk.setUpPosition();
             }
             if (gamepad1.y){
-                kjk.baseKnockerRotateRight();
-                sleep(500);
-                kjk.knockerDown();
+                kjk.setDownPosition();
                 sleep(500);
                 kjk.knockRight();
                 sleep(500);
-                kjk.knockerUp();
-                sleep(500);
-                kjk.baseKnockerRotateLeft();
+                kjk.setUpPosition();
             }
         }
     }

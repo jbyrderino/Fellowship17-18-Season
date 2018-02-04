@@ -16,9 +16,9 @@ public abstract class JewlKnocker {
 
     public abstract double getKnockerPosition();
 
-    public abstract void baseKnockerRotateLeft();
+    public abstract void setDownPosition();
 
-    public abstract void baseKnockerRotateRight();
+    public abstract void setUpPosition();
 
     public abstract void knockLeft();
 

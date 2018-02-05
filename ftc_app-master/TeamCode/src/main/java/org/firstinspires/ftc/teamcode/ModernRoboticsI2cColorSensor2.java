@@ -149,10 +149,6 @@ public class ModernRoboticsI2cColorSensor2 extends I2cControllerPortDeviceImpl i
             command = COMMAND_ACTIVE_LED;
         }
 
-        if (lastCommand == command) { // switching is expensive
-            return;
-        }
-
         lastCommand = command;
         state = State.PERFORMING_WRITE;
 

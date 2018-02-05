@@ -69,7 +69,7 @@ public class AutoUtilities {
 
 
     static public void KnockJewel(KeithJewlKnocker jewlKnocker, boolean leftSide) {
-        jewlKnocker.baseKnockerRotateRight();
+        jewlKnocker.setUpPosition();
         jewlKnocker.knockerDown();
         if (leftSide) {
             jewlKnocker.knockRight();
@@ -77,7 +77,7 @@ public class AutoUtilities {
             jewlKnocker.knockLeft();
         }
         jewlKnocker.knockerUp();
-        jewlKnocker.baseKnockerRotateLeft();
+        jewlKnocker.setDownPosition();
 
     }
 

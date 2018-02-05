@@ -89,25 +89,25 @@ public class KeithJewlKnocker extends JewlKnocker {
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(0.70);
+        knockerBase.setPosition(0.68);
         servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(0.70);
-        servoKnocker.setPosition(0.57);
+        knockerBase.setPosition(0.68);
+        servoKnocker.setPosition(0.60);
         if (!sleep(1000)) {
             return;
         }
     }
 
     public void setUpPosition() {
-        knockerBase.setPosition(0.70);
-        servoKnocker.setPosition(0.57);
+        knockerBase.setPosition(0.68);
+        servoKnocker.setPosition(0.60);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(0.70);
+        knockerBase.setPosition(0.68);
         servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;

@@ -9,16 +9,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 @TeleOp(name="ColorTest", group="Iterative Opmode")
-public class TestColorCensor extends LinearOpMode {
+public class TestColorSensor extends LinearOpMode {
 
     ModernRoboticsI2cColorSensor2 sensor;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         I2cDevice i2c = hardwareMap.i2cDevice.get("colorSensor");
         sensor = new ModernRoboticsI2cColorSensor2(i2c.getI2cController(), i2c.getPort());
-        sensor.enableLed(true);
         waitForStart();
+        sensor.enableLed(true);
         while (opModeIsActive()) {
             telemetry.addLine(String.format("Red: %d", sensor.red()));
             telemetry.addLine(String.format("Green: %d", sensor.green()));
@@ -26,6 +26,6 @@ public class TestColorCensor extends LinearOpMode {
             telemetry.addLine(String.format("Color #: %d", sensor.colorNumber()));
             telemetry.update();
         }
-        sensor.enableLed(false);
+        sensor.enableLed(true);
     }
 }

@@ -46,17 +46,14 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
-        if (!lop.opModeIsActive()) {
-            //stop opMODE
-            return;
-        }
+
         int color = jewlKnocker.detectColor();
         jewlKnocker.tl.addLine("see color #: "+color);
         jewlKnocker.tl.update();
-        sleep(3000);
+        sleep(2000);
         if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
             jewlKnocker.knockRight();
-        } else {
+        } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){
             jewlKnocker.knockLeft();
         }
         if (!lop.opModeIsActive()) {

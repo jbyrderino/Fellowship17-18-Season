@@ -22,17 +22,18 @@ public class MysteriousTeleOpUnderAndrewsQuest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            /*
+
             double ly = gamepad1.left_stick_y;
             double ry = gamepad1.right_stick_y;
             telemetry.addLine(String.format("Left joystick: %f, Right joystick: %f", ly, ry));
+            telemetry.update();
             frs.setLowerReelPower(ly);
             frs.setUpperReelPower(ry);
-            */
-            double ly = -gamepad1.left_stick_y / 2;
-            telemetry.addLine(String.format("Left joystick: %.3f", ly));
-            frs.setRodMotorPower(ly);
-            telemetry.update();
+
+//            double ly = -gamepad1.left_stick_y / 2;
+//            telemetry.addLine(String.format("Left joystick: %.3f", ly));
+//            frs.setRodMotorPower(ly);
+//            telemetry.update();
         }
     }
 }

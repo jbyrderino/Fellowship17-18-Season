@@ -143,7 +143,8 @@ public class NewRed1 extends LinearOpMode {
             return;
         }
 
-        utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
+        sleep(5000);
+        //utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
 
 //        stop();
 

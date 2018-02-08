@@ -32,7 +32,7 @@ public class NewUtilities {
         return Math.abs(base - val) <= 1;
     }
 
-    public static final int RED = 3;
+    public static final int RED = 10;
     public static final int BLUE = 3;
 
     //stance: [true,red],[false,blue]
@@ -46,22 +46,18 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
-        if (!lop.opModeIsActive()) {
-            //stop opMODE
-            return;
-        }
         int color = jewlKnocker.detectColor();
+        jewlKnocker.tl.addLine("see color #: "+color);
+        jewlKnocker.tl.update();
+        sleep(3000);
+        color = jewlKnocker.detectColor();
         jewlKnocker.tl.addLine("see color #: "+color);
         jewlKnocker.tl.update();
         sleep(3000);
         if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
             jewlKnocker.knockRight();
-        } else {
+        } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){
             jewlKnocker.knockLeft();
-        }
-        if (!lop.opModeIsActive()) {
-            //stop opMODE
-            return;
         }
         if (!lop.opModeIsActive()) {
             //stop opMODE

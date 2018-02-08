@@ -46,6 +46,7 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
+<<<<<<< HEAD
         int color = jewlKnocker.detectColor();
         jewlKnocker.tl.addLine("see color #: "+color);
         jewlKnocker.tl.update();
@@ -54,6 +55,13 @@ public class NewUtilities {
         jewlKnocker.tl.addLine("see color #: "+color);
         jewlKnocker.tl.update();
         sleep(3000);
+=======
+
+        int color = jewlKnocker.detectColor();
+        jewlKnocker.tl.addLine("see color #: "+color);
+        jewlKnocker.tl.update();
+        sleep(2000);
+>>>>>>> c66500c9c09a188a78acefd372f0c2d0b107150c
         if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
             jewlKnocker.knockRight();
         } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){

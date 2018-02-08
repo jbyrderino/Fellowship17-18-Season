@@ -89,25 +89,25 @@ public class KeithJewlKnocker extends JewlKnocker {
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(0.72);
+        knockerBase.setPosition(0.77);
         servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(0.72);
-        servoKnocker.setPosition(0.60);
+        knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.57);
         if (!sleep(1000)) {
             return;
         }
     }
 
     public void setUpPosition() {
-        knockerBase.setPosition(0.72);
+        knockerBase.setPosition(0.77);
         servoKnocker.setPosition(0.60);
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(0.72);
+        knockerBase.setPosition(0.77);
         servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;
@@ -126,8 +126,25 @@ public class KeithJewlKnocker extends JewlKnocker {
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(.70);
+        knockerBase.setPosition(.77);
         if (!sleep(700)) {
+            return;
+        }
+    }
+
+    public void knockLeftAndGoHome() {
+        tl.addLine("knock left");
+        tl.update();
+        knockerBase.setPosition(.40);
+        if (!sleep(700)) {
+            return;
+        }
+        servoKnocker.setPosition(0.99);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.18);
+        if (!sleep(1000)) {
             return;
         }
     }
@@ -139,12 +156,46 @@ public class KeithJewlKnocker extends JewlKnocker {
         if (!sleep(700)) {
             return;
         }
-        knockerBase.setPosition(.70);
+        knockerBase.setPosition(.77);
         if (!sleep(700)) {
             return;
         }
     }
 
+    public void knockRightAndGoHome() {
+        tl.addLine("knock right");
+        tl.update();
+        knockerBase.setPosition(1.0);
+        if (!sleep(700)) {
+            return;
+        }
+        servoKnocker.setPosition(0.99);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.18);
+        if (!sleep(1000)) {
+            return;
+        }
+    }
+
+    public void moveSlightUp() {
+        tl.addLine("Slight Up");
+        tl.update();
+        servoKnocker.setPosition(0.59);
+        if (!sleep(1000)) {
+            return;
+        }
+    }
+
+    public void moveSlightDown() {
+        tl.addLine("Slight Up");
+        tl.update();
+        servoKnocker.setPosition(0.57);
+        if (!sleep(1000)) {
+            return;
+        }
+    }
     public boolean sleep(int millis) {
         long start = System.currentTimeMillis();
         while (System.currentTimeMillis() - start < millis) {

@@ -52,8 +52,12 @@ public class NewUtilities {
         jewlKnocker.tl.update();
         sleep(2000);
         if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
+            jewlKnocker.tl.addLine("knock right");
+            jewlKnocker.tl.update();
             jewlKnocker.knockRight();
         } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){
+            jewlKnocker.tl.addLine("knock left");
+            jewlKnocker.tl.update();
             jewlKnocker.knockLeft();
         }
         if (!lop.opModeIsActive()) {

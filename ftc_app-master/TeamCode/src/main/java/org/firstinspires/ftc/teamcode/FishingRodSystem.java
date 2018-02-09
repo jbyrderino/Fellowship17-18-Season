@@ -149,6 +149,7 @@ public class FishingRodSystem extends RelicArmSubsystem {
     }
 
     public double getRatio () { return ratio; }
+
     public void incRatio(double inc) {
         ratio += inc;
         if (ratio < 0) {

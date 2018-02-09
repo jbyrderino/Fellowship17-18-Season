@@ -11,20 +11,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
-
 /**
  * Created by Joshua on 1/30/2018.
  */
 
-@Autonomous(name = "NewRed1: Next to relic recovery", group = "Auto")
-public class NewRed1 extends LinearOpMode {
+@Autonomous(name = "NewBlue1: Next to relic recovery", group = "Auto")
+public class NewBlue1 extends LinearOpMode {
 
     //vuforia component
     OpenGLMatrix lastLocation = null;
@@ -126,7 +123,7 @@ public class NewRed1 extends LinearOpMode {
             return;
         }
 
-        utility.KnockJewel(jks, true);
+        utility.KnockJewel(jks, false);
 
 
 //        if (color_sensor.red() > 200) {
@@ -142,7 +139,7 @@ public class NewRed1 extends LinearOpMode {
             return;
         }
 
-        utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
+        utility.ExecuteMovesBlue(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
 
 //        stop();
 

@@ -162,7 +162,7 @@ public class MecanumDS extends DriveSystem {
             if (currentHeading > (headingGoal - tolerance) && currentHeading < (headingGoal + tolerance)) {
                 setMotorPower(0, 0, 0, 0);
                 long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime <= 500) ;
+                while (System.currentTimeMillis() - startTime <= 100) ;
             }
         }
         setMotorPower(0, 0, 0, 0);

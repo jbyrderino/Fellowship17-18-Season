@@ -18,7 +18,9 @@ public class NewUtilities {
 
     LinearOpMode lop;
 
-    public NewUtilities(LinearOpMode lop) { this.lop = lop; }
+    public NewUtilities(LinearOpMode lop) {
+        this.lop = lop;
+    }
 
     void sleep(long millis) {
         try {
@@ -47,41 +49,23 @@ public class NewUtilities {
             return;
         }
         int color = jewlKnocker.detectColor();
-        jewlKnocker.tl.addLine("see color #: "+color);
+        jewlKnocker.tl.addLine("see color #: " + color);
         jewlKnocker.tl.update();
         //sleep(3000);
         if (!inRange(BLUE, color) && !inRange(RED, color)) {
             jewlKnocker.moveSlightUp();
             color = jewlKnocker.detectColor();
-            jewlKnocker.tl.addLine("see color #: "+color);
+            jewlKnocker.tl.addLine("see color #: " + color);
             jewlKnocker.tl.update();
             //sleep(3000);
             jewlKnocker.moveSlightDown();
         }
         if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
-<<<<<<< HEAD
-            jewlKnocker.tl.addLine("knock right");
-            jewlKnocker.tl.update();
-            jewlKnocker.knockRight();
-        } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){
-            jewlKnocker.tl.addLine("knock left");
-            jewlKnocker.tl.update();
-            jewlKnocker.knockLeft();
-        }
-        if (!lop.opModeIsActive()) {
-            //stop opMODE
-            return;
-=======
             jewlKnocker.knockRightAndGoHome();
-        } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){
+        } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))) {
             jewlKnocker.knockLeftAndGoHome();
         } else {
             jewlKnocker.setUpPosition();
->>>>>>> 1999ebc562321e3f25c7e62a43be71aae85b1c33
-        }
-        if (!lop.opModeIsActive()) {
-            //stop opMODE
-            return;
         }
         if (!lop.opModeIsActive()) {
             //stop opMODE
@@ -109,154 +93,154 @@ public class NewUtilities {
         elevator.elevatorPower(0.0);
     }
 
-    public boolean ExecuteMovesBlue(MecanumDS ds, KeithElevator elevator, double movePower, double spinPower, boolean nextToRelicRecovery, Telemetry telemetry, int position) {
-        if (nextToRelicRecovery) {
-            telemetry.addData("", "Moves: BLUE, next to RelicRecovery");
-            // For our start position, we are facing away from the glyph box area,
-            // so we need to move back, then turn left 90 degrees, then move
-            // back again a little bit.
-
-            // Move back
-            if (!ds.Move(movePower, 180, 0, 1300, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Backward move timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            // Turn right 90 degrees
-            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Left turn timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            // Move forward
-            if (!ds.Move(movePower, 0, 0, 150, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Backward move timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            CryptoMove(ds, movePower, position, telemetry);
-            sleep(3000);
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-            ScoreWithElevator(elevator, telemetry);
-
-        } else {
-            telemetry.addData("", "Moves: BLUE, away from RelicRecovery");
-            // For our start position, we are facing away from the glyph box area so we
-            // need to move back, then turn left 90 degrees, then move forward a bit more,
-            // turn right 90 degrees and finally move back a little bit.
-
-            // Move back
-            if (!ds.Move(movePower, 180, 0, 1000, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Backward move timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            // Turn right 90 degrees
-            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Left turn timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            // Move backward
-            if (!ds.Move(movePower, 0, 180, 440, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Forward move timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            // Turn right 90 degrees
-            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Right turn timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            // Move forward
-            if (!ds.Move(movePower, 0, 0, 120, 5000)) {
-                // we seem to have timed out. Let's not continue this anymore
-                // it's not safe to try to go further as we don't really know
-                // our current position anymore
-                telemetry.addData("", "Backward move timed out, abandoning.");
-                return false;
-            }
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            CryptoMove(ds, movePower, position, telemetry);
-            sleep(3000);
-
-            if (!lop.opModeIsActive()) {
-                //abort due to turning off OpMode
-                return false;
-            }
-
-            ScoreWithElevator(elevator, telemetry);
-
-        }
-
-        return true;
-    }
+//    public boolean ExecuteMovesBlue(MecanumDS ds, KeithElevator elevator, double movePower, double spinPower, boolean nextToRelicRecovery, Telemetry telemetry, int position) {
+//        if (nextToRelicRecovery) {
+//            telemetry.addData("", "Moves: BLUE, next to RelicRecovery");
+//            // For our start position, we are facing away from the glyph box area,
+//            // so we need to move back, then turn left 90 degrees, then move
+//            // back again a little bit.
+//
+//            // Move back
+//            if (!ds.Move(movePower, 180, 0, 1300, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Backward move timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            // Turn right 90 degrees
+//            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Left turn timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            // Move forward
+//            if (!ds.Move(movePower, 0, 0, 150, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Backward move timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            CryptoMove(ds, movePower, position, telemetry);
+//            sleep(3000);
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//            ScoreWithElevator(elevator, telemetry);
+//
+//        } else {
+//            telemetry.addData("", "Moves: BLUE, away from RelicRecovery");
+//            // For our start position, we are facing away from the glyph box area so we
+//            // need to move back, then turn left 90 degrees, then move forward a bit more,
+//            // turn right 90 degrees and finally move back a little bit.
+//
+//            // Move back
+//            if (!ds.Move(movePower, 180, 0, 1000, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Backward move timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            // Turn right 90 degrees
+//            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Left turn timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            // Move backward
+//            if (!ds.Move(movePower, 0, 180, 440, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Forward move timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            // Turn right 90 degrees
+//            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Right turn timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            // Move forward
+//            if (!ds.Move(movePower, 0, 0, 120, 5000)) {
+//                // we seem to have timed out. Let's not continue this anymore
+//                // it's not safe to try to go further as we don't really know
+//                // our current position anymore
+//                telemetry.addData("", "Backward move timed out, abandoning.");
+//                return false;
+//            }
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            CryptoMove(ds, movePower, position, telemetry);
+//            sleep(3000);
+//
+//            if (!lop.opModeIsActive()) {
+//                //abort due to turning off OpMode
+//                return false;
+//            }
+//
+//            ScoreWithElevator(elevator, telemetry);
+//
+//        }
+//
+//        return true;
+//    }
 
     public boolean ExecuteMovesRed(MecanumDS ds, KeithElevator elevator, double movePower, double spinPower, boolean nextToRelicRecovery, Telemetry telemetry, int position) {
         if (nextToRelicRecovery) {
@@ -308,8 +292,6 @@ public class NewUtilities {
                 return false;
             }
 
-            //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-
             ScoreWithElevator(elevator, telemetry);
 
             if (!lop.opModeIsActive()) {
@@ -354,7 +336,8 @@ public class NewUtilities {
             }
 
             // Move forward
-            if (!ds.Move(movePower, 0, 0, 450, 5000)) {
+            int dx = 465 + position * 270;
+            if (!ds.Move(movePower, 0, 0, dx, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
                 // our current position anymore
@@ -395,19 +378,176 @@ public class NewUtilities {
                 return false;
             }
 
-            //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
-            sleep(3000);
+            ScoreWithElevator(elevator, telemetry);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            ds.Move(movePower, 180, 0, 300, 5000);
+
+        }
+        return true;
+    }
+
+    public boolean ExecuteMovesBlue(MecanumDS ds, KeithElevator elevator, double movePower, double spinPower, boolean nextToRelicRecovery, Telemetry telemetry, int position) {
+        if (nextToRelicRecovery) {
+            telemetry.addData("", "Moves: RED, next to RelicRecovery");
+            // For our start position, we are facing the glyph box area, so we
+            // need to move forward, then turn left 90 degrees, then move
+            // back a little bit
+
+            //since we are going backward, position need to be negated
+            position *= -1;
+            // Move backward
+            int dx = 1305 + position * 270;
+            if (!ds.Move(movePower, 180, 0, dx, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Backward move timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            // Turn right 90 degrees
+            if (!ds.Move(spinPower, 0, -88, 0, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Left turn timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            // Move forward
+            if (!ds.Move(movePower, 0, 0, 300, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Backward move timed out, abandoning.");
+                return false;
+            }
+
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
             ScoreWithElevator(elevator, telemetry);
-            sleep(4000);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            ds.Move(movePower, 180, 0, 300, 5000);
+
+        } else {
+            telemetry.addData("", "Moves: RED, away from RelicRecovery");
+            // For our start position, we are facing the glyph box area, so we
+            // need to move forward, then turn left 90 degrees, then move forward
+            // a bit more, turn left 90 degrees again and finally move back a little bit.
+
+            // Move backward
+            if (!ds.Move(movePower, 180, 0, 1035, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Forward move timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            // Turn left 90 degrees
+            if (!ds.Move(spinPower, 0, 89, 0, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Left turn timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            // Move forward
+            int dx = 465 + position * 270;
+            if (!ds.Move(movePower, 0, 0, dx, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Forward move timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            // Turn left 90 degrees
+            if (!ds.Move(spinPower, 0, +89, 0, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position anymore
+                telemetry.addData("", "Left turn timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            // Move forward
+            if (!ds.Move(movePower, 0, 0, 180, 5000)) {
+                // we seem to have timed out. Let's not continue this anymore
+                // it's not safe to try to go further as we don't really know
+                // our current position
+                telemetry.addData("", "Backward move timed out, abandoning.");
+                return false;
+            }
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            ScoreWithElevator(elevator, telemetry);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
 
             ds.Move(movePower, 180, 0, 100, 5000);
+
+            ScoreWithElevator(elevator, telemetry);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            ds.Move(movePower, 180, 0, 200, 5000);
+
         }
         return true;
     }
-
 }

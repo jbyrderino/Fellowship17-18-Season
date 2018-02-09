@@ -32,7 +32,7 @@ public class NewUtilities {
         return Math.abs(base - val) <= 1;
     }
 
-    public static final int RED = 3;
+    public static final int RED = 10;
     public static final int BLUE = 3;
 
     //stance: [true,red],[false,blue]
@@ -46,12 +46,20 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
-
         int color = jewlKnocker.detectColor();
         jewlKnocker.tl.addLine("see color #: "+color);
         jewlKnocker.tl.update();
-        sleep(2000);
+        //sleep(3000);
+        if (!inRange(BLUE, color) && !inRange(RED, color)) {
+            jewlKnocker.moveSlightUp();
+            color = jewlKnocker.detectColor();
+            jewlKnocker.tl.addLine("see color #: "+color);
+            jewlKnocker.tl.update();
+            //sleep(3000);
+            jewlKnocker.moveSlightDown();
+        }
         if ((stance && inRange(BLUE, color)) || (!stance && inRange(RED, color))) {
+<<<<<<< HEAD
             jewlKnocker.tl.addLine("knock right");
             jewlKnocker.tl.update();
             jewlKnocker.knockRight();
@@ -63,12 +71,18 @@ public class NewUtilities {
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
+=======
+            jewlKnocker.knockRightAndGoHome();
+        } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))){
+            jewlKnocker.knockLeftAndGoHome();
+        } else {
+            jewlKnocker.setUpPosition();
+>>>>>>> 1999ebc562321e3f25c7e62a43be71aae85b1c33
         }
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
         }
-        jewlKnocker.setUpPosition();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
@@ -87,7 +101,7 @@ public class NewUtilities {
     public void ScoreWithElevator(KeithElevator elevator, Telemetry telemetry) {
         elevator.elevatorPower(-0.8);
         long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < 3000) {
+        while (System.currentTimeMillis() - start < 2000) {
             if (!lop.opModeIsActive()) {
                 break;
             }
@@ -252,7 +266,7 @@ public class NewUtilities {
             // back a little bit
 
             // Move forward
-            int dx = 1300 + position * 210;
+            int dx = 1270 + position * 270;
             if (!ds.Move(movePower, 0, 0, dx, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
@@ -297,14 +311,13 @@ public class NewUtilities {
             //NewUtilities.CryptoMove(ds, movePower, position, telemetry);
 
             ScoreWithElevator(elevator, telemetry);
-            sleep(4000);
 
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
-            ds.Move(movePower, 180, 0, 100, 5000);
+            ds.Move(movePower, 180, 0, 300, 5000);
 
         } else {
             telemetry.addData("", "Moves: RED, away from RelicRecovery");

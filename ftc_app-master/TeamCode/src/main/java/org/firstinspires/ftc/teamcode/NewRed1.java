@@ -86,7 +86,7 @@ public class NewRed1 extends LinearOpMode {
                     double rZ = rot.thirdAngle;
                 }
                 //successfully read the cypher
-//                break;
+                break;
             } else {
                 telemetry.addData("VuMark", "not visible");
             }
@@ -120,7 +120,7 @@ public class NewRed1 extends LinearOpMode {
 
         telemetry.addLine(String.format("Detected code: %d", cryptoPosition));
         telemetry.update();
-        sleep(3000);
+        //sleep(3000);
 
         if (!opModeIsActive()) {
             //abort due to turning off OpMode
@@ -143,7 +143,7 @@ public class NewRed1 extends LinearOpMode {
             return;
         }
 
-        utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, cryptoPosition);
+        utility.ExecuteMovesRed(ds, ele, movePower, spinPower, true, telemetry, -1);
 
 //        stop();
 

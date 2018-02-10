@@ -66,6 +66,7 @@ public class KeithTeleOp extends OpMode{
 
     // Variables that control the driving system
     MecanumDS ds = null;
+    boolean newDriveActive = false;
     boolean linearMode = false;
     boolean allowEncoders = true;
     double maxDrivingPower = 1.0;
@@ -185,6 +186,17 @@ public class KeithTeleOp extends OpMode{
 	        }
 	    }
 
+        if (gamepad1.start) {
+            if (gamepad1.x) {
+                //start+x switch to old drive mode
+                newDriveActive = false;
+            }
+            if (gamepad1.y) {
+                //start+y switch to new drive mode
+                newDriveActive = true;
+            }
+        }
+
         if (gamepad2.start) {
             if (gamepad2.x) {
                 //start+x switch to harvester mode
@@ -198,7 +210,11 @@ public class KeithTeleOp extends OpMode{
             }
         }
 
-        CallTestDriveSystem(pwrLvl);
+        if (newDriveActive) {
+            CallTestDriveSystem(pwrLvl);
+        } else {
+            CallDriveSystem();
+        }
         if (System.currentTimeMillis() - switchSelectionTime > 300) {
             if (harvesterActive) {
                 CallHarvesterSystem();
@@ -471,8 +487,9 @@ public class KeithTeleOp extends OpMode{
         // Get the input from the joysticks
         double LeftX = gamepad1.left_stick_x;
         double LeftY = -gamepad1.left_stick_y;
-        double RightX = gamepad1.right_stick_x;
-        double RightY = -gamepad1.right_stick_y;
+        double RightX = gamepad1.left_stick_x;
+        double RightY = -gamepad1.left_stick_y;
+        double spinFactor = gamepad1.right_stick_x;
         if (debugTelemetry) {
             telemetry.addData("", "LX: %.3f, LY: %.3f, RX: %.3f, RY: %.3f", LeftX, LeftY, RightX, RightY);
         }
@@ -538,11 +555,20 @@ public class KeithTeleOp extends OpMode{
         LeftY = LeftY * maxDrivingPower;
         RightX = RightX * maxDrivingPower;
         RightY = RightY * maxDrivingPower;
+        double frontLeft = LeftY + LeftX;
+        double frontRight = RightY - RightX;
+        double backLeft = LeftY - LeftX;
+        double backRight = RightY + RightX;
+        frontLeft = frontLeft + spinFactor * maxDrivingPower;
+        frontRight = frontRight - spinFactor * maxDrivingPower;
+        backLeft = backLeft + spinFactor * maxDrivingPower;
+        backRight = backRight - spinFactor * maxDrivingPower;
+
         Utilities.PowerLevels powerLevels = new Utilities.PowerLevels(
-                LeftY + LeftX,
-                RightY - RightX,
-                LeftY - LeftX,
-                RightY + RightX);
+                frontLeft,
+                frontRight,
+                backLeft,
+                backRight);
         if (debugTelemetry) {
             telemetry.addData("", "FL(IP): %.2f, FR(IP): %.2f, BL(IP): %.2f, BR(IP): %.2f", powerLevels.powerFL, powerLevels.powerFR, powerLevels.powerBL, powerLevels.powerBR);
         }

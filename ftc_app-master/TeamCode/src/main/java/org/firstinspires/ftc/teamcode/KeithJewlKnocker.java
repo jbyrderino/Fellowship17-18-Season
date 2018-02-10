@@ -101,13 +101,69 @@ public class KeithJewlKnocker extends JewlKnocker {
         }
     }
 
-    public void setUpPosition() {
-        knockerBase.setPosition(0.77);
-        servoKnocker.setPosition(0.60);
+    public void setDownPosition2() {
+        knockerBase.setPosition(0.18);
+        servoKnocker.setPosition(0.99);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.40);
+        servoKnocker.setPosition(0.99);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.40);
+        servoKnocker.setPosition(0.65);
         if (!sleep(700)) {
             return;
         }
         knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.65);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.57);
+        if (!sleep(1000)) {
+            return;
+        }
+    }
+
+    public void setUpPosition() {
+        knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.57);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.99);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.18);
+        servoKnocker.setPosition(0.99);
+        if (!sleep(1000)) {
+            return;
+        }
+    }
+
+    public void setUpPosition2() {
+        knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.57);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.77);
+        servoKnocker.setPosition(0.65);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.40);
+        servoKnocker.setPosition(0.65);
+        if (!sleep(700)) {
+            return;
+        }
+        knockerBase.setPosition(0.40);
         servoKnocker.setPosition(0.99);
         if (!sleep(700)) {
             return;

@@ -103,8 +103,9 @@ public class NewRed1 extends LinearOpMode {
 
 
         //SCORING POSITION EITHER LEFT (-1), CENTER (0), OR RIGHT (1)
-//        int cryptoPosition = 0;
-        int cryptoPosition = Integer.MAX_VALUE;
+        //by default, 0 at the center
+        int cryptoPosition = 0;
+
         if (vuMark.toString().equals("LEFT")) {
             cryptoPosition = 1;
         } else if (vuMark.toString().equals("RIGHT")) {
@@ -113,9 +114,6 @@ public class NewRed1 extends LinearOpMode {
             cryptoPosition = 0;
         }
 
-        if (cryptoPosition == Integer.MAX_VALUE) {
-            throw new RuntimeException("NO READING");
-        }
 
         telemetry.addLine(String.format("Detected code: %d", cryptoPosition));
         telemetry.update();

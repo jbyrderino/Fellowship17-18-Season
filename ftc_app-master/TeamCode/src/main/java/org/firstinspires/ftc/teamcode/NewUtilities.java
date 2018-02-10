@@ -43,7 +43,7 @@ public class NewUtilities {
             //stop opMODE
             return;
         }
-        jewlKnocker.setDownPosition();
+        jewlKnocker.setDownPosition2();
         if (!lop.opModeIsActive()) {
             //stop opMODE
             return;
@@ -65,7 +65,7 @@ public class NewUtilities {
         } else if ((stance && inRange(RED, color)) || (!stance && inRange(BLUE, color))) {
             jewlKnocker.knockLeftAndGoHome();
         } else {
-            jewlKnocker.setUpPosition();
+            jewlKnocker.setUpPosition2();
         }
         if (!lop.opModeIsActive()) {
             //stop opMODE
@@ -90,6 +90,14 @@ public class NewUtilities {
                 break;
             }
         }
+        elevator.elevatorPower(0.0);
+    }
+
+    public void StartElevator (KeithElevator elevator, Telemetry telemetry) {
+        elevator.elevatorPower(-0.8);
+    }
+
+    public void StopElevator (KeithElevator elevator, Telemetry telemetry) {
         elevator.elevatorPower(0.0);
     }
 
@@ -292,7 +300,14 @@ public class NewUtilities {
                 return false;
             }
 
-            ScoreWithElevator(elevator, telemetry);
+            StartElevator(elevator, telemetry);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            sleep(1000);
 
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
@@ -300,6 +315,13 @@ public class NewUtilities {
             }
 
             ds.Move(movePower, 180, 0, 300, 5000);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            StopElevator(elevator, telemetry);
 
         } else {
             telemetry.addData("", "Moves: RED, away from RelicRecovery");
@@ -378,7 +400,14 @@ public class NewUtilities {
                 return false;
             }
 
-            ScoreWithElevator(elevator, telemetry);
+            StartElevator(elevator, telemetry);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            sleep(1000);
 
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
@@ -386,6 +415,13 @@ public class NewUtilities {
             }
 
             ds.Move(movePower, 180, 0, 300, 5000);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            StopElevator(elevator, telemetry);
 
         }
         return true;
@@ -401,7 +437,7 @@ public class NewUtilities {
             //since we are going backward, position need to be negated
             position *= -1;
             // Move backward
-            int dx = 1305 + position * 270;
+            int dx = 1315 + position * 270;
             if (!ds.Move(movePower, 180, 0, dx, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
@@ -416,7 +452,7 @@ public class NewUtilities {
             }
 
             // Turn right 90 degrees
-            if (!ds.Move(spinPower, 0, -88, 0, 5000)) {
+            if (!ds.Move(spinPower, 0, -90, 0, 5000)) {
                 // we seem to have timed out. Let's not continue this anymore
                 // it's not safe to try to go further as we don't really know
                 // our current position anymore
@@ -443,7 +479,14 @@ public class NewUtilities {
                 return false;
             }
 
-            ScoreWithElevator(elevator, telemetry);
+            StartElevator(elevator, telemetry);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            sleep(1000);
 
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
@@ -451,6 +494,13 @@ public class NewUtilities {
             }
 
             ds.Move(movePower, 180, 0, 300, 5000);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            StopElevator(elevator, telemetry);
 
         } else {
             telemetry.addData("", "Moves: RED, away from RelicRecovery");
@@ -529,23 +579,28 @@ public class NewUtilities {
                 return false;
             }
 
-            ScoreWithElevator(elevator, telemetry);
+            StartElevator(elevator, telemetry);
 
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
-            ds.Move(movePower, 180, 0, 100, 5000);
-
-            ScoreWithElevator(elevator, telemetry);
+            sleep(1000);
 
             if (!lop.opModeIsActive()) {
                 //abort due to turning off OpMode
                 return false;
             }
 
-            ds.Move(movePower, 180, 0, 200, 5000);
+            ds.Move(movePower, 180, 0, 300, 5000);
+
+            if (!lop.opModeIsActive()) {
+                //abort due to turning off OpMode
+                return false;
+            }
+
+            StopElevator(elevator, telemetry);
 
         }
         return true;

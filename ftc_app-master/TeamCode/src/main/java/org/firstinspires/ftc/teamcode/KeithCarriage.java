@@ -9,6 +9,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * Created by KAEGAN on 1/11/2018.
+ *
+ * I don't know who KAEGAN is.
+ * But all works are done by me.
+ * --Charlie :)
  */
 
 public class KeithCarriage extends Carriage {
@@ -19,14 +23,6 @@ public class KeithCarriage extends Carriage {
     Servo rServo = null;
     Telemetry tl;
 
-    //gripper constants
-    static final double holdL = 1.0;
-    static final double releaseL = 0.2;
-    static final double holdR = 0.7;
-    static final double releaseR = 0.1;
-    static final boolean LEFTS = true;
-    static final boolean RIGHTS = false;
-
     public KeithCarriage(HardwareMap hwMap, Telemetry telemetry, String SMLabel, String FMLabel, String LSLabel, String RSLabel) {
         tl = telemetry;
         slideMotor = hwMap.get(DcMotor.class, SMLabel);
@@ -36,18 +32,22 @@ public class KeithCarriage extends Carriage {
         rServo = hwMap.get(Servo.class, RSLabel);
     }
 
-
+    //carriage constant
     public static final int LEFT = 1000;
     public static final int CENTER = 0;
     public static final int RIGHT = -1000;
     public static final double MAIN_POWER = 0.4;
-    public static final double ADJUST_POWER = 0.1;
+    public static final double ADJUST_POWER = 0.08;
+
+    //carriage data
     private int carriageState = 0;
     public boolean slideActive = false;
     public int destination;
+    public int moveDir;
     public long carriageMotionStartTime;
+
     //threshold of velocity(ticks/ms)
-    public static final double THRESHOLD_VL = 0.8;
+    //public static final double THRESHOLD_VL = 0.8;
 
     public void powerSlideMotor(double pwr) {
         slideMotor.setPower(pwr);
@@ -58,20 +58,23 @@ public class KeithCarriage extends Carriage {
             tl.addLine("carriage is moving");
             tl.addLine("another move shall not be executed");
             tl.update();
-            sleep(500);
+            //ignore command
             return;
         }
-        if (carriageState == dest) {
+        if (carriageState == dest && inRange(carriageState, slideMotor.getCurrentPosition())) {
             //already in position
+            //sometimes carriageState isn't really current position
+            //so at this time we will keep executing command
             tl.addLine(String.format("target:%d, tick:%d", dest, slideMotor.getCurrentPosition()));
             tl.addLine("in position");
             tl.update();
-            sleep(500);
+            //ignore command
             return;
         }
-
+        //execute command
         slideActive = true;
         destination = dest;
+        moveDir = Integer.signum(dest - slideMotor.getCurrentPosition());
         tl.addLine("Carriage GO");
         tl.update();
         slideMotor.setPower(MAIN_POWER * Integer.signum(dest - slideMotor.getCurrentPosition()));
@@ -80,11 +83,20 @@ public class KeithCarriage extends Carriage {
 
     public boolean slideVerify() {
         if (!slideActive) {
-            tl.addLine("verifying motor position: "+slideMotor.getCurrentPosition());
+            tl.addLine("verifying motor position: " + slideMotor.getCurrentPosition());
             tl.update();
+            //carriage isn't active
             return true;
         }
-        if (Math.abs(destination - slideMotor.getCurrentPosition()) <= 20 || System.currentTimeMillis() - carriageMotionStartTime > 2000) {
+        //overshoot: reached desired position
+        boolean overshoot;
+        if (moveDir == 1) {
+            overshoot = slideMotor.getCurrentPosition() >= destination - 10;
+        } else {
+            overshoot = slideMotor.getCurrentPosition() <= destination + 10;
+        }
+        //Math.abs(destination - slideMotor.getCurrentPosition()) <= 20
+        if (overshoot || System.currentTimeMillis() - carriageMotionStartTime > 2000) {
             slideMotor.setPower(0.0);
             slideActive = false;
             carriageState = destination;
@@ -92,13 +104,13 @@ public class KeithCarriage extends Carriage {
             tl.addLine("current slider position " + slideMotor.getCurrentPosition());
             tl.addLine("starting fine adjustment...");
             tl.update();
-            sleep(500);
             autoAdjust();
             return true;
         }
         return false;
     }
 
+    @Deprecated
     public void slideTo(int target) {
         if (carriageState == target) {
             //already in position
@@ -131,11 +143,14 @@ public class KeithCarriage extends Carriage {
     }
 
     public void autoAdjust() {
+        if (Math.abs(carriageState - slideMotor.getCurrentPosition()) < 5) {
+            return;
+        }
         slideMotor.setPower(ADJUST_POWER * Integer.signum(carriageState - slideMotor.getCurrentPosition()));
         long startTime = System.currentTimeMillis();
         while (Math.abs(carriageState - slideMotor.getCurrentPosition()) > 5) {
             //wait until finish
-            if (System.currentTimeMillis() - startTime > 500) {
+            if (System.currentTimeMillis() - startTime > 100) {
                 //timeout
                 break;
             }
@@ -144,14 +159,14 @@ public class KeithCarriage extends Carriage {
         tl.addLine("fine adjustment finished");
         tl.addLine(String.format("state:%d current position: %d", carriageState, slideMotor.getCurrentPosition()));
         tl.update();
-        sleep(500);
+        sleep(50);
     }
 
     private boolean inRange(int target, int value) {
-        return Math.abs(target - value) < 10;
+        return Math.abs(target - value) < 20;
     }
 
-
+    @Deprecated
     public void flipperToggleStart() {
         if (!flipperToggleActive) {
             return;
@@ -161,6 +176,7 @@ public class KeithCarriage extends Carriage {
     }
 
     //return true iff flipper has reached destination or isn't active
+    @Deprecated
     public boolean flipperToggleVerify() {
         if (!flipperToggleActive) {
             return true;
@@ -222,6 +238,13 @@ public class KeithCarriage extends Carriage {
         }
     }
 
+    //gripper constants
+    static final double holdL = 1.0;
+    static final double releaseL = 0.2;
+    static final double holdR = 0.7;
+    static final double releaseR = 0.1;
+    static final boolean LEFTS = true;
+    static final boolean RIGHTS = false;
 
     public void holderToggle(boolean side) {
         if (side) {

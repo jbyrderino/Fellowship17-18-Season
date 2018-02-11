@@ -160,7 +160,7 @@ public class FishingRodSystem extends RelicArmSubsystem {
         }
     }
 
-    static double ratio = 0.5;//TBDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+    static double ratio = 0.25;//TBDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 
     public void extendOn(double dir) {
         setLowerReelPower(dir);

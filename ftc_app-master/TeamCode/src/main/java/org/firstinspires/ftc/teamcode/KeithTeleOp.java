@@ -69,7 +69,7 @@ public class KeithTeleOp extends OpMode{
     boolean newDriveActive = false;
     boolean linearMode = false;
     boolean allowEncoders = true;
-    double maxDrivingPower = 1.0;
+    double maxDrivingPower = 0.3;
     boolean engageMotors = true;
     double dsSelectionTime = 0;
     PowerLvl pwrLvl = PowerLvl.MED;
@@ -120,8 +120,10 @@ public class KeithTeleOp extends OpMode{
             jds.JewlDetectForInit(telemetry, hardwareMap);
         }
 
-        jwl.setBasePosition(0.2);
-        jwl.setKnockerPosition(0.75);
+//        jwl.setBasePosition(0.2);
+//        jwl.setKnockerPosition(0.75);
+        jwl.setKnockerPosition(0.99);
+        jwl.setBasePosition(0.18);
 
         telemetry.addLine("init...");
         telemetry.update();
@@ -234,18 +236,24 @@ public class KeithTeleOp extends OpMode{
         if (gamepad2.dpad_left) {
             telemetry.addLine("command: slide left");
             telemetry.update();
-            car.slideTo(KeithCarriage.LEFT);
+//            car.slideTo(KeithCarriage.LEFT);
+            car.slideStart(KeithCarriage.LEFT);
         }
         if (gamepad2.dpad_up) {
             telemetry.addLine("command: slide center");
             telemetry.update();
-            car.slideTo(KeithCarriage.CENTER);
+//            car.slideTo(KeithCarriage.CENTER);
+            car.slideStart(KeithCarriage.CENTER);
         }
         if (gamepad2.dpad_right) {
             telemetry.addLine("command: slide right");
             telemetry.update();
-            car.slideTo(KeithCarriage.RIGHT);
+//            car.slideTo(KeithCarriage.RIGHT);
+            car.slideStart(KeithCarriage.RIGHT);
         }
+        //stop any finished sliding movement
+        car.slideVerify();
+
         if (gamepad2.x) {
             telemetry.addLine("Flipper toggle");
             car.flipperToggle();
@@ -385,11 +393,11 @@ public class KeithTeleOp extends OpMode{
             // modify the conversion ration between motor and servos
             if (gamepad2.right_bumper) {
                 frsSelection = true;
-                frs.incRatio(0.01);
+                frs.incRatio(0.001);
             }
             if (gamepad2.left_bumper) {
                 frsSelection = true;
-                frs.incRatio(-0.01);
+                frs.incRatio(-0.001);
             }
 
             // tilt the claw
@@ -410,13 +418,16 @@ public class KeithTeleOp extends OpMode{
                 tiltActive = false;
             }
         }
-        telemetry.addData("", "Ratio(Bumpers): %.2f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
+        telemetry.addData("", "Ratio(Bumpers): %.3f, Tilting: %s", frs.getRatio(), tiltActive ? "Yes" : "No");
     }
 
     void CallTestDriveSystem(PowerLvl pwrLvl) {
 
-        double r = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
-        double robotAngle = Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y) - Math.PI / 4;
+        double leftX = -gamepad1.left_stick_y;
+        double leftY = gamepad1.left_stick_x;
+
+        double r = Math.hypot(leftX, leftY);
+        double robotAngle = Math.atan2(leftX, leftY) - Math.PI / 4;
         double rightX = gamepad1.right_stick_x;
         final double v1 = r * Math.cos(robotAngle) + rightX*pwrLvl.constant;
         final double v2 = r * Math.sin(robotAngle) - rightX*pwrLvl.constant;
@@ -444,8 +455,8 @@ public class KeithTeleOp extends OpMode{
                 if (maxDrivingPower > 1) {
                     maxDrivingPower = 1;
                 }
-                if (maxDrivingPower < 0) {
-                    maxDrivingPower = 0;
+                if (maxDrivingPower < 0.1) {
+                    maxDrivingPower = 0.1;
                 }
             } else if (gamepad1.right_bumper) {
                 dsSelection = true;

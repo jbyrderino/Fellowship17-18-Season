@@ -40,6 +40,7 @@ public class NewRed1 extends LinearOpMode {
         jks.sensor.enableLed(true);
         jks.setLinearOpMode(this);
         NewUtilities utility = new NewUtilities(this);
+        ele.kickerSetPosition(KeithElevator.upPos);
         jks.setKnockerPosition(0.99);
         jks.setBasePosition(0.18);
         ele.kickerSetPosition(0.7);

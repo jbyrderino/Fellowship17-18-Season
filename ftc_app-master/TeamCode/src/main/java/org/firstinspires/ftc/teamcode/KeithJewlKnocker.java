@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -19,6 +21,7 @@ public class KeithJewlKnocker extends JewlKnocker {
     Servo knockerBase = null;
     Servo servoKnocker = null;
     ModernRoboticsI2cColorSensor2 sensor;
+    ModernRoboticsI2cColorSensor sensor2;
     Telemetry tl = null;
 
     LinearOpMode lop;
@@ -38,18 +41,16 @@ public class KeithJewlKnocker extends JewlKnocker {
     KeithJewlKnocker(HardwareMap hwMap, String labelBase, String labelKnocker, String labelSensor, Telemetry telemetry) {
         I2cDevice i2c = hwMap.i2cDevice.get(labelSensor);
         sensor = new ModernRoboticsI2cColorSensor2(i2c.getI2cController(), i2c.getPort());
+        //sensor2 = (ModernRoboticsI2cColorSensor)hwMap.get(labelSensor);
         sensor.enableLed(true);
         knockerBase = hwMap.servo.get(labelBase);
         knockerBase.setPosition(0.25);
         servoKnocker = hwMap.servo.get(labelKnocker);
         servoKnocker.setPosition(0.1);
         tl = telemetry;
-
     }
 
-    public int detectColor() {
-        return sensor.colorNumber();
-    }
+    public int detectColor() { return sensor.colorNumber(); }
 
     public void setBasePosition(double position) {
         knockerBase.setPosition(position);

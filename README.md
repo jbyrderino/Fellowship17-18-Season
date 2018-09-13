@@ -1,3 +1,3 @@
-Fellowship of The Robot 2017-2018 Season
+Fellowship of The Robot 2018-2019 Season
 
--All FTR Software Files for the 2018-2018 FTC "Relic Recovery" will be stored here
+-All FTR Software Files for the 2018-2019 FTC "Rover Ruckus" will be stored here
